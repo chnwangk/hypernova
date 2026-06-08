@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HYPERNOVA · 加密仓位计算器</title>
+<meta name="description" content="风险驱动的加密合约仓位计算器，自动计算开仓数量、保证金、强平价与盈亏比。所有计算在本地完成，数据不上传。" />
+<style>
+  :root{
+    --bg:#0a0a14;
+    --bg2:#0e0f1d;
+    --card:#14152400;
+    --panel:#15172a;
+    --panel2:#1b1e36;
+    --line:#262a47;
+    --text:#e7e9f5;
+    --muted:#8b90b5;
+    --accent:#7c5cff;
+    --accent2:#22d3ee;
+    --green:#34d399;
+    --red:#fb7185;
+    --amber:#fbbf24;
+    --radius:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Roboto,Helvetica,Arial,sans-serif;
+    background:
+      radial-gradient(1100px 600px at 80% -10%, rgba(124,92,255,.18), transparent 60%),
+      radial-gradient(900px 500px at -10% 10%, rgba(34,211,238,.12), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    line-height:1.6;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+  /* ---------- Nav ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    backdrop-filter:saturate(160%) blur(12px);
+    background:rgba(10,10,20,.72);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.5px}
+  .brand .logo{
+    width:30px;height:30px;border-radius:9px;
+    background:conic-gradient(from 200deg,var(--accent),var(--accent2),var(--accent));
+    box-shadow:0 0 18px rgba(124,92,255,.6);
+    position:relative;
+  }
+  .brand .logo::after{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--bg);}
+  .brand b{font-size:18px}
+  .brand span{color:var(--accent2);font-weight:800}
+  .nav-links{display:flex;gap:26px;align-items:center}
+  .nav-links a{color:var(--muted);font-size:14px;font-weight:600;transition:color .15s}
+  .nav-links a:hover{color:var(--text)}
+  .nav-cta{
+    background:linear-gradient(135deg,var(--accent),#9b7bff);
+    color:#fff;padding:8px 16px;border-radius:10px;font-size:14px;font-weight:700;
+    box-shadow:0 6px 20px rgba(124,92,255,.35);
+  }
+  @media(max-width:680px){.nav-links a:not(.nav-cta){display:none}}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:74px 0 38px;text-align:center}
+  .pill{
+    display:inline-flex;align-items:center;gap:8px;
+    border:1px solid var(--line);background:var(--panel);
+    color:var(--muted);font-size:13px;padding:6px 14px;border-radius:999px;margin-bottom:22px;
+  }
+  .pill .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+  .hero h1{
+    font-size:46px;line-height:1.15;font-weight:850;letter-spacing:-.5px;margin-bottom:16px;
+  }
+  .hero h1 .grad{
+    background:linear-gradient(120deg,var(--accent2),var(--accent) 60%,#c4b5fd);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero p{color:var(--muted);font-size:17px;max-width:620px;margin:0 auto 28px}
+  .hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn{
+    padding:12px 24px;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer;border:none;
+    transition:transform .12s,box-shadow .12s;
+  }
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:linear-gradient(135deg,var(--accent),#9b7bff);color:#fff;box-shadow:0 8px 26px rgba(124,92,255,.4)}
+  .btn-ghost{background:var(--panel);color:var(--text);border:1px solid var(--line)}
+  @media(max-width:680px){.hero h1{font-size:34px}.hero{padding:48px 0 26px}}
+
+  /* ---------- Calculator ---------- */
+  section{padding:34px 0}
+  .sec-title{font-size:13px;letter-spacing:2px;color:var(--accent2);font-weight:700;text-transform:uppercase;margin-bottom:6px}
+  .sec-h{font-size:26px;font-weight:800;margin-bottom:24px}
+
+  .calc{
+    display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start;
+  }
+  @media(max-width:860px){.calc{grid-template-columns:1fr}}
+
+  .panel{
+    background:linear-gradient(180deg,var(--panel),var(--bg2));
+    border:1px solid var(--line);border-radius:var(--radius);padding:22px;
+  }
+  .panel h3{font-size:16px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+  .panel h3 .n{
+    width:22px;height:22px;border-radius:7px;background:var(--accent);color:#fff;
+    font-size:12px;display:grid;place-items:center;font-weight:800;
+  }
+
+  .field{margin-bottom:15px}
+  .field label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:600}
+  .field label .hint{color:#5d6288;font-weight:400}
+  .input-wrap{position:relative;display:flex;align-items:center}
+  .input-wrap .suffix{position:absolute;right:12px;color:var(--muted);font-size:13px;pointer-events:none}
+  input[type=number],select{
+    width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);
+    padding:11px 13px;border-radius:10px;font-size:15px;font-weight:600;outline:none;
+    transition:border-color .15s,box-shadow .15s;
+  }
+  input[type=number]:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,.18)}
+  input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+
+  .seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:4px;gap:4px}
+  .seg button{
+    flex:1;border:none;background:transparent;color:var(--muted);padding:9px;border-radius:7px;
+    font-weight:700;font-size:14px;cursor:pointer;transition:.15s;
+  }
+  .seg button.long.active{background:rgba(52,211,153,.16);color:var(--green)}
+  .seg button.short.active{background:rgba(251,113,133,.16);color:var(--red)}
+  .seg button.mode.active{background:rgba(124,92,255,.18);color:var(--accent2)}
+
+  .lev-row{display:flex;align-items:center;gap:12px}
+  .lev-row input[type=range]{flex:1;accent-color:var(--accent)}
+  .lev-val{min-width:56px;text-align:right;font-weight:800;color:var(--accent2)}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+  /* results */
+  .result-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+  .big-num{font-size:34px;font-weight:850;letter-spacing:-.5px}
+  .big-sub{color:var(--muted);font-size:13px}
+  .divider{height:1px;background:var(--line);margin:18px 0}
+  .rows{display:flex;flex-direction:column;gap:2px}
+  .row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px dashed rgba(38,42,71,.7)}
+  .row:last-child{border-bottom:none}
+  .row .k{color:var(--muted);font-size:14px;display:flex;align-items:center;gap:6px}
+  .row .v{font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
+  .v.green{color:var(--green)}.v.red{color:var(--red)}.v.accent{color:var(--accent2)}
+
+  .rr-badge{font-size:12px;padding:3px 9px;border-radius:999px;font-weight:700}
+  .rr-good{background:rgba(52,211,153,.15);color:var(--green)}
+  .rr-bad{background:rgba(251,113,133,.15);color:var(--red)}
+
+  .alert{
+    display:flex;gap:10px;padding:12px 14px;border-radius:11px;font-size:13.5px;margin-top:14px;line-height:1.5;
+    border:1px solid;
+  }
+  .alert .ico{flex-shrink:0;font-size:16px;line-height:1.4}
+  .alert.warn{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.35);color:#fcd34d}
+  .alert.danger{background:rgba(251,113,133,.09);border-color:rgba(251,113,133,.4);color:#fda4b4}
+  .alert.ok{background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.3);color:#6ee7b7}
+  .alert.info{background:rgba(124,92,255,.08);border-color:rgba(124,92,255,.3);color:#c4b5fd}
+
+  .privacy{
+    display:flex;align-items:center;gap:8px;justify-content:center;color:var(--muted);
+    font-size:13px;margin-top:22px;
+  }
+  .privacy .lock{color:var(--green)}
+
+  /* features */
+  .feat{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:6px}
+  @media(max-width:760px){.feat{grid-template-columns:1fr}}
+  .fcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .fcard .fi{font-size:22px;margin-bottom:10px}
+  .fcard h4{font-size:16px;margin-bottom:6px}
+  .fcard p{color:var(--muted);font-size:14px}
+
+  /* about */
+  .about{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:28px}
+  .about p{color:var(--muted);margin-bottom:12px}
+
+  .disclaimer{
+    border:1px dashed var(--line);border-radius:12px;padding:16px;color:#6f74a0;font-size:13px;margin-top:22px;
+  }
+
+  footer{border-top:1px solid var(--line);margin-top:40px;padding:28px 0;color:var(--muted);font-size:13px}
+  .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<header>
+  <div class="wrap nav">
+    <div class="brand">
+      <div class="logo"></div>
+      <b>HYPER<span>NOVA</span></b>
+    </div>
+    <nav class="nav-links">
+      <a href="#calc">仓位计算器</a>
+      <a href="#features">特性</a>
+      <a href="#about">关于</a>
+      <a href="#calc" class="nav-cta">开始计算</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<div class="wrap hero">
+  <div class="pill"><span class="dot"></span> 数据本地计算 · 永不上传</div>
+  <h1>聪明地决定<br><span class="grad">该开多大仓位</span></h1>
+  <p>专业交易者用的不是「感觉」，而是「风险」。先设定单笔最多能亏多少，HYPERNOVA 帮你倒推该开多少仓、需要多少保证金，并提前警告强平风险。</p>
+  <div class="hero-btns">
+    <a href="#calc"><button class="btn btn-primary">立即计算仓位 →</button></a>
+    <a href="#features"><button class="btn btn-ghost">了解工作原理</button></a>
+  </div>
+</div>
+
+<!-- ===== CALCULATOR ===== -->
+<section id="calc">
+  <div class="wrap">
+    <div class="sec-title">Position Calculator</div>
+    <div class="sec-h">加密合约仓位计算器</div>
+
+    <div class="calc">
+      <!-- INPUTS -->
+      <div class="panel">
+        <h3><span class="n">1</span>填写你的交易计划</h3>
+
+        <div class="field">
+          <label>账户总额 <span class="hint">（用于计算风险的本金）</span></label>
+          <div class="input-wrap">
+            <input type="number" id="account" value="10000" min="0" step="any">
+            <span class="suffix">USDT</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>单笔风险比例 <span class="hint">（建议 1%–2%，即最多愿意亏多少）</span></label>
+          <div class="input-wrap">
+            <input type="number" id="risk" value="1" min="0" step="any">
+            <span class="suffix">%</span>
+          </div>
+        </div>
+
+        <div class="two">
+          <div class="field">
+            <label>方向</label>
+            <div class="seg" id="side">
+              <button class="long active" data-side="long">做多</button>
+              <button class="short" data-side="short">做空</button>
+            </div>
+          </div>
+          <div class="field">
+            <label>保证金模式</label>
+            <div class="seg" id="mode">
+              <button class="mode active" data-mode="cross">全仓</button>
+              <button class="mode" data-mode="isolated">逐仓</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="two">
+          <div class="field">
+            <label>入场价</label>
+            <div class="input-wrap"><input type="number" id="entry" value="50000" min="0" step="any"></div>
+          </div>
+          <div class="field">
+            <label>止损价</label>
+            <div class="input-wrap"><input type="number" id="stop" value="49000" min="0" step="any"></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>止盈价 <span class="hint">（可选，用于算盈亏比）</span></label>
+          <div class="input-wrap"><input type="number" id="target" value="53000" min="0" step="any"></div>
+        </div>
+
+        <div class="field">
+          <label>杠杆倍数</label>
+          <div class="lev-row">
+            <input type="range" id="lev" min="1" max="125" value="10" step="1">
+            <span class="lev-val" id="levVal">10x</span>
+          </div>
+        </div>
+
+        <div class="two">
+          <div class="field">
+            <label>手续费率 <span class="hint">(单边)</span></label>
+            <div class="input-wrap"><input type="number" id="fee" value="0.05" min="0" step="any"><span class="suffix">%</span></div>
+          </div>
+          <div class="field">
+            <label>维持保证金率 <span class="hint">(算强平)</span></label>
+            <div class="input-wrap"><input type="number" id="mmr" value="0.5" min="0" step="any"><span class="suffix">%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div class="panel">
+        <h3><span class="n">2</span>计算结果</h3>
+
+        <div class="result-head">
+          <span class="big-sub">建议开仓数量</span>
+          <span class="big-sub">名义价值</span>
+        </div>
+        <div class="result-head">
+          <span class="big-num accent" id="qty">0.1</span>
+          <span class="big-num" id="notional" style="font-size:24px;align-self:flex-end">5,000</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="rows">
+          <div class="row"><span class="k">单笔风险金额</span><span class="v red" id="riskAmt">100 USDT</span></div>
+          <div class="row"><span class="k">止损距离</span><span class="v" id="stopDist">2.00%</span></div>
+          <div class="row"><span class="k">所需保证金</span><span class="v accent" id="margin">500 USDT</span></div>
+          <div class="row"><span class="k">预估强平价</span><span class="v" id="liq">—</span></div>
+          <div class="row"><span class="k">盈亏比 (R:R) <span id="rrBadge"></span></span><span class="v" id="rr">—</span></div>
+          <div class="row"><span class="k">手续费 (开+平)</span><span class="v" id="feeAmt">—</span></div>
+          <div class="row"><span class="k">止盈达成 · 净盈利</span><span class="v green" id="netWin">—</span></div>
+          <div class="row"><span class="k">止损触发 · 净亏损</span><span class="v red" id="netLoss">—</span></div>
+        </div>
+
+        <div id="alerts"></div>
+      </div>
+    </div>
+
+    <div class="privacy"><span class="lock">🔒</span> 所有计算均在你的浏览器本地完成，不会上传任何数据。</div>
+
+    <div class="disclaimer">
+      ⚠️ <b>免责声明：</b>本工具仅供学习与参考，所有计算结果不构成任何投资建议。加密货币合约交易风险极高，可能导致本金全部损失，请独立判断并自行承担风险。
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURES ===== -->
+<section id="features">
+  <div class="wrap">
+    <div class="sec-title">Why Hypernova</div>
+    <div class="sec-h">为什么用风险驱动模型</div>
+    <div class="feat">
+      <div class="fcard">
+        <div class="fi">🎯</div>
+        <h4>先定亏损，再定仓位</h4>
+        <p>不靠感觉下注。先决定「这笔最多亏 1%」，再倒推该开多大仓——这是专业交易者的核心方法。</p>
+      </div>
+      <div class="fcard">
+        <div class="fi">🛡️</div>
+        <h4>强平价提前预警</h4>
+        <p>杠杆太高时，还没到止损就先爆仓了。我们会算出强平价并在它早于你的止损时红色警告。</p>
+      </div>
+      <div class="fcard">
+        <div class="fi">⚖️</div>
+        <h4>盈亏比一眼看清</h4>
+        <p>自动计算风险回报比（R:R），并提示这笔交易是否值得做（建议 ≥ 2）。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section id="about">
+  <div class="wrap">
+    <div class="sec-title">About</div>
+    <div class="sec-h">关于 HYPERNOVA</div>
+    <div class="about">
+      <p>HYPERNOVA 是一个面向加密交易者的工具站，目标是把专业、可靠的交易工具做得人人都会用。</p>
+      <p>仓位计算器是这里的第一个工具。未来还会加入更多帮助你做出更理性决策的功能。</p>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:0">本站坚持：纯本地计算 · 不收集数据 · 不需要连接钱包。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="wrap foot">
+    <div class="brand"><div class="logo" style="width:24px;height:24px"></div><b style="font-size:15px">HYPER<span>NOVA</span></b></div>
+    <div>© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var side = "long";
+  var marginMode = "cross";
+  var $ = function(id){ return document.getElementById(id); };
+  var ids = ["account","risk","entry","stop","target","lev","fee","mmr"];
+
+  function num(id){ var v = parseFloat($(id).value); return isNaN(v)?0:v; }
+  function fmt(n,dec){
+    if(!isFinite(n)) return "—";
+    dec = dec==null?2:dec;
+    return n.toLocaleString("en-US",{minimumFractionDigits:dec,maximumFractionDigits:dec});
+  }
+  // 智能数量精度：价格越大数量越小，给更多小数位
+  function fmtQty(n){
+    if(!isFinite(n)||n<=0) return "0";
+    if(n>=100) return fmt(n,2);
+    if(n>=1) return fmt(n,3);
+    if(n>=0.01) return fmt(n,4);
+    return fmt(n,6);
+  }
+
+  function calc(){
+    var account = num("account");
+    var riskPct = num("risk")/100;
+    var entry   = num("entry");
+    var stop    = num("stop");
+    var target  = num("target");
+    var lev     = num("lev");
+    var feePct  = num("fee")/100;
+    var mmr     = num("mmr")/100;
+
+    $("levVal").textContent = lev + "x";
+
+    var alerts = [];
+
+    var riskAmt = account * riskPct;
+    var stopDistAbs = Math.abs(entry - stop);
+    var stopDistPct = entry>0 ? stopDistAbs/entry : 0;
+
+    // 方向合理性检查
+    if(entry>0 && stop>0){
+      if(side==="long" && stop>=entry) alerts.push(["warn","做多时止损价应低于入场价，请检查。"]);
+      if(side==="short" && stop<=entry) alerts.push(["warn","做空时止损价应高于入场价，请检查。"]);
+    }
+
+    var notional=0, qty=0, margin=0;
+    if(stopDistAbs>0 && entry>0){
+      notional = riskAmt / stopDistPct;   // 仓位名义价值
+      qty = notional / entry;             // 开仓数量
+      margin = lev>0 ? notional/lev : 0;  // 所需保证金
+    }
+
+    // 强平价
+    var liq = NaN, liqImpossible = false;
+    if(entry>0 && lev>0 && qty>0){
+      if(marginMode==="isolated"){
+        // 逐仓：只有该仓保证金兜底，杠杆决定强平价
+        if(side==="long") liq = entry*(1 - 1/lev + mmr);
+        else              liq = entry*(1 + 1/lev - mmr);
+      } else {
+        // 全仓：整个账户余额兜底（假设为唯一持仓的近似）
+        var maint = notional*mmr;
+        if(side==="long") liq = entry - (account - maint)/qty;
+        else              liq = entry + (account - maint)/qty;
+        // 做多时强平价 ≤ 0 说明价格不可能跌到，几乎不会强平
+        if(side==="long" && liq<=0) liqImpossible = true;
+      }
+    }
+
+    // 盈亏比
+    var rr = NaN, reward=0;
+    if(target>0 && stopDistAbs>0){
+      var rewardDist = Math.abs(target-entry);
+      rr = rewardDist/stopDistAbs;
+      reward = qty*rewardDist;
+    }
+
+    // 手续费（开+平，按名义价值近似）
+    var feeAmt = notional*feePct*2;
+    var netWin = reward - feeAmt;
+    var netLoss = riskAmt + feeAmt;
+
+    // ---- 渲染 ----
+    $("qty").textContent = fmtQty(qty);
+    $("notional").textContent = fmt(notional,0);
+    $("riskAmt").textContent = fmt(riskAmt,2)+" USDT";
+    $("stopDist").textContent = (stopDistPct*100).toFixed(2)+"%";
+    $("margin").textContent = fmt(margin,2)+" USDT";
+    if(liqImpossible){
+      $("liq").textContent = "极低 · 几乎不会强平";
+    } else {
+      $("liq").textContent = isFinite(liq)&&liq>0 ? fmt(liq, entry>=100?2:4) : "—";
+    }
+    $("feeAmt").textContent = feeAmt>0 ? fmt(feeAmt,2)+" USDT" : "—";
+
+    if(isFinite(rr)){
+      $("rr").textContent = rr.toFixed(2)+" : 1";
+      var b=$("rrBadge");
+      if(rr>=2){ b.className="rr-badge rr-good"; b.textContent="值得"; }
+      else { b.className="rr-badge rr-bad"; b.textContent="偏低"; }
+      $("netWin").textContent = "+"+fmt(netWin,2)+" USDT";
+      $("netLoss").textContent = "−"+fmt(netLoss,2)+" USDT";
+    } else {
+      $("rr").textContent="—"; $("rrBadge").textContent="";
+      $("netWin").textContent="—"; $("netLoss").textContent="−"+fmt(netLoss,2)+" USDT";
+    }
+
+    // ---- 护栏警告 ----
+    // 强平早于止损
+    if(isFinite(liq) && stop>0 && entry>0){
+      var liqBeforeStop = side==="long" ? (liq>=stop) : (liq<=stop);
+      if(liqBeforeStop){
+        alerts.push(["danger","⚠ 危险：当前杠杆下，强平价（"+fmt(liq,2)+"）会先于你的止损价（"+fmt(stop,2)+"）被触及——还没到止损就爆仓了！请降低杠杆。"]);
+      }
+    }
+    // 止损距离过小
+    if(stopDistPct>0 && stopDistPct<0.003){
+      alerts.push(["warn","止损距离过小（<0.3%），算出的仓位会非常大，请确认止损是否合理。"]);
+    }
+    // 保证金超出账户
+    if(margin>account && account>0){
+      alerts.push(["danger","所需保证金（"+fmt(margin,0)+"）超过账户总额，无法建立该仓位。请降低风险比例、放宽止损或提高杠杆。"]);
+    }
+    // 名义敞口过大
+    if(account>0 && notional>account*3){
+      alerts.push(["warn","名义敞口达到账户的 "+(notional/account).toFixed(1)+" 倍，极端行情下滑点风险较高，谨慎。"]);
+    }
+    // R:R 太低
+    if(isFinite(rr) && rr<1 && rr>0){
+      alerts.push(["warn","盈亏比小于 1，潜在亏损大于潜在盈利，通常不建议做这笔交易。"]);
+    }
+
+    var box=$("alerts"); box.innerHTML="";
+    var seriousCount = alerts.length; // 此前的都是 warn/danger
+    if(seriousCount===0 && qty>0){
+      alerts.push(["ok","✓ 这笔交易的风险已被控制在 "+fmt(riskAmt,0)+" USDT 以内（账户的 "+num("risk")+"%）。"]);
+    }
+    if(marginMode==="cross" && qty>0){
+      alerts.push(["info","全仓模式：强平价为「假设这是唯一持仓」的近似值，实际还受账户其他持仓与未实现盈亏影响。全仓爆仓可能损失整个账户。"]);
+    }
+    alerts.forEach(function(a){
+      var d=document.createElement("div");
+      d.className="alert "+a[0];
+      d.innerHTML='<span class="ico">'+(a[0]==="danger"?"🚫":a[0]==="ok"?"✅":a[0]==="info"?"ℹ️":"⚠️")+'</span><span>'+a[1]+'</span>';
+      box.appendChild(d);
+    });
+  }
+
+  // 事件绑定
+  ids.forEach(function(id){ $(id).addEventListener("input", calc); });
+  document.querySelectorAll("#side button").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      side = btn.dataset.side;
+      document.querySelectorAll("#side button").forEach(function(b){ b.classList.remove("active"); });
+      btn.classList.add("active");
+      calc();
+    });
+  });
+  document.querySelectorAll("#mode button").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      marginMode = btn.dataset.mode;
+      document.querySelectorAll("#mode button").forEach(function(b){ b.classList.remove("active"); });
+      btn.classList.add("active");
+      calc();
+    });
+  });
+
+  calc();
+})();
+</script>
+</body>
+</html>
