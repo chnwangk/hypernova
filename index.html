@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>HYPERNOVA · 加密仓位计算器</title>
 <meta name="description" content="风险驱动的加密合约仓位计算器，自动计算开仓数量、保证金、强平价与盈亏比。所有计算在本地完成，交易数据不上传。Risk-based crypto futures position size calculator." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%2322d3ee'/><stop offset='1' stop-color='%237c5cff'/></linearGradient></defs><rect width='32' height='32' rx='8' fill='%230a0a14'/><circle cx='16' cy='16' r='9' fill='url(%23g)'/><circle cx='16' cy='16' r='3.6' fill='%230a0a14'/></svg>" />
+<!-- 社交分享卡片 -->
+<meta property="og:title" content="HYPERNOVA · 加密仓位计算器" />
+<meta property="og:description" content="算该开多大仓 · 强平价预警 · 盈亏比，风险驱动、数据不上传的加密合约仓位计算器。" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://hypernova.vip/" />
+<meta property="og:image" content="https://hypernova.vip/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="HYPERNOVA · Crypto Position Calculator" />
+<meta name="twitter:description" content="Exact position size · liquidation alerts · R:R. Risk-based, nothing uploaded." />
+<meta name="twitter:image" content="https://hypernova.vip/og.png" />
 <style>
   :root{
     --bg:#0a0a14;
@@ -195,6 +206,51 @@
 
   footer{border-top:1px solid var(--line);margin-top:40px;padding:28px 0;color:var(--muted);font-size:13px}
   .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+
+  /* ---------- 美化 polish ---------- */
+  /* logo 微光呼吸 */
+  header .brand .logo{animation:novaPulse 3.6s ease-in-out infinite}
+  @keyframes novaPulse{
+    0%,100%{box-shadow:0 0 14px rgba(124,92,255,.55)}
+    50%{box-shadow:0 0 26px rgba(124,92,255,.9),0 0 44px rgba(34,211,238,.45)}
+  }
+  /* hero 漂浮星云 */
+  .hero{position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;width:440px;height:440px;border-radius:50%;
+    background:radial-gradient(circle,rgba(124,92,255,.20),transparent 70%);
+    top:-150px;left:50%;transform:translateX(-50%);filter:blur(8px);
+    animation:floatGlow 11s ease-in-out infinite;z-index:0;pointer-events:none}
+  .hero::after{content:"";position:absolute;width:300px;height:300px;border-radius:50%;
+    background:radial-gradient(circle,rgba(34,211,238,.12),transparent 70%);
+    bottom:-120px;right:6%;filter:blur(8px);
+    animation:floatGlow2 14s ease-in-out infinite;z-index:0;pointer-events:none}
+  .hero>*{position:relative;z-index:1}
+  @keyframes floatGlow{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-44%) translateY(24px)}}
+  @keyframes floatGlow2{0%,100%{transform:translateY(0)}50%{transform:translateY(-28px)}}
+  /* hero 入场动画 */
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  .hero .pill{animation:fadeUp .55s ease both}
+  .hero h1{animation:fadeUp .55s ease .08s both}
+  .hero p{animation:fadeUp .55s ease .16s both}
+  .hero .hero-btns{animation:fadeUp .55s ease .24s both}
+  /* 卡片悬停上浮 */
+  .fcard{transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease}
+  .fcard:hover{transform:translateY(-5px);border-color:rgba(124,92,255,.5);box-shadow:0 14px 32px rgba(124,92,255,.18)}
+  /* 滚动渐入 */
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease, transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+  .feat .fcard:nth-child(2){transition-delay:.08s}
+  .feat .fcard:nth-child(3){transition-delay:.16s}
+  /* 核心数字渐变高亮 */
+  #qty{
+    background:linear-gradient(120deg,var(--accent2),#b9a7ff);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 0 12px rgba(124,92,255,.35));
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important}
+    .reveal{opacity:1;transform:none}
+  }
 </style>
 </head>
 <body>
@@ -351,17 +407,17 @@
     <div class="sec-title">Why Hypernova</div>
     <div class="sec-h" data-i18n="feat_h">为什么用风险驱动模型</div>
     <div class="feat">
-      <div class="fcard">
+      <div class="fcard reveal">
         <div class="fi">🎯</div>
         <h4 data-i18n="feat1_t">先定亏损，再定仓位</h4>
         <p data-i18n="feat1_p">不靠感觉下注。先决定「这笔最多亏 1%」，再倒推该开多大仓——这是专业交易者的核心方法。</p>
       </div>
-      <div class="fcard">
+      <div class="fcard reveal">
         <div class="fi">🛡️</div>
         <h4 data-i18n="feat2_t">强平价提前预警</h4>
         <p data-i18n="feat2_p">杠杆太高时，还没到止损就先爆仓了。我们会算出强平价并在它早于你的止损时红色警告。</p>
       </div>
-      <div class="fcard">
+      <div class="fcard reveal">
         <div class="fi">⚖️</div>
         <h4 data-i18n="feat3_t">盈亏比一眼看清</h4>
         <p data-i18n="feat3_p">自动计算风险回报比（R:R），并提示这笔交易是否值得做（建议 ≥ 2）。</p>
@@ -375,7 +431,7 @@
   <div class="wrap">
     <div class="sec-title">About</div>
     <div class="sec-h" data-i18n="about_h">关于 HYPERNOVA</div>
-    <div class="about">
+    <div class="about reveal">
       <p data-i18n="about_p1">HYPERNOVA 是一个面向加密交易者的工具站，目标是把专业、可靠的交易工具做得人人都会用。</p>
       <p data-i18n="about_p2">仓位计算器是这里的第一个工具。未来还会加入更多帮助你做出更理性决策的功能。</p>
       <p style="color:var(--muted);font-size:13px;margin-bottom:0" data-i18n="about_p3">本站坚持：计算纯本地完成 · 不收集你的交易数据 · 不需要连接钱包。</p>
@@ -387,7 +443,7 @@
 <footer>
   <div class="wrap foot">
     <div class="brand"><div class="logo" style="width:24px;height:24px"></div><b style="font-size:15px">HYPER<span>NOVA</span></b></div>
-    <div data-i18n="footer">© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v1.6</div>
+    <div data-i18n="footer">© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v1.7</div>
   </div>
 </footer>
 
@@ -430,7 +486,7 @@
       about_p1:'HYPERNOVA 是一个面向加密交易者的工具站，目标是把专业、可靠的交易工具做得人人都会用。',
       about_p2:'仓位计算器是这里的第一个工具。未来还会加入更多帮助你做出更理性决策的功能。',
       about_p3:'本站坚持：计算纯本地完成 · 不收集你的交易数据 · 不需要连接钱包。',
-      footer:'© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v1.6'
+      footer:'© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v1.7'
     },
     en: {
       title:'HYPERNOVA · Crypto Position Calculator',
@@ -467,7 +523,7 @@
       about_p1:'HYPERNOVA is a toolkit for crypto traders, built to make professional, reliable trading tools that anyone can use.',
       about_p2:'The position calculator is the first tool here. More features to help you make rational decisions are coming.',
       about_p3:'Our principles: calculations stay local · we do not collect your trade data · no wallet connection required.',
-      footer:'© 2026 HYPERNOVA · For educational reference only, not investment advice · v1.6'
+      footer:'© 2026 HYPERNOVA · For educational reference only, not investment advice · v1.7'
     }
   };
 
@@ -699,6 +755,17 @@
   });
 
   applyI18n();
+
+  /* 滚动渐入 */
+  var rev = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, {threshold:0.12, rootMargin:'0px 0px -40px 0px'});
+    rev.forEach(function(el){ io.observe(el); });
+  } else {
+    rev.forEach(function(el){ el.classList.add('in'); });
+  }
 })();
 </script>
 </body>
