@@ -215,7 +215,7 @@
   .jform .jspan2{grid-column:1 / -1}
   .jbtn{width:100%;margin:4px 0 14px}
   #j_list{display:flex;flex-direction:column}
-  .jtrade{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px dashed rgba(38,42,71,.7);font-size:13.5px}
+  .jtrade{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px dashed rgba(38,42,71,.7);font-size:13.5px}
   .jtrade:last-child{border-bottom:none}
   .jtrade .jt-date{color:var(--muted);font-size:12px;min-width:62px}
   .jtrade .jt-sym{font-weight:700;min-width:40px}
@@ -230,6 +230,17 @@
   .jempty{color:var(--muted);text-align:center;padding:24px 0;font-size:14px}
   .jchart-label{color:var(--muted);font-size:13px;margin:18px 0 8px;font-weight:600}
   #j_chart{width:100%;height:150px;display:block}
+  .jtools{display:flex;gap:10px;margin-top:16px}
+  .jtool-btn{flex:1;background:var(--bg);border:1px solid var(--line);color:var(--muted);padding:9px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;transition:.15s}
+  .jtool-btn:hover{color:var(--text);border-color:var(--accent)}
+  .jtrade .jt-note{flex-basis:100%;color:#6f74a0;font-size:12px;padding:2px 0 0 0}
+  .jt-edit{background:none;border:none;color:#5d6288;cursor:pointer;font-size:13px;padding:2px 4px;border-radius:6px;transition:.15s}
+  .jt-edit:hover{color:var(--accent2);background:rgba(34,211,238,.1)}
+  #j_list{max-height:340px;overflow-y:auto;margin-top:4px}
+  /* 计算器：价格结构可视化 */
+  .viz-label{color:var(--muted);font-size:13px;margin:18px 0 6px;font-weight:600}
+  #tradeViz{width:100%;height:70px;display:block}
+  .tojournal-btn{width:100%;margin-top:14px}
 
   /* ---------- 美化 polish ---------- */
   /* logo 微光呼吸 */
@@ -335,6 +346,11 @@
           </div>
         </div>
 
+        <div class="field">
+          <label data-i18n="label_symbol">标的 <span class="hint">（可选，如 BTC）</span></label>
+          <div class="input-wrap"><input type="text" id="symbol" placeholder="BTC"></div>
+        </div>
+
         <div class="two">
           <div class="field">
             <label data-i18n="label_side">方向</label>
@@ -414,7 +430,12 @@
           <div class="row"><span class="k" data-i18n="row_netloss">止损触发 · 净亏损</span><span class="v red" id="netLoss">—</span></div>
         </div>
 
+        <div class="viz-label" id="vizLabel" data-i18n="viz_label" style="display:none">价格结构</div>
+        <canvas id="tradeViz" height="70" style="display:none"></canvas>
+
         <div id="alerts"></div>
+
+        <button class="btn btn-ghost tojournal-btn" id="toJournal" data-i18n="to_journal" style="display:none">记录到日志 ↓</button>
       </div>
     </div>
 
@@ -448,6 +469,7 @@
           <div class="field jspan2"><label data-i18n="j_note">备注（可选）</label><input type="text" id="j_note"></div>
         </div>
         <button class="btn btn-primary jbtn" id="j_add" data-i18n="j_add_btn">添加交易</button>
+        <button class="btn btn-ghost jbtn" id="j_cancel" data-i18n="j_cancel" style="display:none">取消编辑</button>
         <div id="j_list"></div>
       </div>
 
@@ -461,11 +483,19 @@
           <div class="row"><span class="k" data-i18n="jr_avgwin">平均盈利</span><span class="v green" id="jr_avgwin">—</span></div>
           <div class="row"><span class="k" data-i18n="jr_avgloss">平均亏损</span><span class="v red" id="jr_avgloss">—</span></div>
           <div class="row"><span class="k" data-i18n="jr_pf">盈利因子</span><span class="v" id="jr_pf">—</span></div>
+          <div class="row"><span class="k" data-i18n="jr_streak">最大连胜 / 连亏</span><span class="v" id="jr_streak">—</span></div>
+          <div class="row"><span class="k" data-i18n="jr_best">最佳交易</span><span class="v green" id="jr_best">—</span></div>
+          <div class="row"><span class="k" data-i18n="jr_worst">最差交易</span><span class="v red" id="jr_worst">—</span></div>
           <div class="row"><span class="k" data-i18n="jr_totalpnl">累计盈亏</span><span class="v" id="jr_totalpnl">—</span></div>
           <div class="row"><span class="k" data-i18n="jr_maxdd">最大回撤</span><span class="v red" id="jr_maxdd">—</span></div>
         </div>
         <div class="jchart-label" data-i18n="j_equity">资金曲线（累计盈亏）</div>
         <canvas id="j_chart" height="150"></canvas>
+        <div class="jtools">
+          <button class="jtool-btn" id="j_export" data-i18n="j_export">导出备份</button>
+          <button class="jtool-btn" id="j_import" data-i18n="j_import">导入</button>
+          <input type="file" id="j_file" accept="application/json,.json" style="display:none">
+        </div>
       </div>
     </div>
   </div>
@@ -513,7 +543,7 @@
 <footer>
   <div class="wrap foot">
     <div class="brand"><div class="logo" style="width:24px;height:24px"></div><b style="font-size:15px">HYPER<span>NOVA</span></b></div>
-    <div data-i18n="footer">© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v1.8</div>
+    <div data-i18n="footer">© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v1.9</div>
   </div>
 </footer>
 
@@ -556,7 +586,7 @@
       about_p1:'HYPERNOVA 是一个面向加密交易者的工具站，目标是把专业、可靠的交易工具做得人人都会用。',
       about_p2:'仓位计算器是这里的第一个工具。未来还会加入更多帮助你做出更理性决策的功能。',
       about_p3:'本站坚持：计算纯本地完成 · 不收集你的交易数据 · 不需要连接钱包。',
-      footer:'© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v1.8',
+      footer:'© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v1.9',
       nav_journal:'交易日志',
       journal_h:'交易复盘日志',
       journal_intro:'记录每笔已结束的交易，自动算出你的真实胜率、期望值和资金曲线。盈亏比是交易结束后才知道的——这里用「R 倍数」衡量。数据只存在你的浏览器本地，不上传。',
@@ -569,7 +599,12 @@
       jr_total:'总交易数', jr_winrate:'真实胜率', jr_expectancy:'期望值 / 笔',
       jr_avgwin:'平均盈利', jr_avgloss:'平均亏损', jr_pf:'盈利因子',
       jr_totalpnl:'累计盈亏', jr_maxdd:'最大回撤',
-      j_equity:'资金曲线（累计盈亏）'
+      jr_streak:'最大连胜 / 连亏', jr_best:'最佳交易', jr_worst:'最差交易',
+      j_equity:'资金曲线（累计盈亏）',
+      j_cancel:'取消编辑', j_export:'导出备份', j_import:'导入',
+      label_symbol:'标的 <span class="hint">（可选，如 BTC）</span>',
+      viz_label:'价格结构（入场 / 止损 / 止盈 / 强平）',
+      to_journal:'记录到日志 ↓'
     },
     en: {
       title:'HYPERNOVA · Crypto Position Calculator',
@@ -606,7 +641,7 @@
       about_p1:'HYPERNOVA is a toolkit for crypto traders, built to make professional, reliable trading tools that anyone can use.',
       about_p2:'The position calculator is the first tool here. More features to help you make rational decisions are coming.',
       about_p3:'Our principles: calculations stay local · we do not collect your trade data · no wallet connection required.',
-      footer:'© 2026 HYPERNOVA · For educational reference only, not investment advice · v1.8',
+      footer:'© 2026 HYPERNOVA · For educational reference only, not investment advice · v1.9',
       nav_journal:'Journal',
       journal_h:'Trade Journal',
       journal_intro:'Log every closed trade and see your real win rate, expectancy and equity curve. Your R:R is only known after a trade closes — here it is measured as an R-multiple. Data stays in your browser, never uploaded.',
@@ -619,7 +654,12 @@
       jr_total:'Total trades', jr_winrate:'Win rate', jr_expectancy:'Expectancy / trade',
       jr_avgwin:'Avg win', jr_avgloss:'Avg loss', jr_pf:'Profit factor',
       jr_totalpnl:'Total P/L', jr_maxdd:'Max drawdown',
-      j_equity:'Equity curve (cumulative P/L)'
+      jr_streak:'Max win / loss streak', jr_best:'Best trade', jr_worst:'Worst trade',
+      j_equity:'Equity curve (cumulative P/L)',
+      j_cancel:'Cancel edit', j_export:'Export', j_import:'Import',
+      label_symbol:'Symbol <span class="hint">(optional, e.g. BTC)</span>',
+      viz_label:'Price map (entry / stop / target / liq.)',
+      to_journal:'Log this trade ↓'
     }
   };
 
@@ -641,7 +681,12 @@
       crossNote:"全仓模式：强平价为「假设这是唯一持仓」的近似值，实际还受账户其他持仓与未实现盈亏影响。全仓爆仓可能损失整个账户。",
       jConfirmDel:"确定删除这笔交易记录吗？",
       jEmpty:"还没有记录，在上方添加你的第一笔交易吧。",
-      jWinLoss:function(w,l){ return "（"+w+" 胜 / "+l+" 负）"; }
+      jWinLoss:function(w,l){ return "（"+w+" 胜 / "+l+" 负）"; },
+      jStreakVal:function(w,l){ return w+" 连胜 / "+l+" 连亏"; },
+      jImportOk:function(n){ return "成功导入 "+n+" 笔交易。"; },
+      jImportErr:"导入失败：文件格式不正确。",
+      jSaveEdit:"保存修改",
+      vizNames:{entry:"入场",stop:"止损",target:"止盈",liq:"强平"}
     },
     en: {
       liqSafe:"Very low · safe from liquidation",
@@ -659,7 +704,12 @@
       crossNote:"Cross margin: the liquidation price assumes this is your only position; it is also affected by other positions and unrealized PnL. A cross liquidation can wipe out the whole account.",
       jConfirmDel:"Delete this trade?",
       jEmpty:"No trades yet — add your first one above.",
-      jWinLoss:function(w,l){ return "("+w+"W / "+l+"L)"; }
+      jWinLoss:function(w,l){ return "("+w+"W / "+l+"L)"; },
+      jStreakVal:function(w,l){ return w+"W / "+l+"L"; },
+      jImportOk:function(n){ return "Imported "+n+" trades."; },
+      jImportErr:"Import failed: invalid file format.",
+      jSaveEdit:"Save changes",
+      vizNames:{entry:"Entry",stop:"Stop",target:"Target",liq:"Liq."}
     }
   };
 
@@ -697,6 +747,40 @@
     if(n>=1) return fmt(n,3);
     if(n>=0.01) return fmt(n,4);
     return fmt(n,6);
+  }
+
+  // 价格结构可视化（入场/止损/止盈/强平）
+  function drawTradeViz(o){
+    var cv=$("tradeViz"); if(!cv) return;
+    var ctx=cv.getContext("2d");
+    var cssW=cv.clientWidth||320, cssH=70, dpr=window.devicePixelRatio||1;
+    cv.width=cssW*dpr; cv.height=cssH*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,cssW,cssH);
+
+    var pts=[{k:'entry',v:o.entry,c:'#e7e9f5'},{k:'stop',v:o.stop,c:'#fb7185'}];
+    if(o.target>0) pts.push({k:'target',v:o.target,c:'#34d399'});
+    if(isFinite(o.liq)&&o.liq>0&&!o.liqImpossible) pts.push({k:'liq',v:o.liq,c:'#fbbf24'});
+    var vals=pts.map(function(p){return p.v;});
+    var min=Math.min.apply(null,vals), max=Math.max.apply(null,vals);
+    if(min===max){ min*=0.99; max*=1.01; }
+    var rng=(max-min)||1, pad=rng*0.14; min-=pad; max+=pad; rng=max-min;
+    var padX=12, w=cssW-padX*2, barY=34, barH=8;
+    function X(v){ return padX + ((v-min)/rng)*w; }
+
+    ctx.fillStyle="rgba(139,144,181,.15)"; ctx.fillRect(padX,barY,w,barH);
+    var xe=X(o.entry), xs=X(o.stop);
+    ctx.fillStyle="rgba(251,113,133,.35)"; ctx.fillRect(Math.min(xe,xs),barY,Math.abs(xe-xs),barH);
+    if(o.target>0){ var xt=X(o.target); ctx.fillStyle="rgba(52,211,153,.35)"; ctx.fillRect(Math.min(xe,xt),barY,Math.abs(xe-xt),barH); }
+
+    ctx.textAlign="center"; ctx.font="11px -apple-system,BlinkMacSystemFont,sans-serif";
+    pts.forEach(function(p){
+      var x=X(p.v), px=Math.max(18,Math.min(cssW-18,x));
+      ctx.strokeStyle=p.c; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(x,barY-5); ctx.lineTo(x,barY+barH+5); ctx.stroke();
+      ctx.fillStyle=p.c; ctx.beginPath(); ctx.arc(x,barY+barH/2,3.5,0,7); ctx.fill();
+      var above=(p.k==='entry'||p.k==='target');
+      ctx.fillText(o.names[p.k], px, above?barY-9:barY+barH+18);
+    });
   }
 
   var side = "long";
@@ -763,7 +847,8 @@
     var ready = account>0 && entry>0 && stop>0 && !dirInvalid;
 
     // ---- 渲染 ----
-    $("qty").textContent = ready ? fmtQty(qty) : "—";
+    var _sym=($("symbol").value||"").trim().toUpperCase();
+    $("qty").textContent = ready ? (fmtQty(qty)+(_sym?(" "+_sym):"")) : "—";
     $("notional").textContent = ready ? fmt(notional,0) : "—";
     $("riskAmt").textContent = account>0 ? fmt(riskAmt,2)+" USDT" : "—";
     $("stopDist").textContent = (entry>0 && stop>0) ? (stopDistPct*100).toFixed(2)+"%" : "—";
@@ -831,10 +916,39 @@
       d.appendChild(span1); d.appendChild(span2);
       box.appendChild(d);
     });
+
+    // 可视化 + 记录到日志按钮
+    $("tradeViz").style.display = ready ? "block" : "none";
+    $("vizLabel").style.display = ready ? "block" : "none";
+    $("toJournal").style.display = ready ? "block" : "none";
+    if(ready) drawTradeViz({entry:entry,stop:stop,target:target,liq:liq,liqImpossible:liqImpossible,names:M.vizNames});
+  }
+
+  /* ---------- 记住常用输入 ---------- */
+  var PREF_KEY='hn_calc_prefs';
+  function savePrefs(){
+    try{ localStorage.setItem(PREF_KEY, JSON.stringify({
+      account:$("account").value, risk:$("risk").value, lev:$("lev").value,
+      fee:$("fee").value, mmr:$("mmr").value, mode:marginMode
+    })); }catch(e){}
+  }
+  function restorePrefs(){
+    var p; try{ p=JSON.parse(localStorage.getItem(PREF_KEY)||'null'); }catch(e){ p=null; }
+    if(!p) return;
+    if(p.account) $("account").value=p.account;
+    if(p.risk) $("risk").value=p.risk;
+    if(p.lev) $("lev").value=p.lev;
+    if(p.fee) $("fee").value=p.fee;
+    if(p.mmr) $("mmr").value=p.mmr;
+    if(p.mode==="isolated"||p.mode==="cross"){
+      marginMode=p.mode;
+      document.querySelectorAll("#mode button").forEach(function(b){ b.classList.toggle("active", b.dataset.mode===p.mode); });
+    }
   }
 
   /* ---------- 事件绑定 ---------- */
-  ids.forEach(function(id){ $(id).addEventListener("input", calc); });
+  ids.forEach(function(id){ $(id).addEventListener("input", function(){ calc(); savePrefs(); }); });
+  $("symbol").addEventListener("input", calc);
   document.querySelectorAll("#side button").forEach(function(btn){
     btn.addEventListener("click", function(){
       side = btn.dataset.side;
@@ -848,9 +962,22 @@
       marginMode = btn.dataset.mode;
       document.querySelectorAll("#mode button").forEach(function(b){ b.classList.remove("active"); });
       btn.classList.add("active");
-      calc();
+      calc(); savePrefs();
     });
   });
+
+  // 计算器 →（一键带入）→ 日志
+  $("toJournal").addEventListener("click", function(){
+    var account=num("account"), riskAmt=account*(num("risk")/100);
+    var sym=($("symbol").value||"").trim().toUpperCase();
+    if(sym) $("j_symbol").value=sym;
+    $("j_side").value = side;
+    if(riskAmt>0) $("j_risk").value = Math.round(riskAmt*100)/100;
+    renderJournal();
+    document.getElementById('journal').scrollIntoView({behavior:'smooth'});
+    setTimeout(function(){ $("j_pnl").focus(); }, 400);
+  });
+
   $("langToggle").addEventListener("click", function(){
     LANG = (LANG==='zh') ? 'en' : 'zh';
     try { localStorage.setItem('hn_lang', LANG); } catch(e){}
@@ -865,22 +992,77 @@
   function fmtR(r){ return (r>=0?"+":"−")+Math.abs(r).toFixed(2)+"R"; }
   function fmtSigned(n){ return (n>=0?"+":"−")+fmt(Math.abs(n),2); }
 
+  var editingId=null;
+  function updateFormMode(){
+    if(editingId!==null){ $("j_add").textContent=MSG[LANG].jSaveEdit; $("j_cancel").style.display="block"; }
+    else { $("j_add").textContent=T[LANG].j_add_btn; $("j_cancel").style.display="none"; }
+  }
   function addTrade(){
     var risk = parseFloat($("j_risk").value);
     var pnl = parseFloat($("j_pnl").value);
     if(isNaN(risk) || risk<=0){ $("j_risk").focus(); return; }
     if(isNaN(pnl)){ $("j_pnl").focus(); return; }
-    trades.push({
-      id: Date.now()+Math.floor(Math.random()*1000),
+    var data={
       date: $("j_date").value || "",
       symbol: ($("j_symbol").value||"").trim().toUpperCase().slice(0,12),
       side: $("j_side").value,
       risk: risk, pnl: pnl,
       note: ($("j_note").value||"").trim().slice(0,140)
-    });
+    };
+    if(editingId!==null){
+      for(var i=0;i<trades.length;i++){ if(trades[i].id===editingId){ data.id=editingId; trades[i]=data; break; } }
+      editingId=null;
+    } else {
+      data.id=Date.now()+Math.floor(Math.random()*1000);
+      trades.push(data);
+    }
     saveTrades();
     $("j_pnl").value=""; $("j_note").value="";   // 保留日期/标的/风险，方便连续录入
     renderJournal();
+  }
+  function editTrade(id){
+    var t=null; for(var i=0;i<trades.length;i++){ if(trades[i].id===id){ t=trades[i]; break; } }
+    if(!t) return;
+    $("j_date").value=t.date||""; $("j_symbol").value=t.symbol||"";
+    $("j_side").value=t.side||"long"; $("j_risk").value=t.risk; $("j_pnl").value=t.pnl;
+    $("j_note").value=t.note||"";
+    editingId=id; updateFormMode();
+    $("j_risk").scrollIntoView({behavior:'smooth',block:'center'});
+  }
+  function cancelEdit(){ editingId=null; $("j_pnl").value=""; $("j_note").value=""; updateFormMode(); }
+
+  function exportTrades(){
+    var data=JSON.stringify({app:"hypernova-journal",version:1,trades:trades},null,2);
+    var blob=new Blob([data],{type:"application/json"});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement("a"); a.href=url; a.download="hypernova-journal.json";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+  function importTrades(file){
+    var reader=new FileReader();
+    reader.onload=function(e){
+      try{
+        var obj=JSON.parse(e.target.result);
+        var arr=Array.isArray(obj)?obj:(obj&&Array.isArray(obj.trades)?obj.trades:null);
+        if(!arr) throw 0;
+        var seen={}; trades.forEach(function(t){ seen[t.id]=true; });
+        var added=0;
+        arr.forEach(function(t){
+          if(!t || typeof t.risk==="undefined" || typeof t.pnl==="undefined") return;
+          if(t.id && seen[t.id]) return;   // 已存在，跳过（避免重复）
+          var id = t.id || (Date.now()+Math.floor(Math.random()*100000));
+          seen[id]=true;
+          trades.push({ id:id, date:(t.date||"").toString(), symbol:(t.symbol||"").toString().slice(0,12),
+            side:(t.side==="short"?"short":"long"), risk:Number(t.risk)||0, pnl:Number(t.pnl)||0,
+            note:(t.note||"").toString().slice(0,140) });
+          added++;
+        });
+        saveTrades(); renderJournal();
+        window.alert(MSG[LANG].jImportOk(added));
+      }catch(err){ window.alert(MSG[LANG].jImportErr); }
+    };
+    reader.readAsText(file);
   }
 
   function deleteTrade(id){
@@ -893,11 +1075,15 @@
   function computeStats(){
     var n=trades.length, wins=0, losses=0, sumR=0, sumWinR=0, sumLossR=0, winCount=0, lossCount=0;
     var grossWin=0, grossLoss=0, totalPnl=0;
+    var curWin=0, curLoss=0, maxWinStreak=0, maxLossStreak=0, bestR=null, worstR=null;
     trades.forEach(function(t){
       var r = t.risk>0 ? t.pnl/t.risk : 0;
       sumR += r; totalPnl += t.pnl;
-      if(t.pnl>0){ wins++; winCount++; sumWinR+=r; grossWin+=t.pnl; }
-      else if(t.pnl<0){ losses++; lossCount++; sumLossR+=r; grossLoss+=Math.abs(t.pnl); }
+      if(bestR===null||r>bestR) bestR=r;
+      if(worstR===null||r<worstR) worstR=r;
+      if(t.pnl>0){ wins++; winCount++; sumWinR+=r; grossWin+=t.pnl; curWin++; curLoss=0; if(curWin>maxWinStreak)maxWinStreak=curWin; }
+      else if(t.pnl<0){ losses++; lossCount++; sumLossR+=r; grossLoss+=Math.abs(t.pnl); curLoss++; curWin=0; if(curLoss>maxLossStreak)maxLossStreak=curLoss; }
+      else { curWin=0; curLoss=0; }
     });
     return {
       n:n, wins:wins, losses:losses,
@@ -906,7 +1092,9 @@
       avgWinR: winCount>0 ? sumWinR/winCount : 0,
       avgLossR: lossCount>0 ? sumLossR/lossCount : 0,
       profitFactor: grossLoss>0 ? grossWin/grossLoss : (grossWin>0?Infinity:0),
-      totalPnl: totalPnl
+      totalPnl: totalPnl,
+      maxWinStreak:maxWinStreak, maxLossStreak:maxLossStreak,
+      bestR: bestR===null?0:bestR, worstR: worstR===null?0:worstR
     };
   }
 
@@ -954,7 +1142,7 @@
     var M = MSG[LANG], none="—";
     var s = computeStats();
     if(s.n===0){
-      ["jr_total","jr_winrate","jr_expectancy","jr_avgwin","jr_avgloss","jr_pf","jr_totalpnl","jr_maxdd"]
+      ["jr_total","jr_winrate","jr_expectancy","jr_avgwin","jr_avgloss","jr_pf","jr_streak","jr_best","jr_worst","jr_totalpnl","jr_maxdd"]
         .forEach(function(id){ if($(id)) $(id).textContent=none; });
       $("jr_totalpnl").className="v";
     } else {
@@ -964,6 +1152,9 @@
       $("jr_avgwin").textContent = s.wins>0 ? fmtR(s.avgWinR) : none;
       $("jr_avgloss").textContent = s.losses>0 ? fmtR(s.avgLossR) : none;
       $("jr_pf").textContent = (s.profitFactor===Infinity) ? "∞" : s.profitFactor.toFixed(2);
+      $("jr_streak").textContent = M.jStreakVal(s.maxWinStreak, s.maxLossStreak);
+      $("jr_best").textContent = fmtR(s.bestR);
+      $("jr_worst").textContent = fmtR(s.worstR);
       $("jr_totalpnl").textContent = fmtSigned(s.totalPnl)+" USDT";
       $("jr_totalpnl").className = "v " + (s.totalPnl>=0?"green":"red");
     }
@@ -982,12 +1173,17 @@
         row.appendChild(jspan(t.side==="short"?"jt-side-short":"jt-side-long", sideTxt));
         row.appendChild(jspan("jt-r "+(win?"green":"red"), fmtR(r)));
         row.appendChild(jspan("jt-pnl "+(win?"green":"red"), fmtSigned(t.pnl)));
+        var ed=document.createElement("button"); ed.className="jt-edit"; ed.textContent="✎";
+        ed.addEventListener("click", function(){ editTrade(t.id); });
+        row.appendChild(ed);
         var del=document.createElement("button"); del.className="jdel"; del.textContent="✕";
         del.addEventListener("click", function(){ deleteTrade(t.id); });
         row.appendChild(del);
+        if(t.note) row.appendChild(jspan("jt-note", t.note));
         list.appendChild(row);
       });
     }
+    updateFormMode();
     drawEquityChart();
   }
 
@@ -997,9 +1193,14 @@
     if($("j_date") && !$("j_date").value) $("j_date").value = d.getFullYear()+"-"+mm+"-"+dd;
   })();
   $("j_add").addEventListener("click", addTrade);
+  $("j_cancel").addEventListener("click", cancelEdit);
   $("j_pnl").addEventListener("keypress", function(e){ if(e.key==="Enter") addTrade(); });
-  window.addEventListener("resize", drawEquityChart);
+  $("j_export").addEventListener("click", exportTrades);
+  $("j_import").addEventListener("click", function(){ $("j_file").click(); });
+  $("j_file").addEventListener("change", function(e){ if(e.target.files&&e.target.files[0]){ importTrades(e.target.files[0]); e.target.value=""; } });
+  window.addEventListener("resize", function(){ calc(); drawEquityChart(); });
 
+  restorePrefs();
   applyI18n();
 
   /* 滚动渐入 */
