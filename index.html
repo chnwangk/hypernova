@@ -381,7 +381,7 @@
 <footer>
   <div class="wrap foot">
     <div class="brand"><div class="logo" style="width:24px;height:24px"></div><b style="font-size:15px">HYPER<span>NOVA</span></b></div>
-    <div>© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v1.2</div>
+    <div>© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v1.3</div>
   </div>
 </footer>
 
@@ -425,10 +425,13 @@
     var stopDistAbs = Math.abs(entry - stop);
     var stopDistPct = entry>0 ? stopDistAbs/entry : 0;
 
-    // 方向合理性检查
-    if(entry>0 && stop>0){
-      if(side==="long" && stop>=entry) alerts.push(["warn","做多时止损价应低于入场价，请检查。"]);
-      if(side==="short" && stop<=entry) alerts.push(["warn","做空时止损价应高于入场价，请检查。"]);
+    // 方向是否设反（做多止损应在入场下方，做空止损应在入场上方）
+    var dirInvalid = entry>0 && stop>0 && ((side==="long" && stop>=entry) || (side==="short" && stop<=entry));
+    if(dirInvalid){
+      if(side==="long")
+        alerts.push(["danger","方向搞反了：做多的止损必须设在入场价【下方】。你把止损设在了上方——那其实是止盈，不是止损。请检查方向或价格。"]);
+      else
+        alerts.push(["danger","方向搞反了：做空的止损必须设在入场价【上方】。你把止损设在了下方——那其实是止盈，不是止损。请检查方向或价格。"]);
     }
 
     var notional=0, qty=0, margin=0;
@@ -468,8 +471,8 @@
     var netWin = reward - feeAmt;
     var netLoss = riskAmt + feeAmt;
 
-    // 是否已填齐核心输入（账户/入场/止损），否则结果区显示 —
-    var ready = account>0 && entry>0 && stop>0;
+    // 是否已填齐核心输入且方向正确，否则结果区显示 —
+    var ready = account>0 && entry>0 && stop>0 && !dirInvalid;
 
     // ---- 渲染 ----
     $("qty").textContent = ready ? fmtQty(qty) : "—";
@@ -499,18 +502,18 @@
 
     // ---- 护栏警告 ----
     // 强平早于止损
-    if(isFinite(liq) && stop>0 && entry>0){
+    if(ready && isFinite(liq)){
       var liqBeforeStop = side==="long" ? (liq>=stop) : (liq<=stop);
       if(liqBeforeStop){
         alerts.push(["danger","⚠ 危险：当前杠杆下，强平价（"+fmt(liq,2)+"）会先于你的止损价（"+fmt(stop,2)+"）被触及——还没到止损就爆仓了！请降低杠杆。"]);
       }
     }
     // 止损距离过小
-    if(stopDistPct>0 && stopDistPct<0.003){
+    if(ready && stopDistPct>0 && stopDistPct<0.003){
       alerts.push(["warn","止损距离过小（<0.3%），算出的仓位会非常大，请确认止损是否合理。"]);
     }
     // 保证金超出账户
-    if(margin>account && account>0){
+    if(ready && margin>account){
       alerts.push(["danger","所需保证金（"+fmt(margin,0)+"）超过账户总额，无法建立该仓位。请降低风险比例、放宽止损或提高杠杆。"]);
     }
     // 单笔风险比例过高（直接点出根因）
@@ -521,20 +524,20 @@
       alerts.push(["warn","单笔风险比例 "+riskShown+"% 远高于建议的 1%–2%，单笔亏损过大，建议降低。"]);
     }
     // 名义敞口过大
-    if(account>0 && notional>account*3){
+    if(ready && notional>account*3){
       alerts.push(["warn","名义敞口达到账户的 "+(notional/account).toFixed(1)+" 倍，极端行情下滑点风险较高，谨慎。"]);
     }
     // R:R 太低
-    if(isFinite(rr) && rr<1 && rr>0){
+    if(ready && isFinite(rr) && rr<1 && rr>0){
       alerts.push(["warn","盈亏比小于 1，潜在亏损大于潜在盈利，通常不建议做这笔交易。"]);
     }
 
     var box=$("alerts"); box.innerHTML="";
     var seriousCount = alerts.length; // 此前的都是 warn/danger
-    if(seriousCount===0 && qty>0){
+    if(seriousCount===0 && ready){
       alerts.push(["ok","✓ 这笔交易的风险已被控制在 "+fmt(riskAmt,0)+" USDT 以内（账户的 "+num("risk")+"%）。"]);
     }
-    if(marginMode==="cross" && qty>0){
+    if(marginMode==="cross" && ready){
       alerts.push(["info","全仓模式：强平价为「假设这是唯一持仓」的近似值，实际还受账户其他持仓与未实现盈亏影响。全仓爆仓可能损失整个账户。"]);
     }
     alerts.forEach(function(a){
