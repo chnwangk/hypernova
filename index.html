@@ -152,7 +152,10 @@
 
   .lev-row{display:flex;align-items:center;gap:12px}
   .lev-row input[type=range]{flex:1;accent-color:var(--accent)}
-  .lev-val{min-width:56px;text-align:right;font-weight:800;color:var(--accent2)}
+  .lev-num{display:flex;align-items:center;gap:3px;flex-shrink:0}
+  .lev-num input{width:54px;text-align:center;padding:7px 6px;font-size:15px;font-weight:800;color:var(--accent2);background:var(--bg);border:1px solid var(--line);border-radius:8px}
+  .lev-num input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,.18);outline:none}
+  .lev-num span{color:var(--accent2);font-weight:800;font-size:14px}
 
   .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
@@ -398,7 +401,7 @@
           <label data-i18n="label_lev">杠杆倍数</label>
           <div class="lev-row">
             <input type="range" id="lev" min="1" max="100" value="10" step="1">
-            <span class="lev-val" id="levVal">10x</span>
+            <div class="lev-num"><input type="number" id="levInput" min="1" max="100" value="10"><span>x</span></div>
           </div>
         </div>
 
@@ -557,7 +560,7 @@
 <footer>
   <div class="wrap foot">
     <div class="brand"><div class="logo" style="width:24px;height:24px"></div><b style="font-size:15px">HYPER<span>NOVA</span></b></div>
-    <div data-i18n="footer">© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v2.0</div>
+    <div data-i18n="footer">© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v2.1</div>
   </div>
 </footer>
 
@@ -600,7 +603,7 @@
       about_p1:'HYPERNOVA 是一个面向加密交易者的工具站，目标是把专业、可靠的交易工具做得人人都会用。',
       about_p2:'仓位计算器是这里的第一个工具。未来还会加入更多帮助你做出更理性决策的功能。',
       about_p3:'本站坚持：计算纯本地完成 · 不收集你的交易数据 · 不需要连接钱包。',
-      footer:'© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v2.0',
+      footer:'© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v2.1',
       nav_journal:'交易日志',
       journal_h:'交易复盘日志',
       journal_intro:'记录每笔已结束的交易，自动算出你的真实胜率、期望值和资金曲线。盈亏比是交易结束后才知道的——这里用「R 倍数」衡量。数据只存在你的浏览器本地，不上传。',
@@ -656,7 +659,7 @@
       about_p1:'HYPERNOVA is a toolkit for crypto traders, built to make professional, reliable trading tools that anyone can use.',
       about_p2:'The position calculator is the first tool here. More features to help you make rational decisions are coming.',
       about_p3:'Our principles: calculations stay local · we do not collect your trade data · no wallet connection required.',
-      footer:'© 2026 HYPERNOVA · For educational reference only, not investment advice · v2.0',
+      footer:'© 2026 HYPERNOVA · For educational reference only, not investment advice · v2.1',
       nav_journal:'Journal',
       journal_h:'Trade Journal',
       journal_intro:'Log every closed trade and see your real win rate, expectancy and equity curve. Your R:R is only known after a trade closes — here it is measured as an R-multiple. Data stays in your browser, never uploaded.',
@@ -697,7 +700,7 @@
       crossNote:"全仓模式：强平价为「假设这是唯一持仓」的近似值，实际还受账户其他持仓与未实现盈亏影响。全仓爆仓可能损失整个账户。",
       jConfirmDel:"确定删除这笔交易记录吗？",
       jEmpty:"还没有记录，在上方添加你的第一笔交易吧。",
-      jWinLoss:function(w,l){ return "（"+w+" 胜 / "+l+" 负）"; },
+      jWinLoss:function(w,l,e){ return "（"+w+" 胜 / "+l+" 负"+(e>0?(" / "+e+" 平"):"")+"）"; },
       jStreakVal:function(w,l){ return w+" 连胜 / "+l+" 连亏"; },
       jImportOk:function(n){ return "成功导入 "+n+" 笔交易。"; },
       jImportErr:"导入失败：文件格式不正确。",
@@ -724,7 +727,7 @@
       crossNote:"Cross margin: the liquidation price assumes this is your only position; it is also affected by other positions and unrealized PnL. A cross liquidation can wipe out the whole account.",
       jConfirmDel:"Delete this trade?",
       jEmpty:"No trades yet — add your first one above.",
-      jWinLoss:function(w,l){ return "("+w+"W / "+l+"L)"; },
+      jWinLoss:function(w,l,e){ return "("+w+"W / "+l+"L"+(e>0?(" / "+e+"BE"):"")+")"; },
       jStreakVal:function(w,l){ return w+"W / "+l+"L"; },
       jImportOk:function(n){ return "Imported "+n+" trades."; },
       jImportErr:"Import failed: invalid file format.",
@@ -771,6 +774,14 @@
     if(n>=1) return fmt(n,3);
     if(n>=0.01) return fmt(n,4);
     return fmt(n,6);
+  }
+  // 智能价格格式：低价币(meme)也能显示足够小数位
+  function fmtPx(v){
+    if(!isFinite(v)) return "—";
+    var a=Math.abs(v);
+    if(a===0) return "0";
+    var dec = a>=100?2 : a>=1?4 : a>=0.01?6 : a>=0.0001?8 : 10;
+    return v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:dec});
   }
 
   // 价格结构可视化（入场/止损/止盈/强平）
@@ -854,8 +865,6 @@
     var feePct  = num("fee")/100;
     var mmr     = num("mmr")/100;
 
-    $("levVal").textContent = lev + "x";
-
     var alerts = [];
 
     var riskAmt = account * riskPct;
@@ -911,11 +920,11 @@
     $("notional").textContent = ready ? fmt(notional,0) : "—";
     $("riskAmt").textContent = account>0 ? fmt(riskAmt,2)+" USDT" : "—";
     $("stopDist").textContent = (entry>0 && stop>0) ? (stopDistPct*100).toFixed(2)+"%" : "—";
-    $("margin").textContent = ready ? fmt(margin,2)+" USDT" : "—";
+    $("margin").textContent = ready ? (fmt(margin,2)+" USDT"+(account>0?(" ("+(margin/account*100).toFixed(0)+"%)"):"")) : "—";
     if(liqImpossible){
       $("liq").textContent = M.liqSafe;
     } else {
-      $("liq").textContent = (ready && isFinite(liq)&&liq>0) ? fmt(liq, entry>=100?2:4) : "—";
+      $("liq").textContent = (ready && isFinite(liq)&&liq>0) ? fmtPx(liq) : "—";
     }
     $("feeAmt").textContent = (ready && feeAmt>0) ? fmt(feeAmt,2)+" USDT" : "—";
 
@@ -984,7 +993,7 @@
     $("vizLabel").style.display = ready ? "block" : "none";
     $("resultBtns").style.display = ready ? "flex" : "none";
     if(ready) drawTradeViz({entry:entry,stop:stop,target:target,liq:liq,liqImpossible:liqImpossible,names:M.vizNames,
-      fmtPrice:function(v){ return v>=100?fmt(v,0):fmt(v,2); }});
+      fmtPrice:fmtPx});
     markRiskQuick();
   }
 
@@ -1001,7 +1010,7 @@
     if(!p) return;
     if(p.account) $("account").value=p.account;
     if(p.risk) $("risk").value=p.risk;
-    if(p.lev) $("lev").value=p.lev;
+    if(p.lev){ $("lev").value=p.lev; $("levInput").value=p.lev; }
     if(p.fee) $("fee").value=p.fee;
     if(p.mmr) $("mmr").value=p.mmr;
     if(p.mode==="isolated"||p.mode==="cross"){
@@ -1013,6 +1022,16 @@
   /* ---------- 事件绑定 ---------- */
   ids.forEach(function(id){ $(id).addEventListener("input", function(){ calc(); savePrefs(); }); });
   $("symbol").addEventListener("input", calc);
+  // 杠杆滑块 ↔ 数字输入框 同步
+  $("lev").addEventListener("input", function(){ $("levInput").value=$("lev").value; });
+  $("levInput").addEventListener("input", function(){
+    var v=Math.round(parseFloat($("levInput").value)); if(isNaN(v)) return;
+    v=Math.max(1,Math.min(100,v)); $("lev").value=v; calc(); savePrefs();
+  });
+  $("levInput").addEventListener("change", function(){
+    var v=Math.round(parseFloat($("levInput").value)); if(isNaN(v))v=1; v=Math.max(1,Math.min(100,v));
+    $("levInput").value=v; $("lev").value=v; calc(); savePrefs();
+  });
   document.querySelectorAll("#side button").forEach(function(btn){
     btn.addEventListener("click", function(){
       side = btn.dataset.side;
@@ -1156,7 +1175,7 @@
       else { curWin=0; curLoss=0; }
     });
     return {
-      n:n, wins:wins, losses:losses,
+      n:n, wins:wins, losses:losses, breakeven:n-wins-losses,
       winRate: (wins+losses)>0 ? wins/(wins+losses) : 0,
       expectancy: n>0 ? sumR/n : 0,
       avgWinR: winCount>0 ? sumWinR/winCount : 0,
@@ -1204,6 +1223,12 @@
     ctx.beginPath(); ctx.moveTo(X(0),Y(cum[0]));
     for(var j=1;j<cum.length;j++) ctx.lineTo(X(j),Y(cum[j]));
     ctx.strokeStyle=col; ctx.lineWidth=2; ctx.lineJoin="round"; ctx.stroke();
+    // 末端累计值标注
+    var ex=X(cum.length-1), ey=Y(ending);
+    ctx.fillStyle=col; ctx.beginPath(); ctx.arc(ex,ey,3.5,0,6.2832); ctx.fill();
+    ctx.font="bold 12px -apple-system,BlinkMacSystemFont,sans-serif"; ctx.textAlign="right"; ctx.textBaseline="middle";
+    var lbl=(ending>0?"+":ending<0?"−":"")+fmt(Math.abs(ending),0);
+    ctx.fillText(lbl, ex-7, ey<18?ey+14:ey-11);
   }
 
   function jspan(cls,txt){ var s=document.createElement("span"); s.className=cls; s.textContent=txt; return s; }
@@ -1216,7 +1241,7 @@
         .forEach(function(id){ if($(id)) $(id).textContent=none; });
       $("jr_totalpnl").className="v";
     } else {
-      $("jr_total").textContent = s.n + " " + M.jWinLoss(s.wins, s.losses);
+      $("jr_total").textContent = s.n + " " + M.jWinLoss(s.wins, s.losses, s.breakeven);
       $("jr_winrate").textContent = (s.winRate*100).toFixed(1)+"%";
       $("jr_expectancy").textContent = fmtR(s.expectancy);
       $("jr_avgwin").textContent = s.wins>0 ? fmtR(s.avgWinR) : none;
