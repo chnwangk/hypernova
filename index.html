@@ -239,8 +239,15 @@
   #j_list{max-height:340px;overflow-y:auto;margin-top:4px}
   /* 计算器：价格结构可视化 */
   .viz-label{color:var(--muted);font-size:13px;margin:18px 0 6px;font-weight:600}
-  #tradeViz{width:100%;height:70px;display:block}
-  .tojournal-btn{width:100%;margin-top:14px}
+  #tradeViz{width:100%;height:82px;display:block}
+  .result-btns{display:flex;gap:10px;margin-top:14px}
+  .result-btns .btn{flex:1;padding:11px}
+  /* 风险快捷按钮 */
+  .quick{display:flex;gap:6px;margin-top:8px}
+  .quick button{flex:1;background:var(--bg);border:1px solid var(--line);color:var(--muted);padding:6px;border-radius:8px;font-size:12.5px;font-weight:700;cursor:pointer;transition:.15s}
+  .quick button:hover{color:var(--text);border-color:var(--accent)}
+  .quick button.on{background:rgba(124,92,255,.18);border-color:var(--accent);color:var(--accent2)}
+  .jtool-btn.danger:hover{color:var(--red);border-color:var(--red)}
 
   /* ---------- 美化 polish ---------- */
   /* logo 微光呼吸 */
@@ -344,6 +351,9 @@
             <input type="number" id="risk" value="1" min="0" step="any">
             <span class="suffix">%</span>
           </div>
+          <div class="quick" id="riskQuick">
+            <button data-r="0.5">0.5%</button><button data-r="1">1%</button><button data-r="2">2%</button><button data-r="3">3%</button>
+          </div>
         </div>
 
         <div class="field">
@@ -431,11 +441,14 @@
         </div>
 
         <div class="viz-label" id="vizLabel" data-i18n="viz_label" style="display:none">价格结构</div>
-        <canvas id="tradeViz" height="70" style="display:none"></canvas>
+        <canvas id="tradeViz" height="82" style="display:none"></canvas>
 
         <div id="alerts"></div>
 
-        <button class="btn btn-ghost tojournal-btn" id="toJournal" data-i18n="to_journal" style="display:none">记录到日志 ↓</button>
+        <div class="result-btns" id="resultBtns" style="display:none">
+          <button class="btn btn-ghost" id="copyResult" data-i18n="copy_result">复制结果</button>
+          <button class="btn btn-ghost" id="toJournal" data-i18n="to_journal">记录到日志 ↓</button>
+        </div>
       </div>
     </div>
 
@@ -494,6 +507,7 @@
         <div class="jtools">
           <button class="jtool-btn" id="j_export" data-i18n="j_export">导出备份</button>
           <button class="jtool-btn" id="j_import" data-i18n="j_import">导入</button>
+          <button class="jtool-btn danger" id="j_clear" data-i18n="j_clear">清空全部</button>
           <input type="file" id="j_file" accept="application/json,.json" style="display:none">
         </div>
       </div>
@@ -543,7 +557,7 @@
 <footer>
   <div class="wrap foot">
     <div class="brand"><div class="logo" style="width:24px;height:24px"></div><b style="font-size:15px">HYPER<span>NOVA</span></b></div>
-    <div data-i18n="footer">© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v1.9</div>
+    <div data-i18n="footer">© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v2.0</div>
   </div>
 </footer>
 
@@ -586,7 +600,7 @@
       about_p1:'HYPERNOVA 是一个面向加密交易者的工具站，目标是把专业、可靠的交易工具做得人人都会用。',
       about_p2:'仓位计算器是这里的第一个工具。未来还会加入更多帮助你做出更理性决策的功能。',
       about_p3:'本站坚持：计算纯本地完成 · 不收集你的交易数据 · 不需要连接钱包。',
-      footer:'© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v1.9',
+      footer:'© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v2.0',
       nav_journal:'交易日志',
       journal_h:'交易复盘日志',
       journal_intro:'记录每笔已结束的交易，自动算出你的真实胜率、期望值和资金曲线。盈亏比是交易结束后才知道的——这里用「R 倍数」衡量。数据只存在你的浏览器本地，不上传。',
@@ -604,7 +618,8 @@
       j_cancel:'取消编辑', j_export:'导出备份', j_import:'导入',
       label_symbol:'标的 <span class="hint">（可选，如 BTC）</span>',
       viz_label:'价格结构（入场 / 止损 / 止盈 / 强平）',
-      to_journal:'记录到日志 ↓'
+      to_journal:'记录到日志 ↓',
+      copy_result:'复制结果', j_clear:'清空全部'
     },
     en: {
       title:'HYPERNOVA · Crypto Position Calculator',
@@ -641,7 +656,7 @@
       about_p1:'HYPERNOVA is a toolkit for crypto traders, built to make professional, reliable trading tools that anyone can use.',
       about_p2:'The position calculator is the first tool here. More features to help you make rational decisions are coming.',
       about_p3:'Our principles: calculations stay local · we do not collect your trade data · no wallet connection required.',
-      footer:'© 2026 HYPERNOVA · For educational reference only, not investment advice · v1.9',
+      footer:'© 2026 HYPERNOVA · For educational reference only, not investment advice · v2.0',
       nav_journal:'Journal',
       journal_h:'Trade Journal',
       journal_intro:'Log every closed trade and see your real win rate, expectancy and equity curve. Your R:R is only known after a trade closes — here it is measured as an R-multiple. Data stays in your browser, never uploaded.',
@@ -659,7 +674,8 @@
       j_cancel:'Cancel edit', j_export:'Export', j_import:'Import',
       label_symbol:'Symbol <span class="hint">(optional, e.g. BTC)</span>',
       viz_label:'Price map (entry / stop / target / liq.)',
-      to_journal:'Log this trade ↓'
+      to_journal:'Log this trade ↓',
+      copy_result:'Copy', j_clear:'Clear all'
     }
   };
 
@@ -686,7 +702,11 @@
       jImportOk:function(n){ return "成功导入 "+n+" 笔交易。"; },
       jImportErr:"导入失败：文件格式不正确。",
       jSaveEdit:"保存修改",
-      vizNames:{entry:"入场",stop:"止损",target:"止盈",liq:"强平"}
+      vizNames:{entry:"入场",stop:"止损",target:"止盈",liq:"强平"},
+      copied:"已复制 ✓",
+      jClearConfirm:"确定清空所有交易记录吗？此操作不可撤销。",
+      dirTargetLong:"止盈方向提醒：做多的止盈应在入场价【上方】，当前设在了下方，盈亏比无意义。",
+      dirTargetShort:"止盈方向提醒：做空的止盈应在入场价【下方】，当前设在了上方，盈亏比无意义。"
     },
     en: {
       liqSafe:"Very low · safe from liquidation",
@@ -709,7 +729,11 @@
       jImportOk:function(n){ return "Imported "+n+" trades."; },
       jImportErr:"Import failed: invalid file format.",
       jSaveEdit:"Save changes",
-      vizNames:{entry:"Entry",stop:"Stop",target:"Target",liq:"Liq."}
+      vizNames:{entry:"Entry",stop:"Stop",target:"Target",liq:"Liq."},
+      copied:"Copied ✓",
+      jClearConfirm:"Clear ALL trades? This cannot be undone.",
+      dirTargetLong:"Take-profit note: for a LONG it should be ABOVE entry; it is set below, so the R:R is meaningless.",
+      dirTargetShort:"Take-profit note: for a SHORT it should be BELOW entry; it is set above, so the R:R is meaningless."
     }
   };
 
@@ -753,7 +777,7 @@
   function drawTradeViz(o){
     var cv=$("tradeViz"); if(!cv) return;
     var ctx=cv.getContext("2d");
-    var cssW=cv.clientWidth||320, cssH=70, dpr=window.devicePixelRatio||1;
+    var cssW=cv.clientWidth||320, cssH=82, dpr=window.devicePixelRatio||1;
     cv.width=cssW*dpr; cv.height=cssH*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
     ctx.clearRect(0,0,cssW,cssH);
 
@@ -772,15 +796,48 @@
     ctx.fillStyle="rgba(251,113,133,.35)"; ctx.fillRect(Math.min(xe,xs),barY,Math.abs(xe-xs),barH);
     if(o.target>0){ var xt=X(o.target); ctx.fillStyle="rgba(52,211,153,.35)"; ctx.fillRect(Math.min(xe,xt),barY,Math.abs(xe-xt),barH); }
 
-    ctx.textAlign="center"; ctx.font="11px -apple-system,BlinkMacSystemFont,sans-serif";
+    ctx.textAlign="center";
     pts.forEach(function(p){
-      var x=X(p.v), px=Math.max(18,Math.min(cssW-18,x));
+      var x=X(p.v), px=Math.max(26,Math.min(cssW-26,x));
       ctx.strokeStyle=p.c; ctx.lineWidth=2;
       ctx.beginPath(); ctx.moveTo(x,barY-5); ctx.lineTo(x,barY+barH+5); ctx.stroke();
       ctx.fillStyle=p.c; ctx.beginPath(); ctx.arc(x,barY+barH/2,3.5,0,7); ctx.fill();
       var above=(p.k==='entry'||p.k==='target');
-      ctx.fillText(o.names[p.k], px, above?barY-9:barY+barH+18);
+      // 名称
+      ctx.font="11px -apple-system,BlinkMacSystemFont,sans-serif"; ctx.fillStyle=p.c;
+      ctx.fillText(o.names[p.k], px, above?barY-9:barY+barH+15);
+      // 价格
+      ctx.font="9.5px -apple-system,BlinkMacSystemFont,sans-serif"; ctx.fillStyle="rgba(143,176,199,.9)";
+      ctx.fillText(o.fmtPrice(p.v), px, above?barY-21:barY+barH+27);
     });
+  }
+
+  function markRiskQuick(){
+    var v=$("risk").value;
+    document.querySelectorAll('#riskQuick button').forEach(function(b){ b.classList.toggle('on', b.dataset.r===v); });
+  }
+  function fallbackCopy(t){
+    try{ var ta=document.createElement('textarea'); ta.value=t; ta.style.position='fixed'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }catch(e){}
+  }
+  function copyResult(){
+    var zh=LANG==='zh';
+    var sym=($("symbol").value||"").trim().toUpperCase();
+    var sideTxt=side==="short"?(zh?'做空':'Short'):(zh?'做多':'Long');
+    var t=(zh?'HYPERNOVA 仓位计算':'HYPERNOVA position plan')+"\n"
+      +(sym?(sym+" · "):"")+sideTxt+"\n"
+      +(zh?'开仓数量':'Size')+": "+$("qty").textContent+"\n"
+      +(zh?'名义价值':'Notional')+": "+$("notional").textContent+" USDT\n"
+      +(zh?'风险金额':'Risk')+": "+$("riskAmt").textContent+"\n"
+      +(zh?'止损距离':'Stop dist')+": "+$("stopDist").textContent+"\n"
+      +(zh?'所需保证金':'Margin')+": "+$("margin").textContent+"\n"
+      +(zh?'强平价':'Liq.')+": "+$("liq").textContent+"\n"
+      +(zh?'盈亏比':'R:R')+": "+$("rr").textContent+"\n"
+      +"— hypernova.vip";
+    function done(){ var b=$("copyResult"); b.textContent=MSG[LANG].copied; setTimeout(function(){ b.textContent=T[LANG].copy_result; },1400); }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(t).then(done,function(){ fallbackCopy(t); done(); });
+    } else { fallbackCopy(t); done(); }
   }
 
   var side = "long";
@@ -810,6 +867,8 @@
     if(dirInvalid){
       alerts.push(["danger", side==="long" ? M.dirLong : M.dirShort]);
     }
+    // 止盈方向是否设反
+    var targetWrong = target>0 && entry>0 && ((side==="long" && target<=entry) || (side==="short" && target>=entry));
 
     var notional=0, qty=0, margin=0;
     if(stopDistAbs>0 && entry>0){
@@ -860,7 +919,7 @@
     }
     $("feeAmt").textContent = (ready && feeAmt>0) ? fmt(feeAmt,2)+" USDT" : "—";
 
-    if(ready && isFinite(rr)){
+    if(ready && isFinite(rr) && !targetWrong){
       $("rr").textContent = rr.toFixed(2)+" : 1";
       var b=$("rrBadge");
       if(rr>=2){ b.className="rr-badge rr-good"; b.textContent=M.rrGood; }
@@ -895,8 +954,11 @@
     if(ready && notional>account*3){
       alerts.push(["warn", M.notionalBig((notional/account).toFixed(1))]);
     }
-    if(ready && isFinite(rr) && rr<1 && rr>0){
+    if(ready && !targetWrong && isFinite(rr) && rr<1 && rr>0){
       alerts.push(["warn", M.rrLow]);
+    }
+    if(ready && targetWrong){
+      alerts.push(["warn", side==="long" ? M.dirTargetLong : M.dirTargetShort]);
     }
 
     var box=$("alerts"); box.innerHTML="";
@@ -920,8 +982,10 @@
     // 可视化 + 记录到日志按钮
     $("tradeViz").style.display = ready ? "block" : "none";
     $("vizLabel").style.display = ready ? "block" : "none";
-    $("toJournal").style.display = ready ? "block" : "none";
-    if(ready) drawTradeViz({entry:entry,stop:stop,target:target,liq:liq,liqImpossible:liqImpossible,names:M.vizNames});
+    $("resultBtns").style.display = ready ? "flex" : "none";
+    if(ready) drawTradeViz({entry:entry,stop:stop,target:target,liq:liq,liqImpossible:liqImpossible,names:M.vizNames,
+      fmtPrice:function(v){ return v>=100?fmt(v,0):fmt(v,2); }});
+    markRiskQuick();
   }
 
   /* ---------- 记住常用输入 ---------- */
@@ -989,8 +1053,8 @@
   try { trades = JSON.parse(localStorage.getItem('hn_trades')||'[]'); if(!Array.isArray(trades)) trades=[]; } catch(e){ trades=[]; }
   function saveTrades(){ try{ localStorage.setItem('hn_trades', JSON.stringify(trades)); }catch(e){} }
 
-  function fmtR(r){ return (r>=0?"+":"−")+Math.abs(r).toFixed(2)+"R"; }
-  function fmtSigned(n){ return (n>=0?"+":"−")+fmt(Math.abs(n),2); }
+  function fmtR(r){ return (r>0?"+":r<0?"−":"")+Math.abs(r).toFixed(2)+"R"; }
+  function fmtSigned(n){ return (n>0?"+":n<0?"−":"")+fmt(Math.abs(n),2); }
 
   var editingId=null;
   function updateFormMode(){
@@ -1017,8 +1081,14 @@
       trades.push(data);
     }
     saveTrades();
+    try{ localStorage.setItem('hn_jprefs', JSON.stringify({symbol:data.symbol, side:data.side})); }catch(e){}
     $("j_pnl").value=""; $("j_note").value="";   // 保留日期/标的/风险，方便连续录入
     renderJournal();
+  }
+  function clearAllTrades(){
+    if(!trades.length) return;
+    if(!window.confirm(MSG[LANG].jClearConfirm)) return;
+    trades=[]; editingId=null; saveTrades(); renderJournal();
   }
   function editTrade(id){
     var t=null; for(var i=0;i<trades.length;i++){ if(trades[i].id===id){ t=trades[i]; break; } }
@@ -1087,7 +1157,7 @@
     });
     return {
       n:n, wins:wins, losses:losses,
-      winRate: n>0 ? wins/n : 0,
+      winRate: (wins+losses)>0 ? wins/(wins+losses) : 0,
       expectancy: n>0 ? sumR/n : 0,
       avgWinR: winCount>0 ? sumWinR/winCount : 0,
       avgLossR: lossCount>0 ? sumLossR/lossCount : 0,
@@ -1165,14 +1235,14 @@
     } else {
       trades.slice().reverse().forEach(function(t){
         var r = t.risk>0 ? t.pnl/t.risk : 0;
-        var win = t.pnl>=0;
+        var cls = t.pnl>0 ? "green" : (t.pnl<0 ? "red" : "");
         var row=document.createElement("div"); row.className="jtrade";
         var sideTxt = t.side==="short" ? T[LANG].btn_short : T[LANG].btn_long;
         row.appendChild(jspan("jt-date", t.date||""));
         row.appendChild(jspan("jt-sym", t.symbol||"—"));
         row.appendChild(jspan(t.side==="short"?"jt-side-short":"jt-side-long", sideTxt));
-        row.appendChild(jspan("jt-r "+(win?"green":"red"), fmtR(r)));
-        row.appendChild(jspan("jt-pnl "+(win?"green":"red"), fmtSigned(t.pnl)));
+        row.appendChild(jspan("jt-r "+cls, fmtR(r)));
+        row.appendChild(jspan("jt-pnl "+cls, fmtSigned(t.pnl)));
         var ed=document.createElement("button"); ed.className="jt-edit"; ed.textContent="✎";
         ed.addEventListener("click", function(){ editTrade(t.id); });
         row.appendChild(ed);
@@ -1191,7 +1261,13 @@
   (function(){
     var d=new Date(), mm=("0"+(d.getMonth()+1)).slice(-2), dd=("0"+d.getDate()).slice(-2);
     if($("j_date") && !$("j_date").value) $("j_date").value = d.getFullYear()+"-"+mm+"-"+dd;
+    try{ var jp=JSON.parse(localStorage.getItem('hn_jprefs')||'null'); if(jp){ if(jp.symbol) $("j_symbol").value=jp.symbol; if(jp.side) $("j_side").value=jp.side; } }catch(e){}
   })();
+  document.querySelectorAll('#riskQuick button').forEach(function(btn){
+    btn.addEventListener('click', function(){ $("risk").value=btn.dataset.r; calc(); savePrefs(); });
+  });
+  $("copyResult").addEventListener("click", copyResult);
+  $("j_clear").addEventListener("click", clearAllTrades);
   $("j_add").addEventListener("click", addTrade);
   $("j_cancel").addEventListener("click", cancelEdit);
   $("j_pnl").addEventListener("keypress", function(e){ if(e.key==="Enter") addTrade(); });
