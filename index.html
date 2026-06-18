@@ -18,28 +18,30 @@
 <meta name="twitter:image" content="https://hypernova.vip/og.png" />
 <style>
   :root{
-    --bg:#0a0a14;
-    --bg2:#0e0f1d;
+    --bg:#06070b;
+    --bg2:#0a0c11;
     --card:#14152400;
-    --panel:#15172a;
-    --panel2:#1b1e36;
-    --line:#262a47;
-    --text:#e7e9f5;
-    --muted:#8b90b5;
+    --panel:#0d0f15;
+    --panel2:#11141c;
+    --line:#1b1f29;
+    --line2:#23283400;
+    --text:#eceff5;
+    --muted:#79839a;
     --accent:#7c5cff;
-    --accent2:#22d3ee;
+    --accent2:#2dd4bf;
     --green:#34d399;
     --red:#fb7185;
     --amber:#fbbf24;
-    --radius:16px;
+    --radius:14px;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono","Roboto Mono",Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Roboto,Helvetica,Arial,sans-serif;
     background:
-      radial-gradient(1100px 600px at 80% -10%, rgba(124,92,255,.18), transparent 60%),
-      radial-gradient(900px 500px at -10% 10%, rgba(34,211,238,.12), transparent 55%),
+      radial-gradient(1100px 620px at 82% -12%, rgba(124,92,255,.10), transparent 62%),
+      radial-gradient(900px 520px at -12% 8%, rgba(45,212,191,.07), transparent 58%),
       var(--bg);
     color:var(--text);
     line-height:1.6;
@@ -91,13 +93,13 @@
   }
   .pill .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
   .hero h1{
-    font-size:46px;line-height:1.15;font-weight:850;letter-spacing:-.5px;margin-bottom:16px;
+    font-size:48px;line-height:1.12;font-weight:800;letter-spacing:-1.6px;margin-bottom:18px;
   }
   .hero h1 .grad{
-    background:linear-gradient(120deg,var(--accent2),var(--accent) 60%,#c4b5fd);
+    background:linear-gradient(120deg,var(--accent2),var(--accent) 65%,#c4b5fd);
     -webkit-background-clip:text;background-clip:text;color:transparent;
   }
-  .hero p{color:var(--muted);font-size:17px;max-width:640px;margin:0 auto 28px}
+  .hero p{color:var(--muted);font-size:16.5px;line-height:1.7;max-width:600px;margin:0 auto 28px}
   .hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
   .btn{
     padding:12px 24px;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer;border:none;
@@ -110,8 +112,8 @@
 
   /* ---------- Calculator ---------- */
   section{padding:34px 0}
-  .sec-title{font-size:13px;letter-spacing:2px;color:var(--accent2);font-weight:700;text-transform:uppercase;margin-bottom:6px}
-  .sec-h{font-size:26px;font-weight:800;margin-bottom:24px}
+  .sec-title{font-size:12px;letter-spacing:2.5px;color:var(--accent2);font-weight:700;text-transform:uppercase;margin-bottom:8px}
+  .sec-h{font-size:25px;font-weight:750;letter-spacing:-.5px;margin-bottom:24px}
 
   .calc{
     display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start;
@@ -119,8 +121,8 @@
   @media(max-width:860px){.calc{grid-template-columns:1fr}}
 
   .panel{
-    background:linear-gradient(180deg,var(--panel),var(--bg2));
-    border:1px solid var(--line);border-radius:var(--radius);padding:22px;
+    background:var(--panel);
+    border:1px solid var(--line);border-radius:var(--radius);padding:24px;
   }
   .panel h3{font-size:16px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:8px}
   .panel h3 .n{
@@ -153,7 +155,7 @@
   .lev-row{display:flex;align-items:center;gap:12px}
   .lev-row input[type=range]{flex:1;accent-color:var(--accent)}
   .lev-num{display:flex;align-items:center;gap:3px;flex-shrink:0}
-  .lev-num input{width:54px;text-align:center;padding:7px 6px;font-size:15px;font-weight:800;color:var(--accent2);background:var(--bg);border:1px solid var(--line);border-radius:8px}
+  .lev-num input{width:54px;text-align:center;padding:7px 6px;font-size:15px;font-weight:700;font-family:var(--mono);color:var(--accent2);background:var(--bg);border:1px solid var(--line);border-radius:8px}
   .lev-num input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,.18);outline:none}
   .lev-num span{color:var(--accent2);font-weight:800;font-size:14px}
 
@@ -161,14 +163,14 @@
 
   /* results */
   .result-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;gap:10px}
-  .big-num{font-size:34px;font-weight:850;letter-spacing:-.5px}
-  .big-sub{color:var(--muted);font-size:13px}
+  .big-num{font-family:var(--mono);font-size:33px;font-weight:700;letter-spacing:-1px}
+  .big-sub{color:var(--muted);font-size:12px;letter-spacing:.3px}
   .divider{height:1px;background:var(--line);margin:18px 0}
   .rows{display:flex;flex-direction:column;gap:2px}
-  .row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px dashed rgba(38,42,71,.7);gap:10px}
+  .row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(27,31,41,.7);gap:10px}
   .row:last-child{border-bottom:none}
-  .row .k{color:var(--muted);font-size:14px;display:flex;align-items:center;gap:6px}
-  .row .v{font-weight:700;font-size:15px;font-variant-numeric:tabular-nums;text-align:right}
+  .row .k{color:var(--muted);font-size:13.5px;display:flex;align-items:center;gap:6px}
+  .row .v{font-family:var(--mono);font-weight:600;font-size:14px;font-variant-numeric:tabular-nums;text-align:right;letter-spacing:-.2px}
   .v.green{color:var(--green)}.v.red{color:var(--red)}.v.accent{color:var(--accent2)}
 
   .rr-badge{font-size:12px;padding:3px 9px;border-radius:999px;font-weight:700}
@@ -195,9 +197,10 @@
   .feat{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:6px}
   @media(max-width:760px){.feat{grid-template-columns:1fr}}
   .fcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
-  .fcard .fi{font-size:22px;margin-bottom:10px}
-  .fcard h4{font-size:16px;margin-bottom:6px}
-  .fcard p{color:var(--muted);font-size:14px}
+  .fcard .fi{margin-bottom:14px;color:var(--accent2);display:flex}
+  .fcard .fi svg{width:26px;height:26px}
+  .fcard h4{font-size:15.5px;font-weight:700;margin-bottom:7px;letter-spacing:-.2px}
+  .fcard p{color:var(--muted);font-size:14px;line-height:1.65}
 
   /* about */
   .about{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:28px}
@@ -218,14 +221,14 @@
   .jform .jspan2{grid-column:1 / -1}
   .jbtn{width:100%;margin:4px 0 14px}
   #j_list{display:flex;flex-direction:column}
-  .jtrade{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px dashed rgba(38,42,71,.7);font-size:13.5px}
+  .jtrade{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid rgba(27,31,41,.8);font-size:13.5px}
   .jtrade:last-child{border-bottom:none}
   .jtrade .jt-date{color:var(--muted);font-size:12px;min-width:62px}
   .jtrade .jt-sym{font-weight:700;min-width:40px}
   .jt-side-long{color:var(--green);font-weight:700}
   .jt-side-short{color:var(--red);font-weight:700}
-  .jtrade .jt-r{font-weight:800;font-variant-numeric:tabular-nums;margin-left:auto}
-  .jtrade .jt-pnl{color:var(--muted);font-variant-numeric:tabular-nums;min-width:78px;text-align:right;font-size:12.5px}
+  .jtrade .jt-r{font-family:var(--mono);font-weight:700;font-variant-numeric:tabular-nums;margin-left:auto}
+  .jtrade .jt-pnl{font-family:var(--mono);color:var(--muted);font-variant-numeric:tabular-nums;min-width:78px;text-align:right;font-size:12px}
   .jt-r.green,.jt-pnl.green{color:var(--green)}
   .jt-r.red,.jt-pnl.red{color:var(--red)}
   .jdel{background:none;border:none;color:#5d6288;cursor:pointer;font-size:15px;line-height:1;padding:2px 5px;border-radius:6px;transition:.15s}
@@ -254,21 +257,21 @@
 
   /* ---------- 美化 polish ---------- */
   /* logo 微光呼吸 */
-  header .brand .logo{animation:novaPulse 3.6s ease-in-out infinite}
+  header .brand .logo{animation:novaPulse 5s ease-in-out infinite}
   @keyframes novaPulse{
-    0%,100%{box-shadow:0 0 14px rgba(124,92,255,.55)}
-    50%{box-shadow:0 0 26px rgba(124,92,255,.9),0 0 44px rgba(34,211,238,.45)}
+    0%,100%{box-shadow:0 0 12px rgba(124,92,255,.35)}
+    50%{box-shadow:0 0 20px rgba(124,92,255,.55),0 0 30px rgba(45,212,191,.22)}
   }
-  /* hero 漂浮星云 */
+  /* hero 漂浮星云（克制） */
   .hero{position:relative;overflow:hidden}
-  .hero::before{content:"";position:absolute;width:440px;height:440px;border-radius:50%;
-    background:radial-gradient(circle,rgba(124,92,255,.20),transparent 70%);
-    top:-150px;left:50%;transform:translateX(-50%);filter:blur(8px);
-    animation:floatGlow 11s ease-in-out infinite;z-index:0;pointer-events:none}
-  .hero::after{content:"";position:absolute;width:300px;height:300px;border-radius:50%;
-    background:radial-gradient(circle,rgba(34,211,238,.12),transparent 70%);
-    bottom:-120px;right:6%;filter:blur(8px);
-    animation:floatGlow2 14s ease-in-out infinite;z-index:0;pointer-events:none}
+  .hero::before{content:"";position:absolute;width:460px;height:460px;border-radius:50%;
+    background:radial-gradient(circle,rgba(124,92,255,.11),transparent 70%);
+    top:-170px;left:50%;transform:translateX(-50%);filter:blur(10px);
+    animation:floatGlow 14s ease-in-out infinite;z-index:0;pointer-events:none}
+  .hero::after{content:"";position:absolute;width:320px;height:320px;border-radius:50%;
+    background:radial-gradient(circle,rgba(45,212,191,.07),transparent 70%);
+    bottom:-130px;right:6%;filter:blur(10px);
+    animation:floatGlow2 18s ease-in-out infinite;z-index:0;pointer-events:none}
   .hero>*{position:relative;z-index:1}
   @keyframes floatGlow{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-44%) translateY(24px)}}
   @keyframes floatGlow2{0%,100%{transform:translateY(0)}50%{transform:translateY(-28px)}}
@@ -525,17 +528,17 @@
     <div class="sec-h" data-i18n="feat_h">为什么用风险驱动模型</div>
     <div class="feat">
       <div class="fcard reveal">
-        <div class="fi">🎯</div>
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.2"/><path d="M12 1.5v3.5M12 19v3.5M1.5 12h3.5M19 12h3.5"/></svg></div>
         <h4 data-i18n="feat1_t">先定亏损，再定仓位</h4>
         <p data-i18n="feat1_p">不靠感觉下注。先决定「这笔最多亏 1%」，再倒推该开多大仓——这是专业交易者的核心方法。</p>
       </div>
       <div class="fcard reveal">
-        <div class="fi">🛡️</div>
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l7.5 2.8v5.7c0 4.8-3.2 8-7.5 10.5-4.3-2.5-7.5-5.7-7.5-10.5V5.3L12 2.5z"/><path d="M9 12l2 2 4-4.2"/></svg></div>
         <h4 data-i18n="feat2_t">强平价提前预警</h4>
         <p data-i18n="feat2_p">杠杆太高时，还没到止损就先爆仓了。我们会算出强平价并在它早于你的止损时红色警告。</p>
       </div>
       <div class="fcard reveal">
-        <div class="fi">⚖️</div>
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M6 21h12M5 7h14M5 7l-2.5 5.5a3 3 0 006 0L6 7M19 7l-2.5 5.5a3 3 0 006 0L19 7"/></svg></div>
         <h4 data-i18n="feat3_t">盈亏比一眼看清</h4>
         <p data-i18n="feat3_p">自动计算风险回报比（R:R），并提示这笔交易是否值得做（建议 ≥ 2）。</p>
       </div>
@@ -560,7 +563,7 @@
 <footer>
   <div class="wrap foot">
     <div class="brand"><div class="logo" style="width:24px;height:24px"></div><b style="font-size:15px">HYPER<span>NOVA</span></b></div>
-    <div data-i18n="footer">© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v2.1</div>
+    <div data-i18n="footer">© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v2.2</div>
   </div>
 </footer>
 
@@ -572,8 +575,8 @@
       title:'HYPERNOVA · 加密仓位计算器',
       nav_calc:'仓位计算器', nav_features:'特性', nav_about:'关于', nav_cta:'开始计算',
       hero_pill:'计算在本地完成 · 交易数据不上传',
-      hero_h1:'聪明地决定<br><span class="grad">该开多大仓位</span>',
-      hero_p:'专业交易者用的不是「感觉」，而是「风险」。先设定单笔最多能亏多少，HYPERNOVA 帮你倒推该开多少仓、需要多少保证金，并提前警告强平风险。',
+      hero_h1:'精确计算<br><span class="grad">你该开多大仓位</span>',
+      hero_p:'专业交易看的不是「感觉」，而是「风险」。先设定单笔可承受的最大亏损，HYPERNOVA 即时算出合理仓位、所需保证金与强平价，并在风险失控前发出预警。',
       hero_btn1:'立即计算仓位 →', hero_btn2:'了解工作原理',
       calc_h:'加密合约仓位计算器',
       panel1_title:'填写你的交易计划', panel2_title:'计算结果',
@@ -603,7 +606,7 @@
       about_p1:'HYPERNOVA 是一个面向加密交易者的工具站，目标是把专业、可靠的交易工具做得人人都会用。',
       about_p2:'仓位计算器是这里的第一个工具。未来还会加入更多帮助你做出更理性决策的功能。',
       about_p3:'本站坚持：计算纯本地完成 · 不收集你的交易数据 · 不需要连接钱包。',
-      footer:'© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v2.1',
+      footer:'© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v2.2',
       nav_journal:'交易日志',
       journal_h:'交易复盘日志',
       journal_intro:'记录每笔已结束的交易，自动算出你的真实胜率、期望值和资金曲线。盈亏比是交易结束后才知道的——这里用「R 倍数」衡量。数据只存在你的浏览器本地，不上传。',
@@ -628,8 +631,8 @@
       title:'HYPERNOVA · Crypto Position Calculator',
       nav_calc:'Calculator', nav_features:'Features', nav_about:'About', nav_cta:'Start',
       hero_pill:'Runs locally · your trade data never leaves',
-      hero_h1:'Size your position<br><span class="grad">the smart way</span>',
-      hero_p:'Pros do not trade on gut feeling — they trade on risk. Set how much you are willing to lose, and HYPERNOVA works out your exact position size and margin, and warns you about liquidation risk.',
+      hero_h1:'Size every position<br><span class="grad">with precision</span>',
+      hero_p:'Professionals trade by risk, not by feel. Set the most you are willing to lose on a trade, and HYPERNOVA returns the right position size, required margin and liquidation price — and warns you before risk gets out of hand.',
       hero_btn1:'Calculate now →', hero_btn2:'How it works',
       calc_h:'Crypto Futures Position Calculator',
       panel1_title:'Enter your trade plan', panel2_title:'Results',
@@ -659,7 +662,7 @@
       about_p1:'HYPERNOVA is a toolkit for crypto traders, built to make professional, reliable trading tools that anyone can use.',
       about_p2:'The position calculator is the first tool here. More features to help you make rational decisions are coming.',
       about_p3:'Our principles: calculations stay local · we do not collect your trade data · no wallet connection required.',
-      footer:'© 2026 HYPERNOVA · For educational reference only, not investment advice · v2.1',
+      footer:'© 2026 HYPERNOVA · For educational reference only, not investment advice · v2.2',
       nav_journal:'Journal',
       journal_h:'Trade Journal',
       journal_intro:'Log every closed trade and see your real win rate, expectancy and equity curve. Your R:R is only known after a trade closes — here it is measured as an R-multiple. Data stays in your browser, never uploaded.',
