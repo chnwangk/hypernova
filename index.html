@@ -350,8 +350,12 @@
   .two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 
   /* results */
-  .result-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;gap:10px}
-  .big-num{font-family:var(--mono);font-size:var(--fs-num);font-weight:600;letter-spacing:-.03em}
+  /* 每个统计块自带标签与数值，配对关系不依赖左右对齐，换行也不会走散 */
+  .stat-row{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:6px}
+  .stat{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .stat-alt{align-items:flex-end;text-align:right}
+  .big-num{font-family:var(--mono);font-size:var(--fs-num);font-weight:600;letter-spacing:-.03em;line-height:1.15}
+  .big-num-sub{font-size:24px;align-self:flex-end}
   .big-sub{color:var(--muted);font-size:var(--fs-micro);font-weight:700;text-transform:uppercase;letter-spacing:var(--track-caps)}
   .divider{height:1px;background:var(--line);margin:18px 0}
   .rows{display:flex;flex-direction:column;gap:2px}
@@ -475,7 +479,7 @@
   #j_list{max-height:340px;overflow-y:auto;overflow-x:hidden;margin-top:4px}
   /* 计算器：价格结构可视化 */
   .viz-label{color:var(--muted);font-size:var(--fs-sm);margin:18px 0 6px;font-weight:600}
-  #tradeViz{width:100%;height:82px;display:block}
+  #tradeViz{width:100%;min-height:82px;display:block}
   .result-btns{display:flex;gap:10px;margin-top:14px}
   .result-btns .btn{flex:1;padding:11px}
   /* 风险快捷按钮 */
@@ -554,11 +558,32 @@
      响应式覆盖（必须置于所有组件规则之后）
      媒体查询本身不提升优先级；与组件规则同级时靠源码顺序决胜。
      ========================================================== */
+  @media(max-width:680px){
+    /* 提示独占一行：与标签同行时会被撑成两行，读起来还像一句话；
+       更要命的是两列布局里左右标签行数不同，输入框基线就错位了。 */
+    .field label{display:flex;flex-direction:column;gap:3px}
+    .field label .hint{margin-left:0}
+
+    /* 日志表单改单列：两列时日期框放不下原生选择器会被裁，
+       且「本笔风险 1R」带提示占两行，与左侧「方向」错位。 */
+    .jform{grid-template-columns:minmax(0,1fr)}
+    .jform .jspan2{grid-column:auto}
+
+    /* 结果区改为上下堆叠：并排时标的名一长，主数字就会换行占三行高 */
+    .stat-row{flex-direction:column;gap:14px}
+    .stat-alt{align-items:flex-start;text-align:left}
+    .big-num{font-size:27px}
+    .big-num-sub{font-size:22px;align-self:flex-start}
+
+    /* 列表滚动条不再压住右侧的 R 值 */
+    #j_list{scrollbar-gutter:stable;padding-right:2px}
+    /* 备注缩进并加一条竖线，视觉上归属于它所在的那笔记录 */
+    .jtrade .jt-note{margin-left:2px;padding-left:9px;border-left:1px solid var(--line)}
+  }
+
   @media(max-width:374px){
     /* 极窄屏两列排不下：日期框带原生选择器，撑不住就会挤成 170/64 */
-    .jform{grid-template-columns:minmax(0,1fr)}
     .two{grid-template-columns:minmax(0,1fr)}
-    .jform .jspan2{grid-column:auto}
     .jtools{flex-wrap:wrap}
   }
 </style>
@@ -691,13 +716,15 @@
         <h3><span data-i18n="panel2_title">计算结果</span></h3>
         <div class="panel-body">
 
-        <div class="result-head">
-          <span class="big-sub" data-i18n="res_qty_label">应开仓数量</span>
-          <span class="big-sub" data-i18n="res_notional_label">名义价值</span>
-        </div>
-        <div class="result-head">
-          <span class="big-num accent" id="qty">—</span>
-          <span class="big-num" id="notional" style="font-size:24px;align-self:flex-end">—</span>
+        <div class="stat-row">
+          <div class="stat">
+            <span class="big-sub" data-i18n="res_qty_label">应开仓数量</span>
+            <span class="big-num accent" id="qty">—</span>
+          </div>
+          <div class="stat stat-alt">
+            <span class="big-sub" data-i18n="res_notional_label">名义价值</span>
+            <span class="big-num big-num-sub" id="notional">—</span>
+          </div>
         </div>
 
         <div class="divider"></div>
@@ -903,7 +930,7 @@
         <a href="#about" data-i18n="nav_about">关于</a>
       </nav>
       <dl class="foot-meta">
-        <div><dt class="caps" data-i18n="foot_version">版本</dt><dd>v3.4</dd></div>
+        <div><dt class="caps" data-i18n="foot_version">版本</dt><dd>v3.5</dd></div>
         <div><dt class="caps" data-i18n="foot_updated">最后更新</dt><dd>2026-08-21</dd></div>
         <div><dt class="caps" data-i18n="foot_data">数据存储</dt><dd data-i18n="foot_data_v">仅本机浏览器</dd></div>
       </dl>
@@ -1192,9 +1219,8 @@
   function drawTradeViz(o){
     var cv=$("tradeViz"); if(!cv) return;
     var ctx=cv.getContext("2d");
-    var cssW=cv.clientWidth||320, cssH=82, dpr=window.devicePixelRatio||1;
-    cv.width=cssW*dpr; cv.height=cssH*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
-    ctx.clearRect(0,0,cssW,cssH);
+    var cssW=cv.clientWidth||320, dpr=window.devicePixelRatio||1;
+    var padX=12, w=cssW-padX*2, barY=34, barH=8;
 
     var pts=[{k:'entry',v:o.entry,c:tok('--text')},{k:'stop',v:o.stop,c:tok('--red-text')}];
     if(o.target>0) pts.push({k:'target',v:o.target,c:tok('--green-text')});
@@ -1203,8 +1229,37 @@
     var min=Math.min.apply(null,vals), max=Math.max.apply(null,vals);
     if(min===max){ min*=0.99; max*=1.01; }
     var rng=(max-min)||1, pad=rng*0.14; min-=pad; max+=pad; rng=max-min;
-    var padX=12, w=cssW-padX*2, barY=34, barH=8;
     function X(v){ return padX + ((v-min)/rng)*w; }
+
+    var fName='600 11px '+UI_SANS, fPrice='11px '+UI_MONO, TIER=13;
+
+    /* 先算标签排布再定画布高度。高杠杆时强平价与止损价可能只差零点几个百分点，
+       两个标签会直接叠成一团；同侧标签水平相撞就把后一个下压一层。 */
+    var laid = pts.map(function(p){
+      ctx.font=fPrice; var pw=ctx.measureText(o.fmtPrice(p.v)).width;
+      ctx.font=fName;  var nw=ctx.measureText(o.names[p.k]).width;
+      var half=Math.max(pw,nw)/2;
+      return {p:p, x:X(p.v), px:Math.max(half+2, Math.min(cssW-half-2, X(p.v))),
+              half:half, above:(p.k==='entry'||p.k==='target'), tier:0};
+    });
+    var maxTier=0;
+    ['above','below'].forEach(function(side){
+      var g=laid.filter(function(l){ return side==='above' ? l.above : !l.above; })
+                .sort(function(a,b){ return a.px-b.px; });
+      for(var i=1;i<g.length;i++){
+        if(g[i].px-g[i].half < g[i-1].px+g[i-1].half+4 && g[i].tier===g[i-1].tier){
+          g[i].tier = g[i-1].tier+1;
+        }
+        if(g[i].tier>maxTier) maxTier=g[i].tier;
+      }
+    });
+
+    /* 有标签被下压时把画布加高，否则会被固定高度裁掉 */
+    var cssH = 82 + maxTier*TIER*2;
+    cv.style.height = cssH+"px";
+    cv.width=cssW*dpr; cv.height=cssH*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,cssW,cssH);
+    barY = 34 + maxTier*TIER;   // 上方多出的层数把价格条整体下移
 
     ctx.fillStyle=tokA('--line-strong',1); ctx.fillRect(padX,barY,w,barH);
     var xe=X(o.entry), xs=X(o.stop);
@@ -1212,18 +1267,16 @@
     if(o.target>0){ var xt=X(o.target); ctx.fillStyle=tokA('--green',.42); ctx.fillRect(Math.min(xe,xt),barY,Math.abs(xe-xt),barH); }
 
     ctx.textAlign="center";
-    pts.forEach(function(p){
-      var x=X(p.v), px=Math.max(26,Math.min(cssW-26,x));
+    laid.forEach(function(l){
+      var p=l.p;
       ctx.strokeStyle=p.c; ctx.lineWidth=2;
-      ctx.beginPath(); ctx.moveTo(x,barY-5); ctx.lineTo(x,barY+barH+5); ctx.stroke();
-      ctx.fillStyle=p.c; ctx.beginPath(); ctx.arc(x,barY+barH/2,3.5,0,7); ctx.fill();
-      var above=(p.k==='entry'||p.k==='target');
-      // 名称
-      ctx.font='600 11px '+UI_SANS; ctx.fillStyle=p.c;
-      ctx.fillText(o.names[p.k], px, above?barY-9:barY+barH+15);
-      // 价格：等宽体，与页面上其余数字同一视觉语言
-      ctx.font='11px '+UI_MONO; ctx.fillStyle=tok('--muted');
-      ctx.fillText(o.fmtPrice(p.v), px, above?barY-22:barY+barH+28);
+      ctx.beginPath(); ctx.moveTo(l.x,barY-5); ctx.lineTo(l.x,barY+barH+5); ctx.stroke();
+      ctx.fillStyle=p.c; ctx.beginPath(); ctx.arc(l.x,barY+barH/2,3.5,0,7); ctx.fill();
+      var step=l.tier*TIER;
+      var nameY  = l.above ? barY-9-step  : barY+barH+15+step;
+      var priceY = l.above ? barY-22-step : barY+barH+28+step;
+      ctx.font=fName;  ctx.fillStyle=p.c;            ctx.fillText(o.names[p.k], l.px, nameY);
+      ctx.font=fPrice; ctx.fillStyle=tok('--muted'); ctx.fillText(o.fmtPrice(p.v), l.px, priceY);
     });
   }
 
