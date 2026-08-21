@@ -1,0 +1,7 @@
+# 这些是仓库/部署的元文件，不该作为公开静态资源被访问
+.git
+.gitignore
+.assetsignore
+wrangler.jsonc
+.claude
+.DS_Store

@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hypernova",
+  "compatibility_date": "2026-08-20",
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": ".",
+    // 找不到的路径交给 404.html（默认 none 会返回空白裸 404）
+    "not_found_handling": "404-page"
+  }
+}
