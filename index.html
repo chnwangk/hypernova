@@ -6,7 +6,7 @@
 <meta name="format-detection" content="telephone=no,date=no,address=no,email=no" />
 <title>HYPERNOVA · 加密合约仓位计算器</title>
 <meta name="description" content="风险驱动的加密合约仓位计算器：由单笔可承受亏损反推开仓数量、所需保证金、预估强制平仓价与盈亏比，并公开全部计算公式。运算在本地浏览器完成，不上传任何交易数据。" />
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%2322d3ee'/><stop offset='1' stop-color='%237c5cff'/></linearGradient></defs><rect width='32' height='32' rx='8' fill='%230a0a14'/><circle cx='16' cy='16' r='9' fill='url(%23g)'/><circle cx='16' cy='16' r='3.6' fill='%230a0a14'/></svg>" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='5.3' fill='%2304070a'/><g fill='none' stroke='%232dd4bf' stroke-width='2.2' stroke-linecap='square'><path d='M8 4.1H4.6v15.8H8'/><path d='M16 4.1h3.4v15.8H16'/></g><circle cx='12' cy='12' r='2.9' fill='%232dd4bf'/></svg>" />
 <link rel="canonical" href="https://hypernova.vip/" />
 <meta name="robots" content="index, follow, max-image-preview:large" />
 <meta name="theme-color" content="#06070b" />
@@ -204,16 +204,15 @@
     header{background:var(--bg)}
   }
   .nav{display:flex;align-items:center;gap:22px;height:64px}
-  .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.5px}
-  .brand .logo{
-    width:30px;height:30px;border-radius:var(--r);
-    background:conic-gradient(from 200deg,var(--brand),var(--accent),var(--brand));
-    
-    position:relative;
-  }
-  .brand .logo::after{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--bg);}
-  .brand b{font-size:var(--fs-xl)}
-  .brand span{color:var(--accent);font-weight:800}
+  /* 标记：单色几何图形，随文字取色。方括号夹住一个点——
+     爆发力被限定在明确的边界内，正是本工具在做的事。不使用渐变。 */
+  .brand{display:flex;align-items:center;gap:9px;color:var(--text)}
+  .brand .logo{width:26px;height:26px;flex-shrink:0;display:block}
+  .brand-sm .logo{width:22px;height:22px}
+  /* 字标：单一颜色，靠字重而非颜色区分两段 */
+  .brand b{font-size:var(--fs-xl);font-weight:700;letter-spacing:.03em;line-height:1}
+  .brand span{font-weight:300;letter-spacing:.03em}
+  .brand-sm b{font-size:var(--fs-md)}
   .nav-links{display:flex;gap:22px;align-items:center;margin-left:auto}
   .nav-links a{color:var(--muted);font-size:var(--fs-base);font-weight:600;transition:color .15s}
   .nav-links a:hover{color:var(--text)}
@@ -256,12 +255,12 @@
     padding:6px 13px;border-radius:999px;margin-bottom:26px;
     letter-spacing:.01em;
   }
-  .pill .dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
   .hero h1{
-    font-size:var(--fs-hero);line-height:1.16;font-weight:700;letter-spacing:-.028em;margin-bottom:20px;
+    font-size:var(--fs-hero);line-height:1.2;font-weight:600;letter-spacing:-.022em;margin-bottom:20px;
+    color:var(--text);
   }
-  /* 强调行用实色青绿，不做渐变文字——渐变文字在正规语境里显轻浮 */
-  .hero h1 .grad{color:var(--accent)}
+  /* 标题不做颜色拆分：青绿只用于数据，才保得住它的含义 */
+  .hero h1 .grad{color:inherit;font-weight:300}
   .hero p{color:var(--text2);font-size:var(--fs-lg);line-height:1.75;max-width:640px;margin:0 auto 30px}
   .hero-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
   .btn{
@@ -299,12 +298,6 @@
     font-size:var(--fs-xs);font-weight:700;text-transform:uppercase;letter-spacing:var(--track-caps);
     color:var(--text2);margin:0;padding:13px 20px;display:flex;align-items:center;gap:9px;
     background:var(--panel2);border-bottom:1px solid var(--line);
-  }
-  .panel h3 .n{
-    width:18px;height:18px;border-radius:var(--r-sm);
-    background:transparent;border:1px solid var(--line-strong);color:var(--muted);
-    font-size:var(--fs-micro);display:grid;place-items:center;font-weight:700;flex-shrink:0;
-    font-family:var(--mono);letter-spacing:0;
   }
   .panel-body{padding:20px}
 
@@ -528,7 +521,7 @@
 <header>
   <div class="wrap nav">
     <div class="brand">
-      <div class="logo"></div>
+      <svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="M8 4.1H4.6v15.8H8"/><path d="M16 4.1h3.4v15.8H16"/><circle cx="12" cy="12" r="2.9" fill="currentColor" stroke="none"/></svg>
       <b>HYPER<span>NOVA</span></b>
     </div>
     <nav class="nav-links" aria-label="主导航 / Main navigation">
@@ -544,7 +537,7 @@
 
 <!-- ===== HERO ===== -->
 <div class="wrap hero">
-  <div class="pill"><span class="dot"></span> <span data-i18n="hero_pill">全部运算在本地浏览器完成 · 不上传任何交易数据</span></div>
+  <div class="pill"> <span data-i18n="hero_pill">全部运算在本地浏览器完成 · 不上传任何交易数据</span></div>
   <h1 data-i18n="hero_h1">先定义风险<br><span class="grad">再决定仓位规模</span></h1>
   <p data-i18n="hero_p">专业的仓位管理不依赖盘感，而依赖对单笔风险的量化。设定本笔交易可承受的最大亏损后，HYPERNOVA 据此计算应开仓数量、所需保证金与预估强制平仓价格，并在杠杆过高致使强平价先于止损被触及时提示风险。</p>
   <div class="hero-btns">
@@ -556,13 +549,13 @@
 <!-- ===== CALCULATOR ===== -->
 <section id="calc">
   <div class="wrap">
-    <div class="sec-title">Position Calculator</div>
+    <div class="sec-title">01 &nbsp;Calculator</div>
     <div class="sec-h" data-i18n="calc_h">加密合约仓位计算器</div>
 
     <div class="calc">
       <!-- INPUTS -->
       <div class="panel">
-        <h3><span class="n">1</span><span data-i18n="panel1_title">交易参数</span></h3>
+        <h3><span data-i18n="panel1_title">交易参数</span></h3>
         <div class="panel-body">
 
         <div class="field">
@@ -645,7 +638,7 @@
 
       <!-- RESULTS -->
       <div class="panel">
-        <h3><span class="n">2</span><span data-i18n="panel2_title">计算结果</span></h3>
+        <h3><span data-i18n="panel2_title">计算结果</span></h3>
         <div class="panel-body">
 
         <div class="result-head">
@@ -692,14 +685,14 @@
 <!-- ===== TRADE JOURNAL ===== -->
 <section id="journal">
   <div class="wrap">
-    <div class="sec-title">Trade Journal</div>
+    <div class="sec-title">02 &nbsp;Journal</div>
     <div class="sec-h" data-i18n="journal_h">交易复盘日志</div>
     <p class="journal-intro" data-i18n="journal_intro">记录已平仓的交易，自动统计真实胜率、每笔期望值、盈利因子与资金曲线。单笔盈亏以 R 倍数计量，即实际盈亏与该笔止损风险的比值，从而使不同仓位规模的交易可以横向比较。全部记录仅保存于本机浏览器，不会上传。</p>
 
     <div class="journal-grid">
       <!-- 录入 + 列表 -->
       <div class="panel">
-        <h3><span class="n">+</span><span data-i18n="journal_add_title">录入交易</span></h3>
+        <h3><span data-i18n="journal_add_title">录入交易</span></h3>
         <div class="panel-body">
         <div class="jform">
           <div class="field"><label for="j_date" data-i18n="j_date">日期</label><input type="date" id="j_date"></div>
@@ -719,7 +712,7 @@
 
       <!-- 统计 + 图表 -->
       <div class="panel">
-        <h3><span class="n">∑</span><span data-i18n="journal_stats_title">统计结果</span></h3>
+        <h3><span data-i18n="journal_stats_title">统计结果</span></h3>
         <div class="panel-body">
         <div class="rows">
           <div class="row"><span class="k" data-i18n="jr_total">交易笔数</span><span class="v" id="jr_total">—</span></div>
@@ -751,7 +744,7 @@
 <!-- ===== FEATURES ===== -->
 <section id="features">
   <div class="wrap">
-    <div class="sec-title">Why Hypernova</div>
+    <div class="sec-title">03 &nbsp;Principles</div>
     <div class="sec-h" data-i18n="feat_h">为什么以风险为起点</div>
     <div class="feat">
       <div class="fcard reveal">
@@ -777,7 +770,7 @@
 <!-- ===== 计算方法 ===== -->
 <section id="method">
   <div class="wrap">
-    <div class="sec-title">Methodology</div>
+    <div class="sec-title">04 &nbsp;Methodology</div>
     <div class="sec-h" data-i18n="method_h">计算方法</div>
     <p class="sec-lede" data-i18n="method_lede">本页公开工具使用的全部公式。所有数值均由下列公式直接得出，不含任何未披露的调整项。符号约定：E 为入场价，S 为止损价，T 为止盈价，A 为账户总额，r 为单笔风险比例，L 为杠杆倍数，m 为维持保证金率，f 为单边手续费率，Q 为开仓数量，N 为名义价值。</p>
 
@@ -834,7 +827,7 @@
 
 <section id="about">
   <div class="wrap">
-    <div class="sec-title">About</div>
+    <div class="sec-title">05 &nbsp;About</div>
     <div class="sec-h" data-i18n="about_h">关于 HYPERNOVA</div>
     <div class="about reveal">
       <p data-i18n="about_p1">HYPERNOVA 是面向加密衍生品交易者的风险管理工具站，目标是把机构通行的仓位管理方法，做成任何人都能直接使用的工具。</p>
@@ -850,7 +843,7 @@
   <div class="wrap">
     <div class="foot-top">
       <div class="foot-brand">
-        <div class="brand"><div class="logo" style="width:24px;height:24px"></div><b style="font-size:15px">HYPER<span>NOVA</span></b></div>
+        <div class="brand brand-sm"><svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="M8 4.1H4.6v15.8H8"/><path d="M16 4.1h3.4v15.8H16"/><circle cx="12" cy="12" r="2.9" fill="currentColor" stroke="none"/></svg><b>HYPER<span>NOVA</span></b></div>
         <p class="foot-desc" data-i18n="foot_desc">风险驱动的加密衍生品仓位管理工具。全部运算在本地完成。</p>
       </div>
       <nav class="foot-links" aria-label="页脚导航 / Footer navigation">
@@ -860,7 +853,7 @@
         <a href="#about" data-i18n="nav_about">关于</a>
       </nav>
       <dl class="foot-meta">
-        <div><dt class="caps" data-i18n="foot_version">版本</dt><dd>v3.1</dd></div>
+        <div><dt class="caps" data-i18n="foot_version">版本</dt><dd>v3.2</dd></div>
         <div><dt class="caps" data-i18n="foot_updated">最后更新</dt><dd>2026-08-21</dd></div>
         <div><dt class="caps" data-i18n="foot_data">数据存储</dt><dd data-i18n="foot_data_v">仅本机浏览器</dd></div>
       </dl>
