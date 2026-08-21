@@ -263,7 +263,7 @@
   }
 
   /* ---------- Hero ---------- */
-  .hero{padding:80px 0 44px;text-align:center;border-bottom:1px solid var(--line-soft)}
+  .hero{padding-top:80px;padding-bottom:44px;text-align:center;border-bottom:1px solid var(--line-soft)}
   .pill{
     display:inline-flex;align-items:center;gap:8px;
     border:1px solid var(--line);background:var(--panel);
@@ -288,7 +288,7 @@
   .btn-primary:hover{background:var(--accent);border-color:var(--accent)}
   .btn-ghost{background:transparent;color:var(--text2);border-color:var(--line-strong)}
   .btn-ghost:hover{color:var(--text);border-color:var(--muted);background:var(--panel)}
-  @media(max-width:680px){.hero h1{font-size:var(--fs-hero-sm)}.hero{padding:44px 0 30px}}
+  @media(max-width:680px){.hero h1{font-size:var(--fs-hero-sm)}.hero{padding-top:44px;padding-bottom:30px}}
 
   /* ---------- Calculator ---------- */
   section{padding:52px 0}
@@ -559,6 +559,26 @@
      媒体查询本身不提升优先级；与组件规则同级时靠源码顺序决胜。
      ========================================================== */
   @media(max-width:680px){
+    /* 首屏改左对齐：长中文段落居中时左右两边都不齐，末行还会孤悬。
+       左对齐后只剩右侧参差，是长正文在窄屏下的通行做法。 */
+    .hero{text-align:left}
+    .hero p{margin-left:0;margin-right:0;max-width:none}
+
+    /* 长中文正文改两端对齐：中文按字断行，左对齐时右缘参差可达 18px。
+       inter-ideograph 让浏览器在汉字之间分配余量，每行左右都齐。
+       只用于长段落，短标签沿用左对齐以免字距被拉开。 */
+    .hero p,.sec-lede,.journal-intro,.about p,.mcard-p,.method-note,.disclaimer,.privacy{
+      text-align:justify;
+      text-justify:inter-ideograph;
+      text-wrap:auto;
+    }
+    /* .privacy 是 flex 容器：文字换成多行后，align-items:center 会把锁形图标
+       垂直居中到段落中间，脱离它该在的第一行。 */
+    .privacy{align-items:flex-start;justify-content:flex-start}
+    .privacy .lock{margin-top:3px}
+    .hero-btns{justify-content:flex-start}
+    .hero h1{letter-spacing:-.02em}
+
     /* 提示独占一行：与标签同行时会被撑成两行，读起来还像一句话；
        更要命的是两列布局里左右标签行数不同，输入框基线就错位了。 */
     .field label{display:flex;flex-direction:column;gap:3px}
@@ -930,7 +950,7 @@
         <a href="#about" data-i18n="nav_about">关于</a>
       </nav>
       <dl class="foot-meta">
-        <div><dt class="caps" data-i18n="foot_version">版本</dt><dd>v3.5</dd></div>
+        <div><dt class="caps" data-i18n="foot_version">版本</dt><dd>v3.6</dd></div>
         <div><dt class="caps" data-i18n="foot_updated">最后更新</dt><dd>2026-08-21</dd></div>
         <div><dt class="caps" data-i18n="foot_data">数据存储</dt><dd data-i18n="foot_data_v">仅本机浏览器</dd></div>
       </dl>
