@@ -6,6 +6,13 @@
 <title>HYPERNOVA · 加密仓位计算器</title>
 <meta name="description" content="风险驱动的加密合约仓位计算器，自动计算开仓数量、保证金、强平价与盈亏比。所有计算在本地完成，交易数据不上传。Risk-based crypto futures position size calculator." />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%2322d3ee'/><stop offset='1' stop-color='%237c5cff'/></linearGradient></defs><rect width='32' height='32' rx='8' fill='%230a0a14'/><circle cx='16' cy='16' r='9' fill='url(%23g)'/><circle cx='16' cy='16' r='3.6' fill='%230a0a14'/></svg>" />
+<link rel="canonical" href="https://hypernova.vip/" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<meta name="theme-color" content="#06070b" />
+<meta name="color-scheme" content="dark" />
+<link rel="icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
 <!-- 社交分享卡片 -->
 <meta property="og:title" content="HYPERNOVA · 加密仓位计算器" />
 <meta property="og:description" content="算该开多大仓 · 强平价预警 · 盈亏比，风险驱动、数据不上传的加密合约仓位计算器。" />
@@ -16,6 +23,53 @@
 <meta name="twitter:title" content="HYPERNOVA · Crypto Position Calculator" />
 <meta name="twitter:description" content="Exact position size · liquidation alerts · R:R. Risk-based, nothing uploaded." />
 <meta name="twitter:image" content="https://hypernova.vip/og.png" />
+<meta property="og:site_name" content="HYPERNOVA" />
+<meta property="og:locale" content="zh_CN" />
+<meta property="og:locale:alternate" content="en_US" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="HYPERNOVA 加密仓位计算器" />
+<meta name="twitter:image:alt" content="HYPERNOVA crypto position size calculator" />
+
+<!-- 结构化数据：让搜索引擎知道这是一个免费的在线工具 -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://hypernova.vip/#website",
+      "url": "https://hypernova.vip/",
+      "name": "HYPERNOVA",
+      "description": "面向加密交易者的风险管理工具站。",
+      "inLanguage": ["zh-CN", "en"]
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://hypernova.vip/#app",
+      "name": "HYPERNOVA 加密仓位计算器",
+      "alternateName": "HYPERNOVA Crypto Position Size Calculator",
+      "url": "https://hypernova.vip/",
+      "isPartOf": { "@id": "https://hypernova.vip/#website" },
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any (web browser)",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": ["zh-CN", "en"],
+      "image": "https://hypernova.vip/og.png",
+      "description": "风险驱动的加密合约仓位计算器：先设定单笔可承受亏损，倒推开仓数量、所需保证金、预估强平价与盈亏比，并在强平价早于止损时预警。计算全部在浏览器本地完成。",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": [
+        "风险驱动的仓位计算（先定亏损，再定仓位）",
+        "预估强平价并在其早于止损时预警",
+        "盈亏比 (R:R) 与手续费后净盈亏",
+        "全仓 / 逐仓、做多 / 做空",
+        "交易复盘日志：真实胜率、期望值、盈利因子、资金曲线",
+        "中英双语，数据仅存本地"
+      ]
+    }
+  ]
+}
+</script>
 <style>
   :root{
     --bg:#06070b;
@@ -458,7 +512,7 @@
       </div>
     </div>
 
-    <div class="privacy"><span class="lock">🔒</span> <span data-i18n="privacy">所有计算均在你的浏览器本地完成，不会上传你的任何交易数据（仅含匿名访问统计，不收集个人信息）。</span></div>
+    <div class="privacy"><span class="lock">🔒</span> <span data-i18n="privacy">所有计算均在你的浏览器本地完成，不会上传你的任何交易数据；本站不加载任何第三方统计脚本，也不收集个人信息。</span></div>
 
     <div class="disclaimer" data-i18n="disclaimer">
       ⚠️ <b>免责声明：</b>本工具仅供学习与参考，所有计算结果不构成任何投资建议。加密货币合约交易风险极高，可能导致本金全部损失，请独立判断并自行承担风险。
@@ -563,7 +617,7 @@
 <footer>
   <div class="wrap foot">
     <div class="brand"><div class="logo" style="width:24px;height:24px"></div><b style="font-size:15px">HYPER<span>NOVA</span></b></div>
-    <div data-i18n="footer">© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v2.2</div>
+    <div data-i18n="footer">© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v2.3</div>
   </div>
 </footer>
 
@@ -593,7 +647,7 @@
       row_risk:'单笔风险金额', row_stopdist:'止损距离', row_margin:'所需保证金',
       row_liq:'预估强平价', row_rr:'盈亏比 (R:R)', row_fee:'手续费 (开+平)',
       row_netwin:'止盈达成 · 净盈利', row_netloss:'止损触发 · 净亏损',
-      privacy:'所有计算均在你的浏览器本地完成，不会上传你的任何交易数据（仅含匿名访问统计，不收集个人信息）。',
+      privacy:'所有计算均在你的浏览器本地完成，不会上传你的任何交易数据；本站不加载任何第三方统计脚本，也不收集个人信息。',
       disclaimer:'⚠️ <b>免责声明：</b>本工具仅供学习与参考，所有计算结果不构成任何投资建议。加密货币合约交易风险极高，可能导致本金全部损失，请独立判断并自行承担风险。',
       feat_h:'为什么用风险驱动模型',
       feat1_t:'先定亏损，再定仓位',
@@ -606,7 +660,7 @@
       about_p1:'HYPERNOVA 是一个面向加密交易者的工具站，目标是把专业、可靠的交易工具做得人人都会用。',
       about_p2:'仓位计算器是这里的第一个工具。未来还会加入更多帮助你做出更理性决策的功能。',
       about_p3:'本站坚持：计算纯本地完成 · 不收集你的交易数据 · 不需要连接钱包。',
-      footer:'© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v2.2',
+      footer:'© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v2.3',
       nav_journal:'交易日志',
       journal_h:'交易复盘日志',
       journal_intro:'记录每笔已结束的交易，自动算出你的真实胜率、期望值和资金曲线。盈亏比是交易结束后才知道的——这里用「R 倍数」衡量。数据只存在你的浏览器本地，不上传。',
@@ -649,7 +703,7 @@
       row_risk:'Risk amount', row_stopdist:'Stop distance', row_margin:'Margin required',
       row_liq:'Est. liquidation', row_rr:'Risk : Reward', row_fee:'Fees (in + out)',
       row_netwin:'At take-profit · net', row_netloss:'At stop · net loss',
-      privacy:'All calculations run locally in your browser. None of your trade data is uploaded (only anonymous visit analytics, no personal info).',
+      privacy:'All calculations run locally in your browser. Your trade data is never uploaded — this site loads no third-party analytics scripts and collects no personal information.',
       disclaimer:'⚠️ <b>Disclaimer:</b> This tool is for learning and reference only and is not investment advice. Crypto futures trading is extremely risky and can lead to total loss of capital. Make your own decisions and bear your own risk.',
       feat_h:'Why risk-based sizing',
       feat1_t:'Loss first, size second',
@@ -662,7 +716,7 @@
       about_p1:'HYPERNOVA is a toolkit for crypto traders, built to make professional, reliable trading tools that anyone can use.',
       about_p2:'The position calculator is the first tool here. More features to help you make rational decisions are coming.',
       about_p3:'Our principles: calculations stay local · we do not collect your trade data · no wallet connection required.',
-      footer:'© 2026 HYPERNOVA · For educational reference only, not investment advice · v2.2',
+      footer:'© 2026 HYPERNOVA · For educational reference only, not investment advice · v2.3',
       nav_journal:'Journal',
       journal_h:'Trade Journal',
       journal_intro:'Log every closed trade and see your real win rate, expectancy and equity curve. Your R:R is only known after a trade closes — here it is measured as an R-multiple. Data stays in your browser, never uploaded.',

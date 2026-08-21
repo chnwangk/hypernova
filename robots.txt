@@ -1,0 +1,10 @@
+# hypernova.vip
+User-agent: *
+Allow: /
+
+# 内容信号 (Cloudflare / IETF content-signals 提案)：
+# 允许被搜索引擎收录与 AI 检索引用，不允许用于训练模型。
+# 想改策略就改这一行：search / ai-input / ai-train = yes|no
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+Sitemap: https://hypernova.vip/sitemap.xml
