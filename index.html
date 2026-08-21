@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>HYPERNOVA · 加密仓位计算器</title>
-<meta name="description" content="风险驱动的加密合约仓位计算器，自动计算开仓数量、保证金、强平价与盈亏比。所有计算在本地完成，交易数据不上传。Risk-based crypto futures position size calculator." />
+<title>HYPERNOVA · 加密合约仓位计算器</title>
+<meta name="description" content="风险驱动的加密合约仓位计算器：由单笔可承受亏损反推开仓数量、所需保证金、预估强制平仓价与盈亏比，并公开全部计算公式。运算在本地浏览器完成，不上传任何交易数据。" />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%2322d3ee'/><stop offset='1' stop-color='%237c5cff'/></linearGradient></defs><rect width='32' height='32' rx='8' fill='%230a0a14'/><circle cx='16' cy='16' r='9' fill='url(%23g)'/><circle cx='16' cy='16' r='3.6' fill='%230a0a14'/></svg>" />
 <link rel="canonical" href="https://hypernova.vip/" />
 <meta name="robots" content="index, follow, max-image-preview:large" />
@@ -14,21 +14,21 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="manifest" href="/site.webmanifest" />
 <!-- 社交分享卡片 -->
-<meta property="og:title" content="HYPERNOVA · 加密仓位计算器" />
-<meta property="og:description" content="算该开多大仓 · 强平价预警 · 盈亏比，风险驱动、数据不上传的加密合约仓位计算器。" />
+<meta property="og:title" content="HYPERNOVA · 加密合约仓位计算器" />
+<meta property="og:description" content="由风险反推仓位规模，估算强制平仓价与盈亏比，全部公式公开。运算在本地完成，不上传交易数据。" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://hypernova.vip/" />
 <meta property="og:image" content="https://hypernova.vip/og.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="HYPERNOVA · Crypto Position Calculator" />
-<meta name="twitter:description" content="Exact position size · liquidation alerts · R:R. Risk-based, nothing uploaded." />
+<meta name="twitter:description" content="Size positions from risk, estimate liquidation and R:R, with every formula published. Runs locally; no data leaves your device." />
 <meta name="twitter:image" content="https://hypernova.vip/og.png" />
 <meta property="og:site_name" content="HYPERNOVA" />
 <meta property="og:locale" content="zh_CN" />
 <meta property="og:locale:alternate" content="en_US" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="HYPERNOVA 加密仓位计算器" />
+<meta property="og:image:alt" content="HYPERNOVA 加密合约仓位计算器" />
 <meta name="twitter:image:alt" content="HYPERNOVA crypto position size calculator" />
 
 <!-- 结构化数据：让搜索引擎知道这是一个免费的在线工具 -->
@@ -72,38 +72,74 @@
 </script>
 <style>
   :root{
-    --bg:#06070b;
-    --bg2:#0a0c11;
-    --card:#14152400;
-    --panel:#0d0f15;
-    --panel2:#11141c;
-    --line:#1b1f29;
-    --line2:#23283400;
-    --text:#eceff5;
-    --muted:#79839a;
-    --accent:#7c5cff;
-    --accent2:#2dd4bf;
+    /* 表面：由深到浅四级，靠明度差建立层次，不靠阴影 */
+    --bg:#05070a;
+    --bg2:#080b10;
+    --panel:#0b0e14;
+    --panel2:#10141c;
+    --inset:#06080c;
+
+    /* 结构线：终端界面的骨架靠线，不靠圆角和投影 */
+    --line:#1c2230;
+    --line-strong:#28303f;
+    --line-soft:#141924;
+
+    /* 文字：四级明度，正文不用纯白 */
+    --text:#e8ecf3;
+    --text2:#aab4c6;
+    --muted:#6f7a90;
+    --faint:#525c70;
+
+    /* 语义色：青绿为数据主色，紫仅用于品牌与主操作 */
+    --accent:#2dd4bf;
+    --brand:#7c5cff;
     --green:#34d399;
-    --red:#fb7185;
-    --amber:#fbbf24;
-    --radius:14px;
-    --mono:ui-monospace,"SF Mono","JetBrains Mono","Roboto Mono",Menlo,Consolas,monospace;
+    --red:#f87186;
+    --amber:#f5b13d;
+
+    /* 圆角：收紧，越接近直角越像专业终端 */
+    --r-lg:10px;
+    --r:8px;
+    --r-sm:6px;
+
+    /* 排版刻度 */
+    --fs-micro:11px;
+    --fs-xs:12px;
+    --fs-sm:13px;
+    --fs-base:14px;
+    --fs-md:15px;
+    --track-caps:.14em;
+
+    --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono","Roboto Mono",Menlo,Consolas,"Liberation Mono",monospace;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Roboto,Helvetica,Arial,sans-serif;
+    font-family:var(--sans);
+    /* 极克制的环境光——专业终端不做星云 */
     background:
-      radial-gradient(1100px 620px at 82% -12%, rgba(124,92,255,.10), transparent 62%),
-      radial-gradient(900px 520px at -12% 8%, rgba(45,212,191,.07), transparent 58%),
+      radial-gradient(1200px 560px at 50% -20%, rgba(45,212,191,.045), transparent 60%),
       var(--bg);
     color:var(--text);
     line-height:1.6;
     min-height:100vh;
+    font-size:var(--fs-md);
     -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    /* 全站数字等宽对齐，这是终端观感的地基 */
+    font-variant-numeric:tabular-nums;
+    font-feature-settings:"tnum" 1;
   }
+  /* 通用微标签：全大写 + 宽字距，机构界面的标准做法 */
+  .caps{
+    font-size:var(--fs-micro);font-weight:700;text-transform:uppercase;
+    letter-spacing:var(--track-caps);color:var(--muted);
+  }
+  ::selection{background:rgba(45,212,191,.24)}
+  :focus-visible{outline:2px solid var(--brand);outline-offset:2px}
   a{color:inherit;text-decoration:none}
-  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 24px}
 
   /* ---------- Nav ---------- */
   header{
@@ -116,13 +152,13 @@
   .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.5px}
   .brand .logo{
     width:30px;height:30px;border-radius:9px;
-    background:conic-gradient(from 200deg,var(--accent),var(--accent2),var(--accent));
-    box-shadow:0 0 18px rgba(124,92,255,.6);
+    background:conic-gradient(from 200deg,var(--brand),var(--accent),var(--brand));
+    
     position:relative;
   }
   .brand .logo::after{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--bg);}
   .brand b{font-size:18px}
-  .brand span{color:var(--accent2);font-weight:800}
+  .brand span{color:var(--accent);font-weight:800}
   .nav-links{display:flex;gap:22px;align-items:center;margin-left:auto}
   .nav-links a{color:var(--muted);font-size:14px;font-weight:600;transition:color .15s}
   .nav-links a:hover{color:var(--text)}
@@ -130,11 +166,11 @@
     background:var(--panel);border:1px solid var(--line);color:var(--muted);
     padding:7px 12px;min-height:38px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;transition:.15s;
   }
-  .lang-btn:hover{color:var(--text);border-color:var(--accent)}
+  .lang-btn:hover{color:var(--text);border-color:var(--brand)}
   .nav-cta{
-    background:linear-gradient(135deg,var(--accent),#9b7bff);
+    background:linear-gradient(135deg,var(--brand),#9b7bff);
     color:#fff;padding:8px 16px;border-radius:10px;font-size:14px;font-weight:700;
-    box-shadow:0 6px 20px rgba(124,92,255,.35);
+    
   }
   @media(max-width:680px){
     /* 原先锚点链接在移动端整行隐藏，导致够不到「交易日志」。
@@ -153,35 +189,42 @@
   }
 
   /* ---------- Hero ---------- */
-  .hero{padding:74px 0 38px;text-align:center}
+  .hero{padding:80px 0 44px;text-align:center;border-bottom:1px solid var(--line-soft)}
   .pill{
     display:inline-flex;align-items:center;gap:8px;
     border:1px solid var(--line);background:var(--panel);
-    color:var(--muted);font-size:13px;padding:6px 14px;border-radius:999px;margin-bottom:22px;
+    color:var(--muted);font-size:var(--fs-xs);font-weight:600;
+    padding:6px 13px;border-radius:999px;margin-bottom:26px;
+    letter-spacing:.01em;
   }
-  .pill .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+  .pill .dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
   .hero h1{
-    font-size:48px;line-height:1.12;font-weight:800;letter-spacing:-1.6px;margin-bottom:18px;
+    font-size:46px;line-height:1.16;font-weight:700;letter-spacing:-.028em;margin-bottom:20px;
   }
-  .hero h1 .grad{
-    background:linear-gradient(120deg,var(--accent2),var(--accent) 65%,#c4b5fd);
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-  }
-  .hero p{color:var(--muted);font-size:16.5px;line-height:1.7;max-width:600px;margin:0 auto 28px}
-  .hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  /* 强调行用实色青绿，不做渐变文字——渐变文字在正规语境里显轻浮 */
+  .hero h1 .grad{color:var(--accent)}
+  .hero p{color:var(--text2);font-size:16px;line-height:1.75;max-width:640px;margin:0 auto 30px}
+  .hero-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
   .btn{
-    padding:12px 24px;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer;border:none;
-    transition:transform .12s,box-shadow .12s;
+    padding:12px 22px;border-radius:var(--r);font-weight:650;font-size:var(--fs-base);
+    cursor:pointer;border:1px solid transparent;letter-spacing:.01em;
+    transition:background-color .15s,border-color .15s,color .15s;
   }
-  .btn:active{transform:translateY(1px)}
-  .btn-primary{background:linear-gradient(135deg,var(--accent),#9b7bff);color:#fff;box-shadow:0 8px 26px rgba(124,92,255,.4)}
-  .btn-ghost{background:var(--panel);color:var(--text);border:1px solid var(--line)}
-  @media(max-width:680px){.hero h1{font-size:34px}.hero{padding:48px 0 26px}}
+  .btn-primary{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .btn-primary:hover{background:#6b4ce8;border-color:#6b4ce8}
+  .btn-ghost{background:transparent;color:var(--text2);border-color:var(--line-strong)}
+  .btn-ghost:hover{color:var(--text);border-color:var(--muted);background:var(--panel)}
+  @media(max-width:680px){.hero h1{font-size:31px}.hero{padding:44px 0 30px}}
 
   /* ---------- Calculator ---------- */
-  section{padding:34px 0}
-  .sec-title{font-size:12px;letter-spacing:2.5px;color:var(--accent2);font-weight:700;text-transform:uppercase;margin-bottom:8px}
-  .sec-h{font-size:25px;font-weight:750;letter-spacing:-.5px;margin-bottom:24px}
+  section{padding:52px 0}
+  .sec-title{
+    font-size:var(--fs-micro);letter-spacing:var(--track-caps);color:var(--accent);
+    font-weight:700;text-transform:uppercase;margin-bottom:10px;
+  }
+  .sec-h{font-size:23px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px}
+  /* 分区导语：给每个板块一句正式的说明，撑起信息层次 */
+  .sec-lede{color:var(--muted);font-size:var(--fs-base);line-height:1.7;max-width:720px;margin-bottom:26px}
 
   .calc{
     display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start;
@@ -190,17 +233,26 @@
 
   .panel{
     background:var(--panel);
-    border:1px solid var(--line);border-radius:var(--radius);padding:24px;
+    border:1px solid var(--line);border-radius:var(--r-lg);padding:0;overflow:hidden;
   }
-  .panel h3{font-size:16px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+  /* 面板头做成终端的"标题栏"：独立底色 + 下边界 */
+  .panel h3{
+    font-size:var(--fs-xs);font-weight:700;text-transform:uppercase;letter-spacing:var(--track-caps);
+    color:var(--text2);margin:0;padding:13px 20px;display:flex;align-items:center;gap:9px;
+    background:var(--panel2);border-bottom:1px solid var(--line);
+  }
   .panel h3 .n{
-    width:22px;height:22px;border-radius:7px;background:var(--accent);color:#fff;
-    font-size:12px;display:grid;place-items:center;font-weight:800;flex-shrink:0;
+    width:18px;height:18px;border-radius:var(--r-sm);
+    background:transparent;border:1px solid var(--line-strong);color:var(--muted);
+    font-size:10px;display:grid;place-items:center;font-weight:700;flex-shrink:0;
+    font-family:var(--mono);letter-spacing:0;
   }
+  .panel-body{padding:20px}
 
   .field{margin-bottom:15px}
-  .field label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:600}
-  .field label .hint{color:#5d6288;font-weight:400}
+  .field label{display:block;font-size:var(--fs-sm);color:var(--text2);margin-bottom:7px;font-weight:600}
+  /* 提示语与标签拉开距离并降一级明度，避免连成一句话 */
+  .field label .hint{color:var(--faint);font-weight:400;font-size:var(--fs-xs);margin-left:8px}
   .input-wrap{position:relative;display:flex;align-items:center}
   .input-wrap .suffix{position:absolute;right:12px;color:var(--muted);font-size:13px;pointer-events:none}
   input[type=number],input[type=text],input[type=date],select{
@@ -208,7 +260,7 @@
     padding:11px 13px;min-height:44px;border-radius:10px;font-size:15px;font-weight:600;outline:none;
     transition:border-color .15s,box-shadow .15s;
   }
-  input[type=number]:focus,input[type=text]:focus,input[type=date]:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,.18)}
+  input[type=number]:focus,input[type=text]:focus,input[type=date]:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(45,212,191,.16)}
   input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 
   .seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:4px;gap:4px}
@@ -218,68 +270,106 @@
   }
   .seg button.long.active{background:rgba(52,211,153,.16);color:var(--green)}
   .seg button.short.active{background:rgba(251,113,133,.16);color:var(--red)}
-  .seg button.mode.active{background:rgba(124,92,255,.18);color:var(--accent2)}
+  .seg button.mode.active{background:rgba(45,212,191,.13);color:var(--accent)}
 
   .lev-row{display:flex;align-items:center;gap:12px}
-  .lev-row input[type=range]{flex:1;accent-color:var(--accent)}
+  .lev-row input[type=range]{flex:1;accent-color:var(--brand)}
   .lev-num{display:flex;align-items:center;gap:3px;flex-shrink:0}
-  .lev-num input{width:54px;text-align:center;padding:7px 6px;font-size:15px;font-weight:700;font-family:var(--mono);color:var(--accent2);background:var(--bg);border:1px solid var(--line);border-radius:8px}
-  .lev-num input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,.18);outline:none}
-  .lev-num span{color:var(--accent2);font-weight:800;font-size:14px}
+  .lev-num input{width:54px;text-align:center;padding:7px 6px;font-size:15px;font-weight:700;font-family:var(--mono);color:var(--accent);background:var(--bg);border:1px solid var(--line);border-radius:8px}
+  .lev-num input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(45,212,191,.16);outline:none}
+  .lev-num span{color:var(--accent);font-weight:800;font-size:14px}
 
   .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
   /* results */
-  .result-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;gap:10px}
-  .big-num{font-family:var(--mono);font-size:33px;font-weight:700;letter-spacing:-1px}
-  .big-sub{color:var(--muted);font-size:12px;letter-spacing:.3px}
+  .result-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;gap:10px}
+  .big-num{font-family:var(--mono);font-size:31px;font-weight:600;letter-spacing:-.03em}
+  .big-sub{color:var(--muted);font-size:var(--fs-micro);font-weight:700;text-transform:uppercase;letter-spacing:var(--track-caps)}
   .divider{height:1px;background:var(--line);margin:18px 0}
   .rows{display:flex;flex-direction:column;gap:2px}
-  .row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(27,31,41,.7);gap:10px}
+  .row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line-soft);gap:12px}
   .row:last-child{border-bottom:none}
-  .row .k{color:var(--muted);font-size:13.5px;display:flex;align-items:center;gap:6px}
-  .row .v{font-family:var(--mono);font-weight:600;font-size:14px;font-variant-numeric:tabular-nums;text-align:right;letter-spacing:-.2px}
-  .v.green{color:var(--green)}.v.red{color:var(--red)}.v.accent{color:var(--accent2)}
+  .row .k{color:var(--muted);font-size:var(--fs-sm);display:flex;align-items:center;gap:7px}
+  .row .v{font-family:var(--mono);font-weight:600;font-size:var(--fs-sm);font-variant-numeric:tabular-nums;text-align:right;letter-spacing:-.01em;color:var(--text)}
+  .v.green{color:var(--green)}.v.red{color:var(--red)}.v.accent{color:var(--accent)}
 
-  .rr-badge{font-size:12px;padding:3px 9px;border-radius:999px;font-weight:700}
+  .rr-badge{font-size:var(--fs-micro);padding:2px 7px;border-radius:var(--r-sm);font-weight:700;letter-spacing:.04em}
   .rr-good{background:rgba(52,211,153,.15);color:var(--green)}
   .rr-bad{background:rgba(251,113,133,.15);color:var(--red)}
 
   .alert{
-    display:flex;gap:10px;padding:12px 14px;border-radius:11px;font-size:13.5px;margin-top:14px;line-height:1.5;
-    border:1px solid;
+    display:flex;gap:10px;padding:11px 13px;font-size:var(--fs-sm);margin-top:10px;line-height:1.6;
+    border:1px solid var(--line);border-left-width:2px;border-radius:0 var(--r-sm) var(--r-sm) 0;
+    background:var(--inset);color:var(--text2);
   }
-  .alert .ico{flex-shrink:0;font-size:16px;line-height:1.4}
-  .alert.warn{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.35);color:#fcd34d}
-  .alert.danger{background:rgba(251,113,133,.09);border-color:rgba(251,113,133,.4);color:#fda4b4}
-  .alert.ok{background:rgba(52,211,153,.08);border-color:rgba(52,211,153,.3);color:#6ee7b7}
-  .alert.info{background:rgba(124,92,255,.08);border-color:rgba(124,92,255,.3);color:#c4b5fd}
+  .alert .ico{flex-shrink:0;width:15px;height:15px;margin-top:2px;display:block}
+  .alert .ico svg{width:15px;height:15px;display:block}
+  .alert.warn{border-left-color:var(--amber);color:#e8c37a}
+  .alert.danger{border-left-color:var(--red);color:#f4a3af}
+  .alert.ok{border-left-color:var(--green);color:#8ddcbb}
+  .alert.info{border-left-color:var(--line-strong);color:var(--muted)}
 
   .privacy{
     display:flex;align-items:center;gap:8px;justify-content:center;color:var(--muted);
     font-size:13px;margin-top:22px;text-align:center;
   }
-  .privacy .lock{color:var(--green)}
+  .privacy .lock{color:var(--green);display:inline-block;vertical-align:-2px}
+  .privacy .lock svg{width:13px;height:13px;display:block}
 
   /* features */
   .feat{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:6px}
   @media(max-width:760px){.feat{grid-template-columns:1fr}}
   .fcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
-  .fcard .fi{margin-bottom:14px;color:var(--accent2);display:flex}
+  .fcard .fi{margin-bottom:14px;color:var(--accent);display:flex}
   .fcard .fi svg{width:26px;height:26px}
   .fcard h4{font-size:15.5px;font-weight:700;margin-bottom:7px;letter-spacing:-.2px}
   .fcard p{color:var(--muted);font-size:14px;line-height:1.65}
 
+  /* ---------- 计算方法 ---------- */
+  .method-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+  @media(max-width:860px){.method-grid{grid-template-columns:1fr}}
+  .mcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+  .mcard-h{
+    font-size:var(--fs-xs);font-weight:700;letter-spacing:.06em;color:var(--text2);
+    padding:12px 18px;background:var(--panel2);border-bottom:1px solid var(--line);
+  }
+  .mcard-p{color:var(--muted);font-size:var(--fs-sm);line-height:1.75;padding:16px 18px 0}
+  .formula{padding:14px 18px 18px}
+  .f-row{
+    display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:8px 0;border-bottom:1px solid var(--line-soft);
+  }
+  .f-row:last-child{border-bottom:none}
+  .f-l{color:var(--muted);font-size:var(--fs-sm);white-space:nowrap}
+  .f-r{
+    font-family:var(--mono);font-size:var(--fs-sm);color:var(--accent);
+    text-align:right;letter-spacing:-.01em;
+  }
+  .f-r sub{font-size:.75em}
+  .method-note{
+    color:var(--faint);font-size:var(--fs-sm);line-height:1.8;
+    border-left:2px solid var(--line-strong);padding-left:14px;
+  }
+
   /* about */
-  .about{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:28px}
+  .about{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:28px}
   .about p{color:var(--muted);margin-bottom:12px}
 
   .disclaimer{
     border:1px dashed var(--line);border-radius:12px;padding:16px;color:#6f74a0;font-size:13px;margin-top:22px;
   }
 
-  footer{border-top:1px solid var(--line);margin-top:40px;padding:28px 0;color:var(--muted);font-size:13px}
-  .foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+  footer{border-top:1px solid var(--line);margin-top:56px;color:var(--muted);font-size:var(--fs-sm)}
+  .foot-top{display:grid;grid-template-columns:1.4fr 1fr 1.2fr;gap:36px;padding:34px 0 28px}
+  @media(max-width:760px){.foot-top{grid-template-columns:1fr;gap:26px}}
+  .foot-desc{color:var(--faint);font-size:var(--fs-sm);line-height:1.7;margin-top:12px;max-width:300px}
+  .foot-links{display:flex;flex-direction:column;gap:9px}
+  .foot-links a{color:var(--muted);transition:color .15s;padding:5px 0}
+  .foot-links a:hover{color:var(--text)}
+  .foot-meta{display:flex;flex-direction:column;gap:12px}
+  .foot-meta div{display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line-soft);padding-bottom:8px}
+  .foot-meta dd{font-family:var(--mono);color:var(--text2);font-size:var(--fs-xs)}
+  .foot-bottom{border-top:1px solid var(--line-soft);padding:18px 0 26px;color:var(--faint);font-size:var(--fs-xs)}
 
   /* ---------- 交易日志 journal ---------- */
   .journal-intro{color:var(--muted);font-size:15px;max-width:740px;margin-bottom:22px}
@@ -299,17 +389,18 @@
   .jtrade .jt-pnl{font-family:var(--mono);color:var(--muted);font-variant-numeric:tabular-nums;min-width:78px;text-align:right;font-size:12px}
   .jt-r.green,.jt-pnl.green{color:var(--green)}
   .jt-r.red,.jt-pnl.red{color:var(--red)}
-  .jdel{background:none;border:none;color:#5d6288;cursor:pointer;font-size:15px;line-height:1;padding:2px 5px;border-radius:6px;transition:.15s}
-  .jdel:hover{color:var(--red);background:rgba(251,113,133,.12)}
+  .jdel,.jt-edit{background:none;border:none;color:var(--faint);cursor:pointer;line-height:0;padding:5px;border-radius:var(--r-sm);transition:color .15s,background-color .15s}
+  .jdel svg,.jt-edit svg{width:14px;height:14px;display:block}
+  
   .jempty{color:var(--muted);text-align:center;padding:24px 0;font-size:14px}
   .jchart-label{color:var(--muted);font-size:13px;margin:18px 0 8px;font-weight:600}
   #j_chart{width:100%;height:150px;display:block}
   .jtools{display:flex;gap:10px;margin-top:16px}
   .jtool-btn{flex:1;background:var(--bg);border:1px solid var(--line);color:var(--muted);padding:9px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;transition:.15s}
-  .jtool-btn:hover{color:var(--text);border-color:var(--accent)}
+  .jtool-btn:hover{color:var(--text);border-color:var(--brand)}
   .jtrade .jt-note{flex-basis:100%;color:#6f74a0;font-size:12px;padding:2px 0 0 0}
-  .jt-edit{background:none;border:none;color:#5d6288;cursor:pointer;font-size:13px;padding:2px 4px;border-radius:6px;transition:.15s}
-  .jt-edit:hover{color:var(--accent2);background:rgba(34,211,238,.1)}
+  .jt-edit:hover{color:var(--accent);background:rgba(45,212,191,.1)}
+  .jdel:hover{color:var(--red);background:rgba(248,113,134,.1)}
   #j_list{max-height:340px;overflow-y:auto;margin-top:4px}
   /* 计算器：价格结构可视化 */
   .viz-label{color:var(--muted);font-size:13px;margin:18px 0 6px;font-weight:600}
@@ -319,50 +410,30 @@
   /* 风险快捷按钮 */
   .quick{display:flex;gap:6px;margin-top:8px}
   .quick button{flex:1;background:var(--bg);border:1px solid var(--line);color:var(--muted);padding:6px;min-height:38px;border-radius:8px;font-size:12.5px;font-weight:700;cursor:pointer;transition:.15s}
-  .quick button:hover{color:var(--text);border-color:var(--accent)}
-  .quick button.on{background:rgba(124,92,255,.18);border-color:var(--accent);color:var(--accent2)}
+  .quick button:hover{color:var(--text);border-color:var(--brand)}
+  .quick button.on{background:rgba(45,212,191,.12);border-color:rgba(45,212,191,.45);color:var(--accent)}
   .jtool-btn.danger:hover{color:var(--red);border-color:var(--red)}
 
-  /* ---------- 美化 polish ---------- */
-  /* logo 微光呼吸 */
-  header .brand .logo{animation:novaPulse 5s ease-in-out infinite}
-  @keyframes novaPulse{
-    0%,100%{box-shadow:0 0 12px rgba(124,92,255,.35)}
-    50%{box-shadow:0 0 20px rgba(124,92,255,.55),0 0 30px rgba(45,212,191,.22)}
-  }
-  /* hero 漂浮星云（克制） */
-  .hero{position:relative;overflow:hidden}
-  .hero::before{content:"";position:absolute;width:460px;height:460px;border-radius:50%;
-    background:radial-gradient(circle,rgba(124,92,255,.11),transparent 70%);
-    top:-170px;left:50%;transform:translateX(-50%);filter:blur(10px);
-    animation:floatGlow 14s ease-in-out infinite;z-index:0;pointer-events:none}
-  .hero::after{content:"";position:absolute;width:320px;height:320px;border-radius:50%;
-    background:radial-gradient(circle,rgba(45,212,191,.07),transparent 70%);
-    bottom:-130px;right:6%;filter:blur(10px);
-    animation:floatGlow2 18s ease-in-out infinite;z-index:0;pointer-events:none}
-  .hero>*{position:relative;z-index:1}
-  @keyframes floatGlow{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-44%) translateY(24px)}}
-  @keyframes floatGlow2{0%,100%{transform:translateY(0)}50%{transform:translateY(-28px)}}
-  /* hero 入场动画 */
-  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-  .hero .pill{animation:fadeUp .55s ease both}
-  .hero h1{animation:fadeUp .55s ease .08s both}
-  .hero p{animation:fadeUp .55s ease .16s both}
-  .hero .hero-btns{animation:fadeUp .55s ease .24s both}
-  /* 卡片悬停上浮 */
-  .fcard{transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease}
-  .fcard:hover{transform:translateY(-5px);border-color:rgba(124,92,255,.5);box-shadow:0 14px 32px rgba(124,92,255,.18)}
-  /* 滚动渐入 */
-  .reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease, transform .6s ease}
+  /* ---------- 动效：克制到近乎不可见 ---------- */
+  /* 专业终端不发光、不漂浮、不上浮。入场只留一次极短的淡入，避免页面"跳"。 */
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .hero .pill{animation:fadeUp .34s ease both}
+  .hero h1{animation:fadeUp .34s ease .05s both}
+  .hero p{animation:fadeUp .34s ease .1s both}
+  .hero .hero-btns{animation:fadeUp .34s ease .15s both}
+
+  /* 卡片悬停只改边框与底色，不位移、不投影 */
+  .fcard{transition:border-color .16s ease, background-color .16s ease}
+  .fcard:hover{border-color:var(--line-strong);background:var(--panel2)}
+
+  /* 滚动渐入：位移收到 10px，时长减半 */
+  .reveal{opacity:0;transform:translateY(10px);transition:opacity .34s ease, transform .34s ease}
   .reveal.in{opacity:1;transform:none}
-  .feat .fcard:nth-child(2){transition-delay:.08s}
-  .feat .fcard:nth-child(3){transition-delay:.16s}
-  /* 核心数字渐变高亮 */
-  #qty{
-    background:linear-gradient(120deg,var(--accent2),#b9a7ff);
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-    filter:drop-shadow(0 0 12px rgba(124,92,255,.35));
-  }
+  .feat .fcard:nth-child(2){transition-delay:.05s}
+  .feat .fcard:nth-child(3){transition-delay:.1s}
+
+  /* 核心数字：实色青绿，不用渐变文字与发光 */
+  #qty{color:var(--accent)}
   @media(prefers-reduced-motion:reduce){
     *{animation:none!important}
     .reveal{opacity:1;transform:none}
@@ -381,7 +452,7 @@
     <nav class="nav-links" aria-label="主导航 / Main navigation">
       <a href="#calc" data-i18n="nav_calc">仓位计算器</a>
       <a href="#journal" data-i18n="nav_journal">交易日志</a>
-      <a href="#features" data-i18n="nav_features">特性</a>
+      <a href="#method" data-i18n="nav_features">计算方法</a>
       <a href="#about" data-i18n="nav_about">关于</a>
     </nav>
     <button id="langToggle" class="lang-btn">EN</button>
@@ -391,12 +462,12 @@
 
 <!-- ===== HERO ===== -->
 <div class="wrap hero">
-  <div class="pill"><span class="dot"></span> <span data-i18n="hero_pill">计算在本地完成 · 交易数据不上传</span></div>
-  <h1 data-i18n="hero_h1">聪明地决定<br><span class="grad">该开多大仓位</span></h1>
-  <p data-i18n="hero_p">专业交易者用的不是「感觉」，而是「风险」。先设定单笔最多能亏多少，HYPERNOVA 帮你倒推该开多少仓、需要多少保证金，并提前警告强平风险。</p>
+  <div class="pill"><span class="dot"></span> <span data-i18n="hero_pill">全部运算在本地浏览器完成 · 不上传任何交易数据</span></div>
+  <h1 data-i18n="hero_h1">先定义风险<br><span class="grad">再决定仓位规模</span></h1>
+  <p data-i18n="hero_p">专业的仓位管理不依赖盘感，而依赖对单笔风险的量化。设定本笔交易可承受的最大亏损后，HYPERNOVA 据此计算应开仓数量、所需保证金与预估强制平仓价格，并在杠杆过高致使强平价先于止损被触及时提示风险。</p>
   <div class="hero-btns">
-    <a href="#calc"><button class="btn btn-primary" data-i18n="hero_btn1">立即计算仓位 →</button></a>
-    <a href="#features"><button class="btn btn-ghost" data-i18n="hero_btn2">了解工作原理</button></a>
+    <a href="#calc"><button class="btn btn-primary" data-i18n="hero_btn1">开始计算</button></a>
+    <a href="#method"><button class="btn btn-ghost" data-i18n="hero_btn2">查看计算方法</button></a>
   </div>
 </div>
 
@@ -409,10 +480,11 @@
     <div class="calc">
       <!-- INPUTS -->
       <div class="panel">
-        <h3><span class="n">1</span><span data-i18n="panel1_title">填写你的交易计划</span></h3>
+        <h3><span class="n">1</span><span data-i18n="panel1_title">交易参数</span></h3>
+        <div class="panel-body">
 
         <div class="field">
-          <label for="account" data-i18n="label_account">账户总额 <span class="hint">（用于计算风险的本金）</span></label>
+          <label for="account" data-i18n="label_account">账户总额 <span class="hint">计入风险计算的可用本金</span></label>
           <div class="input-wrap">
             <input type="number" id="account" min="0" step="any">
             <span class="suffix">USDT</span>
@@ -420,7 +492,7 @@
         </div>
 
         <div class="field">
-          <label for="risk" data-i18n="label_risk">单笔风险比例 <span class="hint">（建议 1%–2%，即最多愿意亏多少）</span></label>
+          <label for="risk" data-i18n="label_risk">单笔风险比例 <span class="hint">本笔可承受的最大亏损占账户比例，通行区间 1%–2%</span></label>
           <div class="input-wrap">
             <input type="number" id="risk" value="1" min="0" step="any">
             <span class="suffix">%</span>
@@ -431,7 +503,7 @@
         </div>
 
         <div class="field">
-          <label for="symbol" data-i18n="label_symbol">标的 <span class="hint">（可选，如 BTC）</span></label>
+          <label for="symbol" data-i18n="label_symbol">标的 <span class="hint">选填，例如 BTC</span></label>
           <div class="input-wrap"><input type="text" id="symbol" placeholder="BTC"></div>
         </div>
 
@@ -464,7 +536,7 @@
         </div>
 
         <div class="field">
-          <label for="target" data-i18n="label_target">止盈价 <span class="hint">（可选，用于算盈亏比）</span></label>
+          <label for="target" data-i18n="label_target">止盈价 <span class="hint">选填，用于计算盈亏比</span></label>
           <div class="input-wrap"><input type="number" id="target" min="0" step="any"></div>
         </div>
 
@@ -478,22 +550,24 @@
 
         <div class="two">
           <div class="field">
-            <label for="fee" data-i18n="label_fee">手续费率 <span class="hint">(单边)</span></label>
+            <label for="fee" data-i18n="label_fee">手续费率 <span class="hint">单边</span></label>
             <div class="input-wrap"><input type="number" id="fee" value="0.05" min="0" step="any"><span class="suffix">%</span></div>
           </div>
           <div class="field">
-            <label for="mmr" data-i18n="label_mmr">维持保证金率 <span class="hint">(算强平)</span></label>
+            <label for="mmr" data-i18n="label_mmr">维持保证金率 <span class="hint">用于估算强制平仓价格</span></label>
             <div class="input-wrap"><input type="number" id="mmr" value="0.5" min="0" step="any"><span class="suffix">%</span></div>
           </div>
+        </div>
         </div>
       </div>
 
       <!-- RESULTS -->
       <div class="panel">
         <h3><span class="n">2</span><span data-i18n="panel2_title">计算结果</span></h3>
+        <div class="panel-body">
 
         <div class="result-head">
-          <span class="big-sub" data-i18n="res_qty_label">建议开仓数量</span>
+          <span class="big-sub" data-i18n="res_qty_label">应开仓数量</span>
           <span class="big-sub" data-i18n="res_notional_label">名义价值</span>
         </div>
         <div class="result-head">
@@ -507,30 +581,29 @@
           <div class="row"><span class="k" data-i18n="row_risk">单笔风险金额</span><span class="v red" id="riskAmt">—</span></div>
           <div class="row"><span class="k" data-i18n="row_stopdist">止损距离</span><span class="v" id="stopDist">—</span></div>
           <div class="row"><span class="k" data-i18n="row_margin">所需保证金</span><span class="v accent" id="margin">—</span></div>
-          <div class="row"><span class="k" data-i18n="row_liq">预估强平价</span><span class="v" id="liq">—</span></div>
-          <div class="row"><span class="k"><span data-i18n="row_rr">盈亏比 (R:R)</span> <span id="rrBadge"></span></span><span class="v" id="rr">—</span></div>
-          <div class="row"><span class="k" data-i18n="row_fee">手续费（开仓+止损离场）</span><span class="v" id="feeAmt">—</span></div>
-          <div class="row"><span class="k" data-i18n="row_netwin">止盈达成 · 净盈利</span><span class="v green" id="netWin">—</span></div>
-          <div class="row"><span class="k" data-i18n="row_netloss">止损触发 · 净亏损</span><span class="v red" id="netLoss">—</span></div>
+          <div class="row"><span class="k" data-i18n="row_liq">预估强制平仓价</span><span class="v" id="liq">—</span></div>
+          <div class="row"><span class="k"><span data-i18n="row_rr">盈亏比 R:R</span> <span id="rrBadge"></span></span><span class="v" id="rr">—</span></div>
+          <div class="row"><span class="k" data-i18n="row_fee">手续费 开仓+止损离场</span><span class="v" id="feeAmt">—</span></div>
+          <div class="row"><span class="k" data-i18n="row_netwin">止盈成交 · 净盈利</span><span class="v green" id="netWin">—</span></div>
+          <div class="row"><span class="k" data-i18n="row_netloss">止损成交 · 净亏损</span><span class="v red" id="netLoss">—</span></div>
         </div>
 
-        <div class="viz-label" id="vizLabel" data-i18n="viz_label" style="display:none">价格结构</div>
+        <div class="viz-label" id="vizLabel" data-i18n="viz_label" style="display:none">价格结构　入场 / 止损 / 止盈 / 强平</div>
         <canvas id="tradeViz" height="82" style="display:none" role="img" aria-label="价格结构示意图：入场、止损、止盈与强平价的相对位置 / Price structure diagram"></canvas>
 
         <div id="alerts" role="status" aria-live="polite" aria-atomic="false"></div>
 
         <div class="result-btns" id="resultBtns" style="display:none">
           <button class="btn btn-ghost" id="copyResult" data-i18n="copy_result">复制结果</button>
-          <button class="btn btn-ghost" id="toJournal" data-i18n="to_journal">记录到日志 ↓</button>
+          <button class="btn btn-ghost" id="toJournal" data-i18n="to_journal">录入交易日志</button>
+        </div>
         </div>
       </div>
     </div>
 
-    <div class="privacy"><span class="lock">🔒</span> <span data-i18n="privacy">所有计算均在你的浏览器本地完成，不会上传你的任何交易数据；本站不加载任何第三方统计脚本，也不收集个人信息。</span></div>
+    <div class="privacy"><span class="lock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8.2 10.5V7.8a3.8 3.8 0 0 1 7.6 0v2.7"/></svg></span> <span data-i18n="privacy">本工具的全部计算均在您的浏览器本地完成，交易参数不会离开本机；站点不加载任何第三方统计脚本，亦不收集个人信息。</span></div>
 
-    <div class="disclaimer" data-i18n="disclaimer">
-      ⚠️ <b>免责声明：</b>本工具仅供学习与参考，所有计算结果不构成任何投资建议。加密货币合约交易风险极高，可能导致本金全部损失，请独立判断并自行承担风险。
-    </div>
+    <div class="disclaimer" data-i18n="disclaimer"><b>风险披露</b>　本工具输出的全部数值均为基于所填参数的理论估算，仅供研究与参考，不构成投资建议、要约或任何形式的承诺。加密货币衍生品交易具有高度风险：价格剧烈波动、流动性不足、各交易所保证金与强平规则存在差异，以及极端行情下的滑点，均可能使实际结果与本页估算产生显著偏离，并可能导致本金全部损失。请在充分理解上述风险后独立作出决策，并自行承担由此产生的全部后果。</div>
   </div>
 </section>
 
@@ -539,34 +612,37 @@
   <div class="wrap">
     <div class="sec-title">Trade Journal</div>
     <div class="sec-h" data-i18n="journal_h">交易复盘日志</div>
-    <p class="journal-intro" data-i18n="journal_intro">记录每笔已结束的交易，自动算出你的真实胜率、期望值和资金曲线。盈亏比是交易结束后才知道的——这里用「R 倍数」衡量。数据只存在你的浏览器本地，不上传。</p>
+    <p class="journal-intro" data-i18n="journal_intro">记录已平仓的交易，自动统计真实胜率、每笔期望值、盈利因子与资金曲线。单笔盈亏以 R 倍数计量，即实际盈亏与该笔止损风险的比值，从而使不同仓位规模的交易可以横向比较。全部记录仅保存于本机浏览器，不会上传。</p>
 
     <div class="journal-grid">
       <!-- 录入 + 列表 -->
       <div class="panel">
-        <h3><span class="n">+</span><span data-i18n="journal_add_title">记录一笔交易</span></h3>
+        <h3><span class="n">+</span><span data-i18n="journal_add_title">录入交易</span></h3>
+        <div class="panel-body">
         <div class="jform">
           <div class="field"><label for="j_date" data-i18n="j_date">日期</label><input type="date" id="j_date"></div>
           <div class="field"><label for="j_symbol" data-i18n="j_symbol">标的</label><input type="text" id="j_symbol" placeholder="BTC"></div>
           <div class="field"><label for="j_side" data-i18n="label_side">方向</label>
             <select id="j_side"><option value="long" data-i18n="btn_long">做多</option><option value="short" data-i18n="btn_short">做空</option></select>
           </div>
-          <div class="field"><label for="j_risk" data-i18n="j_risk">本笔风险 1R <span class="hint">（止损会亏多少）</span></label><div class="input-wrap"><input type="number" id="j_risk" min="0" step="any"><span class="suffix">USDT</span></div></div>
-          <div class="field jspan2"><label for="j_pnl" data-i18n="j_pnl">实际盈亏 <span class="hint">（正=盈利，负=亏损）</span></label><div class="input-wrap"><input type="number" id="j_pnl" step="any"><span class="suffix">USDT</span></div></div>
-          <div class="field jspan2"><label for="j_note" data-i18n="j_note">备注（可选）</label><input type="text" id="j_note"></div>
+          <div class="field"><label for="j_risk" data-i18n="j_risk">本笔风险 1R <span class="hint">止损触发时的亏损金额</span></label><div class="input-wrap"><input type="number" id="j_risk" min="0" step="any"><span class="suffix">USDT</span></div></div>
+          <div class="field jspan2"><label for="j_pnl" data-i18n="j_pnl">实际盈亏 <span class="hint">盈利为正，亏损为负</span></label><div class="input-wrap"><input type="number" id="j_pnl" step="any"><span class="suffix">USDT</span></div></div>
+          <div class="field jspan2"><label for="j_note" data-i18n="j_note">备注 选填</label><input type="text" id="j_note"></div>
         </div>
-        <button class="btn btn-primary jbtn" id="j_add" data-i18n="j_add_btn">添加交易</button>
+        <button class="btn btn-primary jbtn" id="j_add" data-i18n="j_add_btn">录入</button>
         <button class="btn btn-ghost jbtn" id="j_cancel" data-i18n="j_cancel" style="display:none">取消编辑</button>
         <div id="j_list"></div>
+        </div>
       </div>
 
       <!-- 统计 + 图表 -->
       <div class="panel">
-        <h3><span class="n">∑</span><span data-i18n="journal_stats_title">你的真实数据</span></h3>
+        <h3><span class="n">∑</span><span data-i18n="journal_stats_title">统计结果</span></h3>
+        <div class="panel-body">
         <div class="rows">
-          <div class="row"><span class="k" data-i18n="jr_total">总交易数</span><span class="v" id="jr_total">—</span></div>
-          <div class="row"><span class="k" data-i18n="jr_winrate">真实胜率</span><span class="v" id="jr_winrate">—</span></div>
-          <div class="row"><span class="k" data-i18n="jr_expectancy">期望值 / 笔</span><span class="v accent" id="jr_expectancy">—</span></div>
+          <div class="row"><span class="k" data-i18n="jr_total">交易笔数</span><span class="v" id="jr_total">—</span></div>
+          <div class="row"><span class="k" data-i18n="jr_winrate">胜率</span><span class="v" id="jr_winrate">—</span></div>
+          <div class="row"><span class="k" data-i18n="jr_expectancy">每笔期望值</span><span class="v accent" id="jr_expectancy">—</span></div>
           <div class="row"><span class="k" data-i18n="jr_avgwin">平均盈利</span><span class="v green" id="jr_avgwin">—</span></div>
           <div class="row"><span class="k" data-i18n="jr_avgloss">平均亏损</span><span class="v red" id="jr_avgloss">—</span></div>
           <div class="row"><span class="k" data-i18n="jr_pf">盈利因子</span><span class="v" id="jr_pf">—</span></div>
@@ -584,6 +660,7 @@
           <button class="jtool-btn danger" id="j_clear" data-i18n="j_clear">清空全部</button>
           <input type="file" id="j_file" accept="application/json,.json" style="display:none" aria-label="选择要导入的交易日志备份文件 / Choose a journal backup file to import">
         </div>
+        </div>
       </div>
     </div>
   </div>
@@ -593,45 +670,122 @@
 <section id="features">
   <div class="wrap">
     <div class="sec-title">Why Hypernova</div>
-    <div class="sec-h" data-i18n="feat_h">为什么用风险驱动模型</div>
+    <div class="sec-h" data-i18n="feat_h">为什么以风险为起点</div>
     <div class="feat">
       <div class="fcard reveal">
         <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.2"/><path d="M12 1.5v3.5M12 19v3.5M1.5 12h3.5M19 12h3.5"/></svg></div>
-        <h4 data-i18n="feat1_t">先定亏损，再定仓位</h4>
-        <p data-i18n="feat1_p">不靠感觉下注。先决定「这笔最多亏 1%」，再倒推该开多大仓——这是专业交易者的核心方法。</p>
+        <h4 data-i18n="feat1_t">先确定亏损上限，再确定仓位</h4>
+        <p data-i18n="feat1_p">专业仓位管理的顺序，是先量化单笔可承受亏损，再由止损距离反推应开仓数量；而非先决定开多大仓，再被动接受相应的亏损敞口。</p>
       </div>
       <div class="fcard reveal">
         <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l7.5 2.8v5.7c0 4.8-3.2 8-7.5 10.5-4.3-2.5-7.5-5.7-7.5-10.5V5.3L12 2.5z"/><path d="M9 12l2 2 4-4.2"/></svg></div>
-        <h4 data-i18n="feat2_t">强平价提前预警</h4>
-        <p data-i18n="feat2_p">杠杆太高时，还没到止损就先爆仓了。我们会算出强平价并在它早于你的止损时红色警告。</p>
+        <h4 data-i18n="feat2_t">强制平仓价前置校验</h4>
+        <p data-i18n="feat2_p">杠杆过高时，强制平仓价可能先于止损价被触及，止损将失去保护作用。本工具计算强平价位并在该情形下发出风险提示。</p>
       </div>
       <div class="fcard reveal">
         <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M6 21h12M5 7h14M5 7l-2.5 5.5a3 3 0 006 0L6 7M19 7l-2.5 5.5a3 3 0 006 0L19 7"/></svg></div>
-        <h4 data-i18n="feat3_t">盈亏比一眼看清</h4>
-        <p data-i18n="feat3_p">自动计算风险回报比（R:R），并提示这笔交易是否值得做（建议 ≥ 2）。</p>
+        <h4 data-i18n="feat3_t">盈亏比与费后净额</h4>
+        <p data-i18n="feat3_p">自动计算风险回报比（R:R），并给出扣除双边手续费后的净盈利与净亏损，避免以毛利估算一笔交易的实际价值。</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ===== ABOUT ===== -->
+<!-- ===== 计算方法 ===== -->
+<section id="method">
+  <div class="wrap">
+    <div class="sec-title">Methodology</div>
+    <div class="sec-h" data-i18n="method_h">计算方法</div>
+    <p class="sec-lede" data-i18n="method_lede">本页公开工具使用的全部公式。所有数值均由下列公式直接得出，不含任何未披露的调整项。符号约定：E 为入场价，S 为止损价，T 为止盈价，A 为账户总额，r 为单笔风险比例，L 为杠杆倍数，m 为维持保证金率，f 为单边手续费率，Q 为开仓数量，N 为名义价值。</p>
+
+    <div class="method-grid">
+      <div class="mcard">
+        <div class="mcard-h" data-i18n="m1_t">一、仓位规模</div>
+        <p class="mcard-p" data-i18n="m1_p">先由账户总额与风险比例得出本笔可承受的亏损金额，再以止损距离反推开仓数量。仓位规模由风险决定，与杠杆无关。</p>
+        <div class="formula">
+          <div class="f-row"><span class="f-l">风险金额</span><span class="f-r">R = A × r</span></div>
+          <div class="f-row"><span class="f-l">开仓数量</span><span class="f-r">Q = R ÷ |E − S|</span></div>
+          <div class="f-row"><span class="f-l">名义价值</span><span class="f-r">N = Q × E</span></div>
+          <div class="f-row"><span class="f-l">所需保证金</span><span class="f-r">M = N ÷ L</span></div>
+        </div>
+      </div>
+
+      <div class="mcard">
+        <div class="mcard-h" data-i18n="m2_t">二、强制平仓价</div>
+        <p class="mcard-p" data-i18n="m2_p">强平条件为账户权益等于维持保证金，且维持保证金按强平时的价格计价（而非入场价）。下列为该条件的精确解，非线性近似。全仓模式假设账户内仅此一笔持仓。</p>
+        <div class="formula">
+          <div class="f-row"><span class="f-l">逐仓 · 多</span><span class="f-r">E × (1 − 1/L) ÷ (1 − m)</span></div>
+          <div class="f-row"><span class="f-l">逐仓 · 空</span><span class="f-r">E × (1 + 1/L) ÷ (1 + m)</span></div>
+          <div class="f-row"><span class="f-l">全仓 · 多</span><span class="f-r">(E − A/Q) ÷ (1 − m)</span></div>
+          <div class="f-row"><span class="f-l">全仓 · 空</span><span class="f-r">(E + A/Q) ÷ (1 + m)</span></div>
+        </div>
+      </div>
+
+      <div class="mcard">
+        <div class="mcard-h" data-i18n="m3_t">三、手续费与净盈亏</div>
+        <p class="mcard-p" data-i18n="m3_p">开仓腿按入场价计费，平仓腿按实际离场价计费。因此止损离场与止盈离场的费用并不相同，本页「手续费」一行采用止损离场口径，与「净亏损」严格对应。</p>
+        <div class="formula">
+          <div class="f-row"><span class="f-l">开仓费</span><span class="f-r">F₀ = N × f</span></div>
+          <div class="f-row"><span class="f-l">止损离场费</span><span class="f-r">F<sub>s</sub> = Q × S × f</span></div>
+          <div class="f-row"><span class="f-l">止盈离场费</span><span class="f-r">F<sub>t</sub> = Q × T × f</span></div>
+          <div class="f-row"><span class="f-l">净亏损</span><span class="f-r">R + F₀ + F<sub>s</sub></span></div>
+          <div class="f-row"><span class="f-l">净盈利</span><span class="f-r">Q × |T − E| − F₀ − F<sub>t</sub></span></div>
+        </div>
+      </div>
+
+      <div class="mcard">
+        <div class="mcard-h" data-i18n="m4_t">四、盈亏比与 R 倍数</div>
+        <p class="mcard-p" data-i18n="m4_p">盈亏比为止盈距离与止损距离之比，在开仓前即可确定。R 倍数为交易结束后的实际盈亏与该笔止损风险之比，用于横向比较不同规模的交易。</p>
+        <div class="formula">
+          <div class="f-row"><span class="f-l">盈亏比</span><span class="f-r">|T − E| ÷ |E − S|</span></div>
+          <div class="f-row"><span class="f-l">R 倍数</span><span class="f-r">实际盈亏 ÷ 该笔风险</span></div>
+          <div class="f-row"><span class="f-l">期望值</span><span class="f-r">Σ(R 倍数) ÷ 交易笔数</span></div>
+          <div class="f-row"><span class="f-l">盈利因子</span><span class="f-r">总盈利 ÷ |总亏损|</span></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="method-note" data-i18n="method_note">口径说明：各交易所的维持保证金率随仓位档位阶梯变化，且部分平台在强平计算中计入资金费用与已实现盈亏。本页取用户填写的单一维持保证金率进行估算，故结果为理论值，与具体交易所的实际强平价存在偏差。请以交易所页面显示的数值为准。</p>
+  </div>
+</section>
+
 <section id="about">
   <div class="wrap">
     <div class="sec-title">About</div>
     <div class="sec-h" data-i18n="about_h">关于 HYPERNOVA</div>
     <div class="about reveal">
-      <p data-i18n="about_p1">HYPERNOVA 是一个面向加密交易者的工具站，目标是把专业、可靠的交易工具做得人人都会用。</p>
-      <p data-i18n="about_p2">仓位计算器是这里的第一个工具。未来还会加入更多帮助你做出更理性决策的功能。</p>
-      <p style="color:var(--muted);font-size:13px;margin-bottom:0" data-i18n="about_p3">本站坚持：计算纯本地完成 · 不收集你的交易数据 · 不需要连接钱包。</p>
+      <p data-i18n="about_p1">HYPERNOVA 是面向加密衍生品交易者的风险管理工具站，目标是把机构通行的仓位管理方法，做成任何人都能直接使用的工具。</p>
+      <p data-i18n="about_p2">仓位计算器与交易复盘日志是目前已上线的两项工具。后续将继续扩充与风险控制相关的功能，并保持计算方法完全公开。</p>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:0" data-i18n="about_p3">本站长期遵循三条原则：全部运算在本地完成；不收集交易数据；不要求连接钱包。
+      footer:</p>
     </div>
   </div>
 </section>
 
 <!-- ===== FOOTER ===== -->
 <footer>
-  <div class="wrap foot">
-    <div class="brand"><div class="logo" style="width:24px;height:24px"></div><b style="font-size:15px">HYPER<span>NOVA</span></b></div>
-    <div data-i18n="footer">© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v2.4</div>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <div class="brand"><div class="logo" style="width:24px;height:24px"></div><b style="font-size:15px">HYPER<span>NOVA</span></b></div>
+        <p class="foot-desc" data-i18n="foot_desc">风险驱动的加密衍生品仓位管理工具。全部运算在本地完成。</p>
+      </div>
+      <nav class="foot-links" aria-label="页脚导航 / Footer navigation">
+        <a href="#calc" data-i18n="nav_calc">仓位计算器</a>
+        <a href="#journal" data-i18n="nav_journal">交易日志</a>
+        <a href="#method" data-i18n="nav_features">计算方法</a>
+        <a href="#about" data-i18n="nav_about">关于</a>
+      </nav>
+      <dl class="foot-meta">
+        <div><dt class="caps" data-i18n="foot_version">版本</dt><dd>v3.0</dd></div>
+        <div><dt class="caps" data-i18n="foot_updated">最后更新</dt><dd>2026-08-21</dd></div>
+        <div><dt class="caps" data-i18n="foot_data">数据存储</dt><dd data-i18n="foot_data_v">仅本机浏览器</dd></div>
+      </dl>
+    </div>
+    <div class="foot-bottom">
+      <div data-i18n="footer">© 2026 HYPERNOVA · 本站内容仅供研究与参考，不构成投资建议</div>
+    </div>
   </div>
 </footer>
 
@@ -640,115 +794,141 @@
   /* ---------- i18n 静态文字表 ---------- */
   var T = {
     zh: {
-      title:'HYPERNOVA · 加密仓位计算器',
-      nav_calc:'仓位计算器', nav_features:'特性', nav_about:'关于', nav_cta:'开始计算',
-      hero_pill:'计算在本地完成 · 交易数据不上传',
-      hero_h1:'精确计算<br><span class="grad">你该开多大仓位</span>',
-      hero_p:'专业交易看的不是「感觉」，而是「风险」。先设定单笔可承受的最大亏损，HYPERNOVA 即时算出合理仓位、所需保证金与强平价，并在风险失控前发出预警。',
-      hero_btn1:'立即计算仓位 →', hero_btn2:'了解工作原理',
+      title:'HYPERNOVA · 加密合约仓位计算器',
+      nav_calc:'仓位计算器', nav_features:'计算方法', nav_about:'关于', nav_cta:'开始计算',
+      hero_pill:'全部运算在本地浏览器完成 · 不上传任何交易数据',
+      hero_h1:'先定义风险<br><span class="grad">再决定仓位规模</span>',
+      hero_p:'专业的仓位管理不依赖盘感，而依赖对单笔风险的量化。设定本笔交易可承受的最大亏损后，HYPERNOVA 据此计算应开仓数量、所需保证金与预估强制平仓价格，并在杠杆过高致使强平价先于止损被触及时提示风险。',
+      hero_btn1:'开始计算', hero_btn2:'查看计算方法',
       calc_h:'加密合约仓位计算器',
-      panel1_title:'填写你的交易计划', panel2_title:'计算结果',
-      label_account:'账户总额 <span class="hint">（用于计算风险的本金）</span>',
-      label_risk:'单笔风险比例 <span class="hint">（建议 1%–2%，即最多愿意亏多少）</span>',
+      panel1_title:'交易参数', panel2_title:'计算结果',
+      label_account:'账户总额 <span class="hint">计入风险计算的可用本金</span>',
+      label_risk:'单笔风险比例 <span class="hint">本笔可承受的最大亏损占账户比例，通行区间 1%–2%</span>',
       label_side:'方向', label_mode:'保证金模式',
       label_entry:'入场价', label_stop:'止损价',
-      label_target:'止盈价 <span class="hint">（可选，用于算盈亏比）</span>',
+      label_target:'止盈价 <span class="hint">选填，用于计算盈亏比</span>',
       label_lev:'杠杆倍数',
-      label_fee:'手续费率 <span class="hint">(单边)</span>',
-      label_mmr:'维持保证金率 <span class="hint">(算强平)</span>',
+      label_fee:'手续费率 <span class="hint">单边</span>',
+      label_mmr:'维持保证金率 <span class="hint">用于估算强制平仓价格</span>',
       btn_long:'做多', btn_short:'做空', btn_cross:'全仓', btn_isolated:'逐仓',
-      res_qty_label:'建议开仓数量', res_notional_label:'名义价值',
+      res_qty_label:'应开仓数量', res_notional_label:'名义价值',
       row_risk:'单笔风险金额', row_stopdist:'止损距离', row_margin:'所需保证金',
-      row_liq:'预估强平价', row_rr:'盈亏比 (R:R)', row_fee:'手续费（开仓+止损离场）',
-      row_netwin:'止盈达成 · 净盈利', row_netloss:'止损触发 · 净亏损',
-      privacy:'所有计算均在你的浏览器本地完成，不会上传你的任何交易数据；本站不加载任何第三方统计脚本，也不收集个人信息。',
-      disclaimer:'⚠️ <b>免责声明：</b>本工具仅供学习与参考，所有计算结果不构成任何投资建议。加密货币合约交易风险极高，可能导致本金全部损失，请独立判断并自行承担风险。',
-      feat_h:'为什么用风险驱动模型',
-      feat1_t:'先定亏损，再定仓位',
-      feat1_p:'不靠感觉下注。先决定「这笔最多亏 1%」，再倒推该开多大仓——这是专业交易者的核心方法。',
-      feat2_t:'强平价提前预警',
-      feat2_p:'杠杆太高时，还没到止损就先爆仓了。我们会算出强平价并在它早于你的止损时红色警告。',
-      feat3_t:'盈亏比一眼看清',
-      feat3_p:'自动计算风险回报比（R:R），并提示这笔交易是否值得做（建议 ≥ 2）。',
+      row_liq:'预估强制平仓价', row_rr:'盈亏比 R:R', row_fee:'手续费 开仓+止损离场',
+      row_netwin:'止盈成交 · 净盈利', row_netloss:'止损成交 · 净亏损',
+      privacy:'本工具的全部计算均在您的浏览器本地完成，交易参数不会离开本机；站点不加载任何第三方统计脚本，亦不收集个人信息。',
+      disclaimer:'<b>风险披露</b>　本工具输出的全部数值均为基于所填参数的理论估算，仅供研究与参考，不构成投资建议、要约或任何形式的承诺。加密货币衍生品交易具有高度风险：价格剧烈波动、流动性不足、各交易所保证金与强平规则存在差异，以及极端行情下的滑点，均可能使实际结果与本页估算产生显著偏离，并可能导致本金全部损失。请在充分理解上述风险后独立作出决策，并自行承担由此产生的全部后果。',
+      feat_h:'为什么以风险为起点',
+      feat1_t:'先确定亏损上限，再确定仓位',
+      feat1_p:'专业仓位管理的顺序，是先量化单笔可承受亏损，再由止损距离反推应开仓数量；而非先决定开多大仓，再被动接受相应的亏损敞口。',
+      feat2_t:'强制平仓价前置校验',
+      feat2_p:'杠杆过高时，强制平仓价可能先于止损价被触及，止损将失去保护作用。本工具计算强平价位并在该情形下发出风险提示。',
+      feat3_t:'盈亏比与费后净额',
+      feat3_p:'自动计算风险回报比（R:R），并给出扣除双边手续费后的净盈利与净亏损，避免以毛利估算一笔交易的实际价值。',
       about_h:'关于 HYPERNOVA',
-      about_p1:'HYPERNOVA 是一个面向加密交易者的工具站，目标是把专业、可靠的交易工具做得人人都会用。',
-      about_p2:'仓位计算器是这里的第一个工具。未来还会加入更多帮助你做出更理性决策的功能。',
-      about_p3:'本站坚持：计算纯本地完成 · 不收集你的交易数据 · 不需要连接钱包。',
-      footer:'© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v2.4',
+      about_p1:'HYPERNOVA 是面向加密衍生品交易者的风险管理工具站，目标是把机构通行的仓位管理方法，做成任何人都能直接使用的工具。',
+      about_p2:'仓位计算器与交易复盘日志是目前已上线的两项工具。后续将继续扩充与风险控制相关的功能，并保持计算方法完全公开。',
+      about_p3:'本站长期遵循三条原则：全部运算在本地完成；不收集交易数据；不要求连接钱包。',
+      footer:'© 2026 HYPERNOVA · 本站内容仅供研究与参考，不构成投资建议',
       nav_journal:'交易日志',
       journal_h:'交易复盘日志',
-      journal_intro:'记录每笔已结束的交易，自动算出你的真实胜率、期望值和资金曲线。盈亏比是交易结束后才知道的——这里用「R 倍数」衡量。数据只存在你的浏览器本地，不上传。',
-      journal_add_title:'记录一笔交易',
+      journal_intro:'记录已平仓的交易，自动统计真实胜率、每笔期望值、盈利因子与资金曲线。单笔盈亏以 R 倍数计量，即实际盈亏与该笔止损风险的比值，从而使不同仓位规模的交易可以横向比较。全部记录仅保存于本机浏览器，不会上传。',
+      journal_add_title:'录入交易',
       j_date:'日期', j_symbol:'标的',
-      j_risk:'本笔风险 1R <span class="hint">（止损会亏多少）</span>',
-      j_pnl:'实际盈亏 <span class="hint">（正=盈利，负=亏损）</span>',
-      j_note:'备注（可选）', j_add_btn:'添加交易',
-      journal_stats_title:'你的真实数据',
-      jr_total:'总交易数', jr_winrate:'真实胜率', jr_expectancy:'期望值 / 笔',
+      j_risk:'本笔风险 1R <span class="hint">止损触发时的亏损金额</span>',
+      j_pnl:'实际盈亏 <span class="hint">盈利为正，亏损为负</span>',
+      j_note:'备注 选填', j_add_btn:'录入',
+      journal_stats_title:'统计结果',
+      jr_total:'交易笔数', jr_winrate:'胜率', jr_expectancy:'每笔期望值',
       jr_avgwin:'平均盈利', jr_avgloss:'平均亏损', jr_pf:'盈利因子',
       jr_totalpnl:'累计盈亏', jr_maxdd:'最大回撤',
       jr_streak:'最大连胜 / 连亏', jr_best:'最佳交易', jr_worst:'最差交易',
       j_equity:'资金曲线（累计盈亏）',
       j_cancel:'取消编辑', j_export:'导出备份', j_import:'导入',
-      label_symbol:'标的 <span class="hint">（可选，如 BTC）</span>',
-      viz_label:'价格结构（入场 / 止损 / 止盈 / 强平）',
-      to_journal:'记录到日志 ↓',
+      label_symbol:'标的 <span class="hint">选填，例如 BTC</span>',
+      viz_label:'价格结构　入场 / 止损 / 止盈 / 强平',
+      to_journal:'录入交易日志',
+      method_h:'计算方法',
+      method_lede:'本页公开工具使用的全部公式。所有数值均由下列公式直接得出，不含任何未披露的调整项。符号约定：E 为入场价，S 为止损价，T 为止盈价，A 为账户总额，r 为单笔风险比例，L 为杠杆倍数，m 为维持保证金率，f 为单边手续费率，Q 为开仓数量，N 为名义价值。',
+      m1_t:'一、仓位规模',
+      m1_p:'先由账户总额与风险比例得出本笔可承受的亏损金额，再以止损距离反推开仓数量。仓位规模由风险决定，与杠杆无关。',
+      m2_t:'二、强制平仓价',
+      m2_p:'强平条件为账户权益等于维持保证金，且维持保证金按强平时的价格计价（而非入场价）。下列为该条件的精确解，非线性近似。全仓模式假设账户内仅此一笔持仓。',
+      m3_t:'三、手续费与净盈亏',
+      m3_p:'开仓腿按入场价计费，平仓腿按实际离场价计费。因此止损离场与止盈离场的费用并不相同，本页「手续费」一行采用止损离场口径，与「净亏损」严格对应。',
+      m4_t:'四、盈亏比与 R 倍数',
+      m4_p:'盈亏比为止盈距离与止损距离之比，在开仓前即可确定。R 倍数为交易结束后的实际盈亏与该笔止损风险之比，用于横向比较不同规模的交易。',
+      foot_desc:'风险驱动的加密衍生品仓位管理工具。全部运算在本地完成。',
+      foot_version:'版本', foot_updated:'最后更新', foot_data:'数据存储', foot_data_v:'仅本机浏览器',
+      method_note:'口径说明：各交易所的维持保证金率随仓位档位阶梯变化，且部分平台在强平计算中计入资金费用与已实现盈亏。本页取用户填写的单一维持保证金率进行估算，故结果为理论值，与具体交易所的实际强平价存在偏差。请以交易所页面显示的数值为准。',
       copy_result:'复制结果', j_clear:'清空全部'
     },
     en: {
       title:'HYPERNOVA · Crypto Position Calculator',
-      nav_calc:'Calculator', nav_features:'Features', nav_about:'About', nav_cta:'Start',
-      hero_pill:'Runs locally · your trade data never leaves',
-      hero_h1:'Size every position<br><span class="grad">with precision</span>',
-      hero_p:'Professionals trade by risk, not by feel. Set the most you are willing to lose on a trade, and HYPERNOVA returns the right position size, required margin and liquidation price — and warns you before risk gets out of hand.',
-      hero_btn1:'Calculate now →', hero_btn2:'How it works',
+      nav_calc:'Calculator', nav_features:'Methodology', nav_about:'About', nav_cta:'Start',
+      hero_pill:'All computation runs locally · no trade data is transmitted',
+      hero_h1:'Define the risk first<br><span class="grad">then size the position</span>',
+      hero_p:'Disciplined position management rests on quantified risk rather than intuition. Once the maximum acceptable loss for a trade is defined, HYPERNOVA derives the position size, the margin required and the estimated liquidation price, and flags the case where leverage places liquidation ahead of the stop.',
+      hero_btn1:'Start calculation', hero_btn2:'View methodology',
       calc_h:'Crypto Futures Position Calculator',
-      panel1_title:'Enter your trade plan', panel2_title:'Results',
-      label_account:'Account Size <span class="hint">(capital used to size risk)</span>',
-      label_risk:'Risk per Trade <span class="hint">(1%–2% recommended — max you accept to lose)</span>',
+      panel1_title:'Trade parameters', panel2_title:'Results',
+      label_account:'Account Size <span class="hint">capital against which risk is measured</span>',
+      label_risk:'Risk per Trade <span class="hint">maximum acceptable loss as a share of the account; 1%–2% is standard</span>',
       label_side:'Direction', label_mode:'Margin Mode',
       label_entry:'Entry Price', label_stop:'Stop-Loss',
-      label_target:'Take-Profit <span class="hint">(optional, for R:R)</span>',
+      label_target:'Take-Profit <span class="hint">optional, used to compute R:R</span>',
       label_lev:'Leverage',
-      label_fee:'Fee Rate <span class="hint">(per side)</span>',
-      label_mmr:'Maint. Margin <span class="hint">(for liquidation)</span>',
+      label_fee:'Fee Rate <span class="hint">per side</span>',
+      label_mmr:'Maintenance Margin <span class="hint">used to estimate the liquidation price</span>',
       btn_long:'Long', btn_short:'Short', btn_cross:'Cross', btn_isolated:'Isolated',
-      res_qty_label:'Suggested position', res_notional_label:'Notional value',
+      res_qty_label:'Position size', res_notional_label:'Notional value',
       row_risk:'Risk amount', row_stopdist:'Stop distance', row_margin:'Margin required',
-      row_liq:'Est. liquidation', row_rr:'Risk : Reward', row_fee:'Fees (entry + stop exit)',
-      row_netwin:'At take-profit · net', row_netloss:'At stop · net loss',
-      privacy:'All calculations run locally in your browser. Your trade data is never uploaded — this site loads no third-party analytics scripts and collects no personal information.',
-      disclaimer:'⚠️ <b>Disclaimer:</b> This tool is for learning and reference only and is not investment advice. Crypto futures trading is extremely risky and can lead to total loss of capital. Make your own decisions and bear your own risk.',
-      feat_h:'Why risk-based sizing',
-      feat1_t:'Loss first, size second',
-      feat1_p:'No guessing. Decide your max loss first (e.g. 1%), then derive the position size — the core method pros use.',
-      feat2_t:'Liquidation early-warning',
-      feat2_p:'Too much leverage and you get liquidated before your stop. We compute the liquidation price and flag it in red when it comes before your stop.',
-      feat3_t:'Risk:Reward at a glance',
-      feat3_p:'Auto-calculates your risk:reward ratio and tells you whether the trade is worth taking (aim for ≥ 2).',
+      row_liq:'Est. liquidation price', row_rr:'Risk : Reward', row_fee:'Fees, entry + stop exit',
+      row_netwin:'Net profit at take-profit', row_netloss:'Net loss at stop',
+      privacy:'All computation is performed locally in your browser; trade parameters never leave your device. This site loads no third-party analytics scripts and collects no personal information.',
+      disclaimer:'<b>Risk disclosure</b>&#12288;All figures produced by this tool are theoretical estimates derived from the parameters entered. They are provided for research and reference only and do not constitute investment advice, an offer, or any form of undertaking. Trading crypto derivatives carries a high degree of risk: price volatility, insufficient liquidity, differences between exchanges in margin and liquidation rules, and slippage under extreme conditions may cause actual outcomes to diverge materially from these estimates, and may result in the total loss of capital. Please make independent decisions only after fully understanding these risks, and accept full responsibility for the consequences.',
+      feat_h:'Why risk comes first',
+      feat1_t:'Loss limit first, size second',
+      feat1_p:'Disciplined sizing quantifies the acceptable loss first, then derives the position size from the stop distance — rather than choosing a size first and passively accepting whatever exposure follows.',
+      feat2_t:'Liquidation checked in advance',
+      feat2_p:'When leverage is too high the liquidation price can be reached before the stop, leaving the stop without protective effect. The tool computes the liquidation price and raises a warning in that case.',
+      feat3_t:'R:R and net-of-fee outcomes',
+      feat3_p:'The risk-to-reward ratio is computed automatically, alongside net profit and net loss after fees on both legs, so a trade is never assessed on gross figures alone.',
       about_h:'About HYPERNOVA',
-      about_p1:'HYPERNOVA is a toolkit for crypto traders, built to make professional, reliable trading tools that anyone can use.',
-      about_p2:'The position calculator is the first tool here. More features to help you make rational decisions are coming.',
-      about_p3:'Our principles: calculations stay local · we do not collect your trade data · no wallet connection required.',
-      footer:'© 2026 HYPERNOVA · For educational reference only, not investment advice · v2.4',
+      about_p1:'HYPERNOVA is a risk-management toolkit for crypto derivatives traders, built to make institutional position-sizing methods directly usable by anyone.',
+      about_p2:'The position calculator and the trade journal are the two tools currently available. Further risk-control features will follow, and the calculation methods will remain fully published.',
+      about_p3:'Three standing principles: all computation stays local; no trade data is collected; no wallet connection is required.',
+      footer:'© 2026 HYPERNOVA · Provided for research and reference only; not investment advice',
       nav_journal:'Journal',
       journal_h:'Trade Journal',
-      journal_intro:'Log every closed trade and see your real win rate, expectancy and equity curve. Your R:R is only known after a trade closes — here it is measured as an R-multiple. Data stays in your browser, never uploaded.',
-      journal_add_title:'Log a trade',
+      journal_intro:'Record closed trades to obtain your realised win rate, per-trade expectancy, profit factor and equity curve. Each outcome is measured as an R-multiple — the realised profit or loss divided by the risk taken on that trade — so trades of different sizes remain comparable. All records are held in your browser and are never uploaded.',
+      journal_add_title:'Record a trade',
       j_date:'Date', j_symbol:'Symbol',
-      j_risk:'Risk 1R <span class="hint">(loss if stopped out)</span>',
-      j_pnl:'Actual P/L <span class="hint">(+ profit, − loss)</span>',
-      j_note:'Note (optional)', j_add_btn:'Add trade',
-      journal_stats_title:'Your real stats',
-      jr_total:'Total trades', jr_winrate:'Win rate', jr_expectancy:'Expectancy / trade',
+      j_risk:'Risk 1R <span class="hint">loss incurred if the stop is hit</span>',
+      j_pnl:'Realised P/L <span class="hint">positive for profit, negative for loss</span>',
+      j_note:'Note, optional', j_add_btn:'Record',
+      journal_stats_title:'Statistics',
+      jr_total:'Trades recorded', jr_winrate:'Win rate', jr_expectancy:'Expectancy per trade',
       jr_avgwin:'Avg win', jr_avgloss:'Avg loss', jr_pf:'Profit factor',
       jr_totalpnl:'Total P/L', jr_maxdd:'Max drawdown',
       jr_streak:'Max win / loss streak', jr_best:'Best trade', jr_worst:'Worst trade',
       j_equity:'Equity curve (cumulative P/L)',
       j_cancel:'Cancel edit', j_export:'Export', j_import:'Import',
-      label_symbol:'Symbol <span class="hint">(optional, e.g. BTC)</span>',
-      viz_label:'Price map (entry / stop / target / liq.)',
-      to_journal:'Log this trade ↓',
+      label_symbol:'Symbol <span class="hint">optional, e.g. BTC</span>',
+      viz_label:'Price structure&#12288;entry / stop / target / liquidation',
+      to_journal:'Record in journal',
+      method_h:'Methodology',
+      method_lede:'Every formula used by this tool is published below. All figures follow directly from them, with no undisclosed adjustments. Notation: E entry price, S stop price, T target price, A account size, r risk per trade, L leverage, m maintenance margin rate, f fee rate per side, Q position size, N notional value.',
+      m1_t:'I. Position size',
+      m1_p:'The acceptable loss follows from the account size and the risk rate; the position size is then derived from the stop distance. Size is determined by risk, independently of leverage.',
+      m2_t:'II. Liquidation price',
+      m2_p:'Liquidation occurs where account equity equals the maintenance margin, with that margin valued at the liquidation price rather than at entry. The expressions below are the exact solution to that condition, not a linear approximation. Cross margin assumes this is the only open position.',
+      m3_t:'III. Fees and net result',
+      m3_p:'The entry leg is charged at the entry price and the exit leg at the actual exit price, so a stop exit and a target exit do not cost the same. The Fees row on this page uses the stop-exit basis, which reconciles exactly with the net loss figure.',
+      m4_t:'IV. R:R and R-multiples',
+      m4_p:'The risk-to-reward ratio is the target distance divided by the stop distance and is known before entry. The R-multiple is the realised result divided by the risk taken on that trade, which makes trades of different sizes comparable.',
+      foot_desc:'A risk-driven position management tool for crypto derivatives. All computation runs locally.',
+      foot_version:'Version', foot_updated:'Last updated', foot_data:'Data storage', foot_data_v:'Local browser only',
+      method_note:'Basis of estimation: maintenance margin rates vary by position tier across exchanges, and some venues include funding costs and realised P/L in their liquidation calculation. This page estimates using the single maintenance margin rate entered by the user, so the result is theoretical and will differ from the figure shown by any particular exchange. Always defer to the value displayed by your exchange.',
       copy_result:'Copy', j_clear:'Clear all'
     }
   };
@@ -756,66 +936,66 @@
   /* ---------- i18n 动态文字（结果/警告） ---------- */
   var MSG = {
     zh: {
-      liqSafe:"极低 · 几乎不会强平",
-      rrGood:"值得", rrBad:"偏低",
-      dirLong:"方向搞反了：做多的止损必须设在入场价【下方】。你把止损设在了上方——那其实是止盈，不是止损。请检查方向或价格。",
-      dirShort:"方向搞反了：做空的止损必须设在入场价【上方】。你把止损设在了下方——那其实是止盈，不是止损。请检查方向或价格。",
-      liqBefore:function(liq,stop){ return "⚠ 危险：当前杠杆下，强平价（"+liq+"）会先于你的止损价（"+stop+"）被触及——还没到止损就爆仓了！请降低杠杆。"; },
-      stopSmall:"止损距离过小（<0.3%），算出的仓位会非常大，请确认止损是否合理。",
-      marginExceed:function(m){ return "所需保证金（"+m+"）超过账户总额，无法建立该仓位。请降低风险比例、放宽止损或提高杠杆。"; },
-      riskExtreme:function(r){ return "单笔风险比例 "+r+"% 极高！一次止损就会亏掉账户的一大半，属于灾难级仓位。专业交易者通常只用 1%–2%，强烈建议改回。"; },
-      riskHigh:function(r){ return "单笔风险比例 "+r+"% 远高于建议的 1%–2%，单笔亏损过大，建议降低。"; },
-      notionalBig:function(x){ return "名义敞口达到账户的 "+x+" 倍，极端行情下滑点风险较高，谨慎。"; },
-      rrLow:"盈亏比小于 1，潜在亏损大于潜在盈利，通常不建议做这笔交易。",
-      okRisk:function(amt,pct){ return "✓ 这笔交易的风险已被控制在 "+amt+" USDT 以内（账户的 "+pct+"%）。"; },
-      crossNote:"全仓模式：强平价为「假设这是唯一持仓」的近似值，实际还受账户其他持仓与未实现盈亏影响。全仓爆仓可能损失整个账户。",
-      jConfirmDel:"确定删除这笔交易记录吗？",
-      jEmpty:"还没有记录，在上方添加你的第一笔交易吧。",
+      liqSafe:"远离当前价位",
+      rrGood:"达标", rrBad:"偏低",
+      dirLong:"方向设置有误：做多的止损价应低于入场价。当前止损价高于入场价，该价位属于止盈而非止损，请核对方向与价格。",
+      dirShort:"方向设置有误：做空的止损价应高于入场价。当前止损价低于入场价，该价位属于止盈而非止损，请核对方向与价格。",
+      liqBefore:function(liq,stop){ return "强制平仓价 "+liq+" 位于止损价 "+stop+" 之前，仓位将在止损触发前被强制平仓，止损失去保护作用。建议降低杠杆倍数或收紧仓位规模。"; },
+      stopSmall:"止损距离小于 0.3%，据此反推的仓位规模将被显著放大，请确认止损价位设置是否合理。",
+      marginExceed:function(m){ return "所需保证金 "+m+" 超过账户总额，无法建立该仓位。可降低单笔风险比例、放宽止损距离或提高杠杆倍数。"; },
+      riskExtreme:function(r){ return "单笔风险比例 "+r+"% 显著偏高，单次止损即会损失账户的大部分资金。机构通行的单笔风险区间为 1%–2%，建议下调。"; },
+      riskHigh:function(r){ return "单笔风险比例 "+r+"% 高于 1%–2% 的通行区间，单笔亏损金额较大，建议下调。"; },
+      notionalBig:function(x){ return "名义敞口为账户总额的 "+x+" 倍，极端行情下的滑点与冲击成本风险较高。"; },
+      rrLow:"盈亏比低于 1，潜在收益小于潜在亏损，在同等胜率下该笔交易的期望值通常为负。",
+      okRisk:function(amt,pct){ return "本笔交易的最大亏损已限定在 "+amt+" USDT 以内，占账户总额的 "+pct+"%。"; },
+      crossNote:"全仓模式下，强制平仓价按「账户内仅此一笔持仓」估算；实际数值还受其他持仓与未实现盈亏影响。全仓被强制平仓可能损失账户全部资金。",
+      jConfirmDel:"确认删除该笔交易记录？",
+      jEmpty:"暂无记录。请在上方录入第一笔已平仓交易。",
       jWinLoss:function(w,l,e){ return "（"+w+" 胜 / "+l+" 负"+(e>0?(" / "+e+" 平"):"")+"）"; },
       jStreakVal:function(w,l){ return w+" 连胜 / "+l+" 连亏"; },
       jImportOk:function(n){ return "成功导入 "+n+" 笔交易。"; },
       jImportErr:"导入失败：文件格式不正确。",
       jSaveEdit:"保存修改",
       vizNames:{entry:"入场",stop:"止损",target:"止盈",liq:"强平"},
-      copied:"已复制 ✓",
-      jClearConfirm:"确定清空所有交易记录吗？此操作不可撤销。",
-      dirTargetLong:"止盈方向提醒：做多的止盈应在入场价【上方】，当前设在了下方，盈亏比无意义。",
-      dirTargetShort:"止盈方向提醒：做空的止盈应在入场价【下方】，当前设在了上方，盈亏比无意义。",
-      negInput:"输入里有负数。账户总额、风险比例、价格与费率都必须是正数，请检查后重填。",
-      riskZero:"单笔风险比例必须大于 0，否则算不出仓位。建议填 1%–2%。",
-      mmrBad:"维持保证金率应远小于 100%（常见 0.4%–1%）。当前值算不出有意义的强平价。",
-      accountMissing:"请先填写账户总额——没有本金就无法反推该开多大仓位。"
+      copied:"已复制",
+      jClearConfirm:"确认清空全部交易记录？该操作不可撤销。",
+      dirTargetLong:"止盈方向有误：做多的止盈价应高于入场价，当前设置低于入场价，盈亏比不成立。",
+      dirTargetShort:"止盈方向有误：做空的止盈价应低于入场价，当前设置高于入场价，盈亏比不成立。",
+      negInput:"存在负值输入。账户总额、风险比例、价格与费率均须为正数，请核对后重新填写。",
+      riskZero:"单笔风险比例须大于 0，否则无法反推仓位规模。通行区间为 1%–2%。",
+      mmrBad:"维持保证金率应远低于 100%，常见区间为 0.4%–1%。当前取值无法得出有意义的强制平仓价。",
+      accountMissing:"请先填写账户总额，否则无法据以反推仓位规模。"
     },
     en: {
-      liqSafe:"Very low · safe from liquidation",
-      rrGood:"Good", rrBad:"Low",
-      dirLong:"Direction looks wrong: for a LONG, the stop must be BELOW entry. You set it above — that is a take-profit, not a stop. Check your direction or prices.",
-      dirShort:"Direction looks wrong: for a SHORT, the stop must be ABOVE entry. You set it below — that is a take-profit, not a stop. Check your direction or prices.",
-      liqBefore:function(liq,stop){ return "⚠ Danger: at this leverage, the liquidation price ("+liq+") is reached before your stop ("+stop+") — you would be liquidated before the stop triggers! Lower your leverage."; },
-      stopSmall:"Stop distance is tiny (<0.3%), which makes the position size huge. Double-check that your stop is reasonable.",
-      marginExceed:function(m){ return "Required margin ("+m+") exceeds your account balance — this position cannot be opened. Lower the risk %, widen the stop, or raise leverage."; },
-      riskExtreme:function(r){ return "Risk per trade of "+r+"% is extreme! A single stop-out wipes out most of your account — a catastrophic size. Pros use 1%–2%. Strongly reduce it."; },
-      riskHigh:function(r){ return "Risk per trade of "+r+"% is far above the recommended 1%–2%. The per-trade loss is too large; consider reducing it."; },
-      notionalBig:function(x){ return "Notional exposure is "+x+"× your account. In extreme moves the slippage risk is high — be careful."; },
-      rrLow:"Risk:Reward is below 1 — the potential loss exceeds the potential gain. Usually not worth taking.",
-      okRisk:function(amt,pct){ return "✓ This trade's risk is capped at "+amt+" USDT ("+pct+"% of your account)."; },
-      crossNote:"Cross margin: the liquidation price assumes this is your only position; it is also affected by other positions and unrealized PnL. A cross liquidation can wipe out the whole account.",
-      jConfirmDel:"Delete this trade?",
-      jEmpty:"No trades yet — add your first one above.",
+      liqSafe:"Far from current price",
+      rrGood:"Meets target", rrBad:"Below target",
+      dirLong:"Direction error: for a long position the stop must sit below entry. The current stop is above entry, which is a take-profit rather than a stop. Please review the direction and prices.",
+      dirShort:"Direction error: for a short position the stop must sit above entry. The current stop is below entry, which is a take-profit rather than a stop. Please review the direction and prices.",
+      liqBefore:function(liq,stop){ return "The liquidation price "+liq+" sits ahead of the stop at "+stop+". The position would be liquidated before the stop is triggered, leaving the stop without protective effect. Consider reducing leverage or tightening the position size."; },
+      stopSmall:"The stop distance is below 0.3%, which materially inflates the derived position size. Please confirm that the stop level is appropriate.",
+      marginExceed:function(m){ return "Required margin of "+m+" exceeds the account balance, so this position cannot be opened. Reduce the risk per trade, widen the stop distance, or increase leverage."; },
+      riskExtreme:function(r){ return "Risk per trade of "+r+"% is substantially elevated; a single stop-out would remove most of the account. The standard institutional range is 1%–2%, and a reduction is advised."; },
+      riskHigh:function(r){ return "Risk per trade of "+r+"% exceeds the standard 1%–2% range. The loss on a single trade is correspondingly large; a reduction is advised."; },
+      notionalBig:function(x){ return "Notional exposure is "+x+"× the account balance. Slippage and market-impact risk are elevated under extreme conditions."; },
+      rrLow:"The risk-to-reward ratio is below 1: potential gain is smaller than potential loss, so at an equal win rate the expectancy of this trade is typically negative.",
+      okRisk:function(amt,pct){ return "The maximum loss on this trade is capped at "+amt+" USDT, equal to "+pct+"% of the account balance."; },
+      crossNote:"Under cross margin the liquidation price is estimated on the assumption that this is the only open position; the actual level is also affected by other positions and unrealised P/L. A cross-margin liquidation may result in the loss of the entire account balance.",
+      jConfirmDel:"Delete this trade record?",
+      jEmpty:"No records yet. Use the form above to record your first closed trade.",
       jWinLoss:function(w,l,e){ return "("+w+"W / "+l+"L"+(e>0?(" / "+e+"BE"):"")+")"; },
       jStreakVal:function(w,l){ return w+"W / "+l+"L"; },
       jImportOk:function(n){ return "Imported "+n+" trades."; },
       jImportErr:"Import failed: invalid file format.",
       jSaveEdit:"Save changes",
       vizNames:{entry:"Entry",stop:"Stop",target:"Target",liq:"Liq."},
-      copied:"Copied ✓",
-      jClearConfirm:"Clear ALL trades? This cannot be undone.",
-      dirTargetLong:"Take-profit note: for a LONG it should be ABOVE entry; it is set below, so the R:R is meaningless.",
-      dirTargetShort:"Take-profit note: for a SHORT it should be BELOW entry; it is set above, so the R:R is meaningless.",
+      copied:"Copied",
+      jClearConfirm:"Clear all trade records? This action cannot be undone.",
+      dirTargetLong:"Take-profit error: for a long position the target should sit above entry. It is currently below entry, so the R:R does not hold.",
+      dirTargetShort:"Take-profit error: for a short position the target should sit below entry. It is currently above entry, so the R:R does not hold.",
       negInput:"Negative values detected. Account size, risk, prices and fee rates must all be positive — please check your inputs.",
       riskZero:"Risk per trade must be greater than 0, otherwise there is no position to size. 1%–2% is the usual range.",
       mmrBad:"Maintenance margin rate should be far below 100% (typically 0.4%–1%). The current value cannot produce a meaningful liquidation price.",
-      accountMissing:"Enter your account size first — without capital there is nothing to size the position against"
+      accountMissing:"Please enter the account size first; without it the position size cannot be derived."
     }
   };
 
@@ -932,6 +1112,14 @@
 
   var side = "long";
   var marginMode = "cross";
+
+  /* 提示图标：线性 SVG，随文字取色。内容是写死的常量，不含任何用户输入。 */
+  var ALERT_ICON = {
+    danger:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.6v5.2"/><path d="M12 16.3h.01"/></svg>',
+    warn:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6 2.6 20h18.8L12 3.6Z"/><path d="M12 9.8v4.1"/><path d="M12 17.1h.01"/></svg>',
+    ok:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8.2 12.2 2.6 2.6 5-5.4"/></svg>',
+    info:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11.2v5.1"/><path d="M12 7.9h.01"/></svg>'
+  };
 
   function calc(){
     var M = MSG[LANG];
@@ -1074,8 +1262,9 @@
     alerts.forEach(function(a){
       var d=document.createElement("div");
       d.className="alert "+a[0];
-      var ico = a[0]==="danger"?"🚫":a[0]==="ok"?"✅":a[0]==="info"?"ℹ️":"⚠️";
-      var span1=document.createElement("span"); span1.className="ico"; span1.textContent=ico;
+      var span1=document.createElement("span"); span1.className="ico";
+      span1.setAttribute("aria-hidden","true");
+      span1.innerHTML = ALERT_ICON[a[0]] || ALERT_ICON.warn;
       var span2=document.createElement("span"); span2.textContent=a[1];
       d.appendChild(span1); d.appendChild(span2);
       box.appendChild(d);
@@ -1367,10 +1556,12 @@
         row.appendChild(jspan(t.side==="short"?"jt-side-short":"jt-side-long", sideTxt));
         row.appendChild(jspan("jt-r "+cls, fmtR(r)));
         row.appendChild(jspan("jt-pnl "+cls, fmtSigned(t.pnl)));
-        var ed=document.createElement("button"); ed.className="jt-edit"; ed.textContent="✎";
+        var ed=document.createElement("button"); ed.className="jt-edit";
+        ed.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M15.2 5.4l3.4 3.4"/><path d="M5 19h3.5L19.3 8.2a1.7 1.7 0 0 0 0-2.4l-1.1-1.1a1.7 1.7 0 0 0-2.4 0L5 15.5V19Z"/></svg>';
         ed.addEventListener("click", function(){ editTrade(t.id); });
         row.appendChild(ed);
-        var del=document.createElement("button"); del.className="jdel"; del.textContent="✕";
+        var del=document.createElement("button"); del.className="jdel";
+        del.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg>';
         del.addEventListener("click", function(){ deleteTrade(t.id); });
         row.appendChild(del);
         if(t.note) row.appendChild(jspan("jt-note", t.note));

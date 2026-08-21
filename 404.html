@@ -8,50 +8,48 @@
 <meta name="theme-color" content="#06070b" />
 <link rel="icon" href="/favicon.ico" sizes="any" />
 <style>
-  :root{--bg:#06070b;--text:#eceff5;--muted:#79839a;--accent:#7c5cff;--accent2:#2dd4bf;--line:#1b1f29}
+  :root{--bg:#05070a;--text:#e8ecf3;--text2:#aab4c6;--muted:#6f7a90;--accent:#2dd4bf;--brand:#7c5cff;--line:#1c2230;--line-strong:#28303f}
   *{box-sizing:border-box;margin:0;padding:0}
   body{
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Roboto,Helvetica,Arial,sans-serif;
     background:
-      radial-gradient(1100px 620px at 82% -12%, rgba(124,92,255,.10), transparent 62%),
-      radial-gradient(900px 520px at -12% 8%, rgba(45,212,191,.07), transparent 58%),
+      radial-gradient(1200px 560px at 50% -20%, rgba(45,212,191,.045), transparent 60%),
       var(--bg);
+    font-variant-numeric:tabular-nums;
     color:var(--text);line-height:1.6;min-height:100vh;
     display:flex;align-items:center;justify-content:center;padding:24px;
     -webkit-font-smoothing:antialiased;
   }
   .box{text-align:center;max-width:440px}
   .logo{
-    width:42px;height:42px;border-radius:13px;margin:0 auto 22px;position:relative;
-    background:conic-gradient(from 200deg,var(--accent),var(--accent2),var(--accent));
-    box-shadow:0 0 22px rgba(124,92,255,.6);
+    width:40px;height:40px;border-radius:12px;margin:0 auto 24px;position:relative;
+    background:conic-gradient(from 200deg,var(--brand),var(--accent),var(--brand));
   }
   .logo::after{content:"";position:absolute;inset:10px;border-radius:50%;background:var(--bg)}
   .code{
     font-family:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
-    font-size:60px;font-weight:600;letter-spacing:-2px;line-height:1;
-    background:linear-gradient(135deg,var(--accent2),var(--accent));
-    -webkit-background-clip:text;background-clip:text;color:transparent;
+    font-size:15px;font-weight:700;letter-spacing:.14em;line-height:1;
+    color:var(--accent);text-transform:uppercase;
   }
-  h1{font-size:19px;font-weight:600;margin:16px 0 8px}
-  p{color:var(--muted);font-size:14px;margin-bottom:26px}
-  .en{display:block;font-size:13px;opacity:.72;margin-top:4px}
+  h1{font-size:22px;font-weight:700;letter-spacing:-.02em;margin:14px 0 10px}
+  p{color:var(--muted);font-size:14px;line-height:1.75;margin-bottom:28px}
+  .en{display:block;font-size:13px;color:var(--muted);font-weight:400;margin-top:6px}
   a.btn{
-    display:inline-block;padding:11px 22px;border-radius:12px;
-    background:linear-gradient(135deg,var(--accent2),var(--accent));
-    color:#06070b;font-weight:600;font-size:14px;text-decoration:none;
-    transition:transform .18s ease,box-shadow .18s ease;
+    display:inline-block;padding:11px 22px;border-radius:8px;
+    background:transparent;border:1px solid var(--line-strong);
+    color:var(--text2);font-weight:600;font-size:14px;text-decoration:none;
+    transition:color .15s,border-color .15s;
   }
-  a.btn:hover{transform:translateY(-1px);box-shadow:0 8px 26px rgba(124,92,255,.32)}
+  a.btn:hover{color:var(--text);border-color:var(--muted)}
 </style>
 </head>
 <body>
   <div class="box">
     <div class="logo"></div>
-    <div class="code">404</div>
-    <h1>这个页面不存在<span class="en">This page doesn't exist</span></h1>
-    <p>你要找的东西可能已经移走或者从来没有过。回首页用仓位计算器吧。</p>
-    <a class="btn" href="/">返回首页 · Back to HYPERNOVA</a>
+    <div class="code">Error 404</div>
+    <h1>页面不存在<span class="en">Page not found</span></h1>
+    <p>所请求的地址在本站不存在，可能已被移除或从未发布。<br>请返回首页继续使用仓位计算器。<br><span class="en">The requested address does not exist on this site. Please return to the homepage.</span></p>
+    <a class="btn" href="/">返回首页 · Return to homepage</a>
   </div>
 </body>
 </html>
