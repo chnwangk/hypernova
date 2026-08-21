@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="format-detection" content="telephone=no,date=no,address=no,email=no" />
 <title>HYPERNOVA · 加密合约仓位计算器</title>
-<meta name="description" content="风险驱动的加密合约仓位计算器：由单笔可承受亏损反推开仓数量、所需保证金、预估强制平仓价与盈亏比，并公开全部计算公式。运算在本地浏览器完成，不上传任何交易数据。" />
+<meta name="description" content="面向 Hyperliquid 交易者的合约仓位计算器：填入标的即自动带出该合约的最大杠杆与维持保证金率，由单笔可承受亏损反推开仓数量、所需保证金、预估强制平仓价与盈亏比，全部公式公开。运算在本地浏览器完成，不上传交易数据。" />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='5.3' fill='%2304070a'/><g fill='none' stroke='%232dd4bf' stroke-width='2.2' stroke-linecap='square'><path d='M8 4.1H4.6v15.8H8'/><path d='M16 4.1h3.4v15.8H16'/></g><circle cx='12' cy='12' r='2.9' fill='%232dd4bf'/></svg>" />
 <link rel="canonical" href="https://hypernova.vip/" />
 <meta name="robots" content="index, follow, max-image-preview:large" />
@@ -321,6 +321,14 @@
   .field label{display:block;font-size:var(--fs-sm);color:var(--text2);margin-bottom:7px;font-weight:600}
   /* 提示语与标签拉开距离并降一级明度，避免连成一句话 */
   .field label .hint{color:var(--faint);font-weight:400;font-size:var(--fs-xs);margin-left:8px}
+  /* 标的识别结果：显示从 Hyperliquid 取到的最大杠杆与维持保证金率 */
+  .asset-note{
+    font-size:var(--fs-xs);margin-top:6px;min-height:16px;line-height:1.5;
+    font-family:var(--mono);color:var(--muted);
+  }
+  .asset-note.ok{color:var(--accent)}
+  .asset-note.warn{color:var(--amber-text)}
+  .asset-note b{font-weight:700}
   .input-wrap{position:relative;display:flex;align-items:center}
   .input-wrap .suffix{position:absolute;right:12px;color:var(--muted);font-size:var(--fs-sm);pointer-events:none}
   input[type=number],input[type=text],input[type=date],select{
@@ -673,8 +681,10 @@
         </div>
 
         <div class="field">
-          <label for="symbol" data-i18n="label_symbol">标的 <span class="hint">选填，例如 BTC</span></label>
-          <div class="input-wrap"><input type="text" id="symbol" placeholder="BTC"></div>
+          <label for="symbol" data-i18n="label_symbol">标的 <span class="hint">填入后自动带出该合约的杠杆上限与维持保证金率</span></label>
+          <div class="input-wrap"><input type="text" id="symbol" placeholder="BTC" list="hlAssets" autocomplete="off" autocapitalize="characters" spellcheck="false"></div>
+            <datalist id="hlAssets"></datalist>
+            <div class="asset-note" id="assetNote" role="status" aria-live="polite"></div>
         </div>
 
         <div class="two">
@@ -724,8 +734,8 @@
             <div class="input-wrap"><input type="number" id="fee" value="0.05" min="0" step="any"><span class="suffix">%</span></div>
           </div>
           <div class="field">
-            <label for="mmr" data-i18n="label_mmr">维持保证金率 <span class="hint">用于估算强制平仓价格</span></label>
-            <div class="input-wrap"><input type="number" id="mmr" value="0.5" min="0" step="any"><span class="suffix">%</span></div>
+            <label for="mmr" data-i18n="label_mmr">维持保证金率 <span class="hint">填入标的后自动带出，也可手动覆盖</span></label>
+            <div class="input-wrap"><input type="number" id="mmr" value="1.25" min="0" step="any"><span class="suffix">%</span></div>
           </div>
         </div>
         </div>
@@ -773,7 +783,7 @@
       </div>
     </div>
 
-    <div class="privacy"><span class="lock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8.2 10.5V7.8a3.8 3.8 0 0 1 7.6 0v2.7"/></svg></span> <span data-i18n="privacy">本工具的全部计算均在您的浏览器本地完成，交易参数不会离开本机；站点不加载任何第三方统计脚本，亦不收集个人信息。</span></div>
+    <div class="privacy"><span class="lock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8.2 10.5V7.8a3.8 3.8 0 0 1 7.6 0v2.7"/></svg></span> <span data-i18n="privacy">全部计算均在您的浏览器本地完成，您填写的账户金额、价格与仓位参数不会离开本机。站点仅向 Hyperliquid 官方接口请求一份公开的合约清单（最大杠杆与下单精度），该请求不包含您的任何输入，结果缓存 24 小时；请求失败不影响计算器使用。除此之外不加载任何第三方资源，不含统计脚本，不收集个人信息。</span></div>
 
     <div class="disclaimer" data-i18n="disclaimer"><b>风险披露</b>　本工具输出的全部数值均为基于所填参数的理论估算，仅供研究与参考，不构成投资建议、要约或任何形式的承诺。加密货币衍生品交易具有高度风险：价格剧烈波动、流动性不足、各交易所保证金与强平规则存在差异，以及极端行情下的滑点，均可能使实际结果与本页估算产生显著偏离，并可能导致本金全部损失。请在充分理解上述风险后独立作出决策，并自行承担由此产生的全部后果。</div>
   </div>
@@ -918,7 +928,7 @@
       </div>
     </div>
 
-    <p class="method-note" data-i18n="method_note">口径说明：各交易所的维持保证金率随仓位档位阶梯变化，且部分平台在强平计算中计入资金费用与已实现盈亏。本页取用户填写的单一维持保证金率进行估算，故结果为理论值，与具体交易所的实际强平价存在偏差。请以交易所页面显示的数值为准。</p>
+    <p class="method-note" data-i18n="method_note">口径说明：填写标的后，维持保证金率按 Hyperliquid 的规则自动带出——维持保证金率 = 1 ÷ (2 × 该合约最大杠杆)，数据取自其公开合约清单。需要注意两点：其一，Hyperliquid 对大额仓位设有保证金分档（例如 BTC 名义价值超过 1.5 亿美元后最大杠杆降至 20x），本页按第一档计算，对该门槛以下的仓位均准确；其二，强平价仍为理论估算，实际数值还受资金费用、已实现盈亏与账户内其他持仓影响。请以交易所页面显示的数值为准。</p>
   </div>
 </section>
 
@@ -929,8 +939,7 @@
     <div class="about reveal">
       <p data-i18n="about_p1">HYPERNOVA 是面向加密衍生品交易者的风险管理工具站，目标是把机构通行的仓位管理方法，做成任何人都能直接使用的工具。</p>
       <p data-i18n="about_p2">仓位计算器与交易复盘日志是目前已上线的两项工具。后续将继续扩充与风险控制相关的功能，并保持计算方法完全公开。</p>
-      <p style="color:var(--muted);font-size:13px;margin-bottom:0" data-i18n="about_p3">本站长期遵循三条原则：全部运算在本地完成；不收集交易数据；不要求连接钱包。
-      footer:</p>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:0" data-i18n="about_p3">本站长期遵循三条原则：您输入的交易参数只在本机参与运算；不收集、不上传交易数据；不要求连接钱包。对外仅请求 Hyperliquid 的公开合约参数，不含任何用户信息。</p>
     </div>
   </div>
 </section>
@@ -950,7 +959,7 @@
         <a href="#about" data-i18n="nav_about">关于</a>
       </nav>
       <dl class="foot-meta">
-        <div><dt class="caps" data-i18n="foot_version">版本</dt><dd>v3.6</dd></div>
+        <div><dt class="caps" data-i18n="foot_version">版本</dt><dd>v4.0</dd></div>
         <div><dt class="caps" data-i18n="foot_updated">最后更新</dt><dd>2026-08-21</dd></div>
         <div><dt class="caps" data-i18n="foot_data">数据存储</dt><dd data-i18n="foot_data_v">仅本机浏览器</dd></div>
       </dl>
@@ -981,13 +990,13 @@
       label_target:'止盈价 <span class="hint">选填，用于计算盈亏比</span>',
       label_lev:'杠杆倍数',
       label_fee:'手续费率 <span class="hint">单边</span>',
-      label_mmr:'维持保证金率 <span class="hint">用于估算强制平仓价格</span>',
+      label_mmr:'维持保证金率 <span class="hint">填入标的后自动带出，也可手动覆盖</span>',
       btn_long:'做多', btn_short:'做空', btn_cross:'全仓', btn_isolated:'逐仓',
       res_qty_label:'应开仓数量', res_notional_label:'名义价值',
       row_risk:'单笔风险金额', row_stopdist:'止损距离', row_margin:'所需保证金',
       row_liq:'预估强制平仓价', row_rr:'盈亏比 R:R', row_fee:'手续费 开仓+止损离场',
       row_netwin:'止盈成交 · 净盈利', row_netloss:'止损成交 · 净亏损',
-      privacy:'本工具的全部计算均在您的浏览器本地完成，交易参数不会离开本机；站点不加载任何第三方统计脚本，亦不收集个人信息。',
+      privacy:'全部计算均在您的浏览器本地完成，您填写的账户金额、价格与仓位参数不会离开本机。站点仅向 Hyperliquid 官方接口请求一份公开的合约清单（最大杠杆与下单精度），该请求不包含您的任何输入，结果缓存 24 小时；请求失败不影响计算器使用。除此之外不加载任何第三方资源，不含统计脚本，不收集个人信息。',
       disclaimer:'<b>风险披露</b>　本工具输出的全部数值均为基于所填参数的理论估算，仅供研究与参考，不构成投资建议、要约或任何形式的承诺。加密货币衍生品交易具有高度风险：价格剧烈波动、流动性不足、各交易所保证金与强平规则存在差异，以及极端行情下的滑点，均可能使实际结果与本页估算产生显著偏离，并可能导致本金全部损失。请在充分理解上述风险后独立作出决策，并自行承担由此产生的全部后果。',
       feat_h:'为什么以风险为起点',
       feat1_t:'先确定亏损上限，再确定仓位',
@@ -999,7 +1008,7 @@
       about_h:'关于 HYPERNOVA',
       about_p1:'HYPERNOVA 是面向加密衍生品交易者的风险管理工具站，目标是把机构通行的仓位管理方法，做成任何人都能直接使用的工具。',
       about_p2:'仓位计算器与交易复盘日志是目前已上线的两项工具。后续将继续扩充与风险控制相关的功能，并保持计算方法完全公开。',
-      about_p3:'本站长期遵循三条原则：全部运算在本地完成；不收集交易数据；不要求连接钱包。',
+      about_p3:'本站长期遵循三条原则：您输入的交易参数只在本机参与运算；不收集、不上传交易数据；不要求连接钱包。对外仅请求 Hyperliquid 的公开合约参数，不含任何用户信息。',
       footer:'© 2026 HYPERNOVA · 本站内容仅供研究与参考，不构成投资建议',
       nav_journal:'交易日志',
       journal_h:'交易复盘日志',
@@ -1016,7 +1025,7 @@
       jr_streak:'最大连胜 / 连亏', jr_best:'最佳交易', jr_worst:'最差交易',
       j_equity:'资金曲线（累计盈亏）',
       j_cancel:'取消编辑', j_export:'导出备份', j_import:'导入',
-      label_symbol:'标的 <span class="hint">选填，例如 BTC</span>',
+      label_symbol:'标的 <span class="hint">填入后自动带出该合约的杠杆上限与维持保证金率</span>',
       viz_label:'价格结构　入场 / 止损 / 止盈 / 强平',
       to_journal:'录入交易日志',
       method_h:'计算方法',
@@ -1031,7 +1040,7 @@
       m4_p:'盈亏比为止盈距离与止损距离之比，在开仓前即可确定。R 倍数为交易结束后的实际盈亏与该笔止损风险之比，用于横向比较不同规模的交易。',
       foot_desc:'风险驱动的加密衍生品仓位管理工具。全部运算在本地完成。',
       foot_version:'版本', foot_updated:'最后更新', foot_data:'数据存储', foot_data_v:'仅本机浏览器',
-      method_note:'口径说明：各交易所的维持保证金率随仓位档位阶梯变化，且部分平台在强平计算中计入资金费用与已实现盈亏。本页取用户填写的单一维持保证金率进行估算，故结果为理论值，与具体交易所的实际强平价存在偏差。请以交易所页面显示的数值为准。',
+      method_note:'口径说明：填写标的后，维持保证金率按 Hyperliquid 的规则自动带出——维持保证金率 = 1 ÷ (2 × 该合约最大杠杆)，数据取自其公开合约清单。需要注意两点：其一，Hyperliquid 对大额仓位设有保证金分档（例如 BTC 名义价值超过 1.5 亿美元后最大杠杆降至 20x），本页按第一档计算，对该门槛以下的仓位均准确；其二，强平价仍为理论估算，实际数值还受资金费用、已实现盈亏与账户内其他持仓影响。请以交易所页面显示的数值为准。',
       copy_result:'复制结果', j_clear:'清空全部'
     },
     en: {
@@ -1050,13 +1059,13 @@
       label_target:'Take-Profit <span class="hint">optional, used to compute R:R</span>',
       label_lev:'Leverage',
       label_fee:'Fee Rate <span class="hint">per side</span>',
-      label_mmr:'Maintenance Margin <span class="hint">used to estimate the liquidation price</span>',
+      label_mmr:'Maintenance Margin <span class="hint">filled in automatically from the symbol; can be overridden</span>',
       btn_long:'Long', btn_short:'Short', btn_cross:'Cross', btn_isolated:'Isolated',
       res_qty_label:'Position size', res_notional_label:'Notional value',
       row_risk:'Risk amount', row_stopdist:'Stop distance', row_margin:'Margin required',
       row_liq:'Est. liquidation price', row_rr:'Risk : Reward', row_fee:'Fees, entry + stop exit',
       row_netwin:'Net profit at take-profit', row_netloss:'Net loss at stop',
-      privacy:'All computation is performed locally in your browser; trade parameters never leave your device. This site loads no third-party analytics scripts and collects no personal information.',
+      privacy:'All computation is performed locally in your browser; the account size, prices and position parameters you enter never leave your device. The site makes one request to Hyperliquid\'s public API for the contract list (max leverage and size precision). That request contains none of your input, the result is cached for 24 hours, and a failed request does not affect the calculator. Nothing else is loaded from third parties: no analytics scripts, no personal information collected.',
       disclaimer:'<b>Risk disclosure</b>&#12288;All figures produced by this tool are theoretical estimates derived from the parameters entered. They are provided for research and reference only and do not constitute investment advice, an offer, or any form of undertaking. Trading crypto derivatives carries a high degree of risk: price volatility, insufficient liquidity, differences between exchanges in margin and liquidation rules, and slippage under extreme conditions may cause actual outcomes to diverge materially from these estimates, and may result in the total loss of capital. Please make independent decisions only after fully understanding these risks, and accept full responsibility for the consequences.',
       feat_h:'Why risk comes first',
       feat1_t:'Loss limit first, size second',
@@ -1068,7 +1077,7 @@
       about_h:'About HYPERNOVA',
       about_p1:'HYPERNOVA is a risk-management toolkit for crypto derivatives traders, built to make institutional position-sizing methods directly usable by anyone.',
       about_p2:'The position calculator and the trade journal are the two tools currently available. Further risk-control features will follow, and the calculation methods will remain fully published.',
-      about_p3:'Three standing principles: all computation stays local; no trade data is collected; no wallet connection is required.',
+      about_p3:'Three standing principles: the parameters you enter are used only on your own device; no trade data is collected or uploaded; no wallet connection is required. The only outbound request fetches public contract parameters from Hyperliquid and carries no user information.',
       footer:'© 2026 HYPERNOVA · Provided for research and reference only; not investment advice',
       nav_journal:'Journal',
       journal_h:'Trade Journal',
@@ -1085,7 +1094,7 @@
       jr_streak:'Max win / loss streak', jr_best:'Best trade', jr_worst:'Worst trade',
       j_equity:'Equity curve (cumulative P/L)',
       j_cancel:'Cancel edit', j_export:'Export', j_import:'Import',
-      label_symbol:'Symbol <span class="hint">optional, e.g. BTC</span>',
+      label_symbol:'Symbol <span class="hint">fills in the contract&rsquo;s leverage cap and maintenance margin</span>',
       viz_label:'Price structure&#12288;entry / stop / target / liquidation',
       to_journal:'Record in journal',
       method_h:'Methodology',
@@ -1100,7 +1109,7 @@
       m4_p:'The risk-to-reward ratio is the target distance divided by the stop distance and is known before entry. The R-multiple is the realised result divided by the risk taken on that trade, which makes trades of different sizes comparable.',
       foot_desc:'A risk-driven position management tool for crypto derivatives. All computation runs locally.',
       foot_version:'Version', foot_updated:'Last updated', foot_data:'Data storage', foot_data_v:'Local browser only',
-      method_note:'Basis of estimation: maintenance margin rates vary by position tier across exchanges, and some venues include funding costs and realised P/L in their liquidation calculation. This page estimates using the single maintenance margin rate entered by the user, so the result is theoretical and will differ from the figure shown by any particular exchange. Always defer to the value displayed by your exchange.',
+      method_note:'Basis of estimation: once a symbol is entered, the maintenance margin rate is derived from Hyperliquid&rsquo;s rule &mdash; maintenance margin = 1 &divide; (2 &times; the contract&rsquo;s max leverage) &mdash; using their public contract list. Two caveats. First, Hyperliquid applies tiered margin to large positions (for example BTC drops to 20x max leverage above $150M notional); this page uses the first tier, which is accurate for any position below that threshold. Second, the liquidation price remains a theoretical estimate: the actual level is also affected by funding costs, realised P/L and other positions in the account. Always defer to the value displayed by your exchange.',
       copy_result:'Copy', j_clear:'Clear all'
     }
   };
@@ -1136,7 +1145,14 @@
       negInput:"存在负值输入。账户总额、风险比例、价格与费率均须为正数，请核对后重新填写。",
       riskZero:"单笔风险比例须大于 0，否则无法反推仓位规模。通行区间为 1%–2%。",
       mmrBad:"维持保证金率应远低于 100%，常见区间为 0.4%–1%。当前取值无法得出有意义的强制平仓价。",
-      accountMissing:"请先填写账户总额，否则无法据以反推仓位规模。"
+      accountMissing:"请先填写账户总额，否则无法据以反推仓位规模。",
+      assetFound:function(sym,lev,mmr){
+        return "Hyperliquid · "+sym+" 最大杠杆 <b>"+lev+"x</b> · 维持保证金率 <b>"+mmr+"%</b>（已自动填入）";
+      },
+      assetUnknown:function(sym){ return sym+" 不在 Hyperliquid 永续合约清单中，维持保证金率请手动填写"; },
+      sizeTooSmall:function(sym,step,ntl){
+        return "按 "+sym+" 的下单精度，最小可下单数量为 "+step+"（约 "+ntl+" USDT 名义价值），当前算出的仓位不足此数量，无法实际成交。可提高单笔风险比例、收紧止损距离，或改用下单精度更细的标的。";
+      }
     },
     en: {
       liqSafe:"Far from current price",
@@ -1167,7 +1183,14 @@
       negInput:"Negative values detected. Account size, risk, prices and fee rates must all be positive — please check your inputs.",
       riskZero:"Risk per trade must be greater than 0, otherwise there is no position to size. 1%–2% is the usual range.",
       mmrBad:"Maintenance margin rate should be far below 100% (typically 0.4%–1%). The current value cannot produce a meaningful liquidation price.",
-      accountMissing:"Please enter the account size first; without it the position size cannot be derived."
+      accountMissing:"Please enter the account size first; without it the position size cannot be derived.",
+      assetFound:function(sym,lev,mmr){
+        return "Hyperliquid &middot; "+sym+" max leverage <b>"+lev+"x</b> &middot; maintenance margin <b>"+mmr+"%</b> (filled in automatically)";
+      },
+      assetUnknown:function(sym){ return sym+" is not in the Hyperliquid perpetuals list; please enter the maintenance margin manually."; },
+      sizeTooSmall:function(sym,step,ntl){
+        return "The minimum tradeable size for "+sym+" is "+step+" (about "+ntl+" USDT notional). The position derived here falls below that and cannot be executed. Consider raising the risk per trade, tightening the stop distance, or choosing an instrument with finer size precision.";
+      }
     }
   };
 
@@ -1201,6 +1224,8 @@
   }
   function fmtQty(n){
     if(!isFinite(n)||n<=0) return "0";
+    // 数量在 calc() 里已按合约精度取整，这里只负责按同样的位数显示
+    if(HL_SZ_DEC!=null) return fmt(n, HL_SZ_DEC);
     if(n>=100) return fmt(n,2);
     if(n>=1) return fmt(n,3);
     if(n>=0.01) return fmt(n,4);
@@ -1371,11 +1396,22 @@
     // 止盈方向是否设反
     var targetWrong = target>0 && entry>0 && ((side==="long" && target<=entry) || (side==="short" && target>=entry));
 
-    var notional=0, qty=0, margin=0;
+    var notional=0, qty=0, margin=0, qtyRounded=false;
     if(stopDistAbs>0 && entry>0){
-      notional = riskAmt / stopDistPct;
-      qty = notional / entry;
+      qty = riskAmt / stopDistAbs;
+      // 已识别标的时，先把数量落到该合约真正能下单的精度上（向下取整，偏保守），
+      // 再由它推导名义价值、保证金、手续费与净盈亏——
+      // 这样页面上每个数字都对应「你照着这个数量下单」的真实结果。
+      if(HL_SZ_DEC!=null){
+        var _f=Math.pow(10,HL_SZ_DEC);
+        var _q=Math.floor(qty*_f)/_f;
+        if(_q!==qty){ qtyRounded=true; }
+        qty=_q;
+      }
+      notional = qty*entry;
       margin = lev>0 ? notional/lev : 0;
+      // 取整后的实际风险金额（略小于目标风险）
+      riskAmt = qty*stopDistAbs;
     }
 
     // 强平价
@@ -1462,6 +1498,11 @@
     if(ready && notional>account*3){
       alerts.push(["warn", M.notionalBig((notional/account).toFixed(1))]);
     }
+    // 按合约下单精度取整后不足最小可下单数量
+    if(ready && HL_SZ_DEC!=null && qty<=0 && entry>0 && stopDistAbs>0){
+      var _step=Math.pow(10,-HL_SZ_DEC);
+      alerts.push(["warn", M.sizeTooSmall(_sym||"该标的", fmt(_step,HL_SZ_DEC), fmtPx(_step*entry))]);
+    }
     if(ready && !targetWrong && isFinite(rr) && rr<1 && rr>0){
       alerts.push(["warn", M.rrLow]);
     }
@@ -1497,6 +1538,102 @@
     markRiskQuick();
   }
 
+  /* ==========================================================
+     Hyperliquid 合约参数
+     只请求一个公开的合约清单接口（{"type":"meta"}），不携带任何用户数据。
+     结果缓存 24 小时。任何失败都必须静默降级——计算器在离线状态下
+     仍须完整可用，这是这段代码唯一不能妥协的约束。
+     ========================================================== */
+  var HL_URL   = 'https://api.hyperliquid.xyz/info';
+  var HL_CACHE = 'hn_hl_meta_v1';
+  var HL_TTL   = 24*3600*1000;
+  var HL_ASSETS = null;          // { BTC: {maxLeverage, szDecimals}, ... }
+
+  function hlApply(universe){
+    var m = {};
+    universe.forEach(function(u){
+      if(u && u.name && u.maxLeverage && !u.isDelisted){
+        m[u.name.toUpperCase()] = {lev:u.maxLeverage, dec:u.szDecimals};
+      }
+    });
+    if(!Object.keys(m).length) return;
+    HL_ASSETS = m;
+    var dl = $("hlAssets");
+    if(dl){
+      var frag = document.createDocumentFragment();
+      Object.keys(m).sort().forEach(function(name){
+        var o=document.createElement("option"); o.value=name; frag.appendChild(o);
+      });
+      dl.innerHTML=""; dl.appendChild(frag);
+    }
+    onSymbolChange();
+  }
+
+  function hlLoad(){
+    // 先用缓存，让首屏不依赖网络
+    try{
+      var c = JSON.parse(localStorage.getItem(HL_CACHE)||'null');
+      if(c && c.t && (Date.now()-c.t) < HL_TTL && c.u){ hlApply(c.u); return; }
+    }catch(e){}
+    if(!window.fetch) return;
+    var ctrl = window.AbortController ? new AbortController() : null;
+    if(ctrl) setTimeout(function(){ try{ctrl.abort();}catch(e){} }, 8000);
+    fetch(HL_URL, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({type:'meta'}),
+      signal: ctrl ? ctrl.signal : undefined
+    })
+    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .then(function(d){
+      if(!d || !d.universe) throw 0;
+      try{ localStorage.setItem(HL_CACHE, JSON.stringify({t:Date.now(), u:d.universe})); }catch(e){}
+      hlApply(d.universe);
+    })
+    .catch(function(err){
+      // 网络失败要静默降级；但代码错误必须暴露出来，否则 bug 会被这里吞掉
+      if(err && err.name!=='AbortError' && err instanceof Error){
+        console.error('[hypernova] 合约参数处理出错:', err);
+      }
+    });
+  }
+
+  /* 标的变化时：带出维持保证金率、把杠杆上限压到该标的的真实上限 */
+  function onSymbolChange(){
+    var note = $("assetNote"); if(!note) return;
+    var M = MSG[LANG];
+    var sym = ($("symbol").value||"").trim().toUpperCase();
+    // 离开某个已识别标的时必须清掉它的下单精度，
+    // 否则会拿着上一个标的的精度去取整，数量可能被直接抹成 0
+    if(!sym){
+      HL_SZ_DEC=null; note.textContent=""; note.className="asset-note";
+      setLevMax(100); calc(); return;
+    }
+    if(!HL_ASSETS){ note.textContent=""; note.className="asset-note"; return; }
+    var a = HL_ASSETS[sym];
+    if(!a){
+      HL_SZ_DEC=null;
+      note.textContent = M.assetUnknown(sym);
+      note.className = "asset-note warn";
+      setLevMax(100); calc(); return;
+    }
+    var mmr = 100/(2*a.lev);                       // 维持保证金率 = 1/(2×最大杠杆)
+    $("mmr").value = +mmr.toFixed(4);
+    HL_SZ_DEC = a.dec;
+    setLevMax(a.lev);
+    note.innerHTML = M.assetFound(sym, a.lev, mmr.toFixed(2));
+    note.className = "asset-note ok";
+    calc(); savePrefs();
+  }
+
+  var HL_SZ_DEC = null;   // 该标的的下单数量精度
+
+  function setLevMax(max){
+    var sl=$("lev"), ni=$("levInput");
+    sl.max=max; ni.max=max;
+    if(+sl.value > max){ sl.value=max; ni.value=max; }
+  }
+
   /* ---------- 记住常用输入 ---------- */
   var PREF_KEY='hn_calc_prefs';
   function savePrefs(){
@@ -1524,7 +1661,8 @@
 
   /* ---------- 事件绑定 ---------- */
   ids.forEach(function(id){ $(id).addEventListener("input", function(){ calc(); savePrefs(); }); });
-  $("symbol").addEventListener("input", calc);
+  $("symbol").addEventListener("input", function(){ onSymbolChange(); calc(); });
+  $("symbol").addEventListener("change", onSymbolChange);
   // 杠杆滑块 ↔ 数字输入框 同步
   $("lev").addEventListener("input", function(){ $("levInput").value=$("lev").value; });
   $("levInput").addEventListener("input", function(){
@@ -1821,6 +1959,7 @@
 
   restorePrefs();
   applyI18n();
+  hlLoad();   // 异步拉取 Hyperliquid 合约参数；失败不影响任何已有功能
 
   /* 滚动渐入 */
   var rev = document.querySelectorAll('.reveal');
