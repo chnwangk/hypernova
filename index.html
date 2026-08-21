@@ -112,7 +112,7 @@
     background:rgba(10,10,20,.72);
     border-bottom:1px solid var(--line);
   }
-  .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .nav{display:flex;align-items:center;gap:22px;height:64px}
   .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.5px}
   .brand .logo{
     width:30px;height:30px;border-radius:9px;
@@ -123,12 +123,12 @@
   .brand .logo::after{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--bg);}
   .brand b{font-size:18px}
   .brand span{color:var(--accent2);font-weight:800}
-  .nav-links{display:flex;gap:22px;align-items:center}
+  .nav-links{display:flex;gap:22px;align-items:center;margin-left:auto}
   .nav-links a{color:var(--muted);font-size:14px;font-weight:600;transition:color .15s}
   .nav-links a:hover{color:var(--text)}
   .lang-btn{
     background:var(--panel);border:1px solid var(--line);color:var(--muted);
-    padding:7px 12px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;transition:.15s;
+    padding:7px 12px;min-height:38px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;transition:.15s;
   }
   .lang-btn:hover{color:var(--text);border-color:var(--accent)}
   .nav-cta{
@@ -136,7 +136,21 @@
     color:#fff;padding:8px 16px;border-radius:10px;font-size:14px;font-weight:700;
     box-shadow:0 6px 20px rgba(124,92,255,.35);
   }
-  @media(max-width:680px){.nav-links a:not(.nav-cta){display:none}}
+  @media(max-width:680px){
+    /* 原先锚点链接在移动端整行隐藏，导致够不到「交易日志」。
+       改为：第一行 品牌 + 语言 + CTA，第二行 锚点链接（可横向滚动） */
+    .nav{height:auto;flex-wrap:wrap;gap:10px;padding:10px 20px}  /* 保留 .wrap 的左右留白 */
+    .brand{order:1}
+    .lang-btn{order:2;margin-left:auto}
+    .nav-cta{order:3}
+    .nav-links{
+      order:4;width:100%;margin-left:0;gap:18px;overflow-x:auto;
+      -webkit-overflow-scrolling:touch;scrollbar-width:none;
+    }
+    .nav-links::-webkit-scrollbar{display:none}
+    .nav-links a{white-space:nowrap;padding:9px 0}
+    #lev{min-height:30px}
+  }
 
   /* ---------- Hero ---------- */
   .hero{padding:74px 0 38px;text-align:center}
@@ -191,7 +205,7 @@
   .input-wrap .suffix{position:absolute;right:12px;color:var(--muted);font-size:13px;pointer-events:none}
   input[type=number],input[type=text],input[type=date],select{
     width:100%;background:var(--bg);border:1px solid var(--line);color:var(--text);
-    padding:11px 13px;border-radius:10px;font-size:15px;font-weight:600;outline:none;
+    padding:11px 13px;min-height:44px;border-radius:10px;font-size:15px;font-weight:600;outline:none;
     transition:border-color .15s,box-shadow .15s;
   }
   input[type=number]:focus,input[type=text]:focus,input[type=date]:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,92,255,.18)}
@@ -199,7 +213,7 @@
 
   .seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:4px;gap:4px}
   .seg button{
-    flex:1;border:none;background:transparent;color:var(--muted);padding:9px;border-radius:7px;
+    flex:1;border:none;background:transparent;color:var(--muted);padding:9px;min-height:42px;border-radius:7px;
     font-weight:700;font-size:14px;cursor:pointer;transition:.15s;
   }
   .seg button.long.active{background:rgba(52,211,153,.16);color:var(--green)}
@@ -304,7 +318,7 @@
   .result-btns .btn{flex:1;padding:11px}
   /* 风险快捷按钮 */
   .quick{display:flex;gap:6px;margin-top:8px}
-  .quick button{flex:1;background:var(--bg);border:1px solid var(--line);color:var(--muted);padding:6px;border-radius:8px;font-size:12.5px;font-weight:700;cursor:pointer;transition:.15s}
+  .quick button{flex:1;background:var(--bg);border:1px solid var(--line);color:var(--muted);padding:6px;min-height:38px;border-radius:8px;font-size:12.5px;font-weight:700;cursor:pointer;transition:.15s}
   .quick button:hover{color:var(--text);border-color:var(--accent)}
   .quick button.on{background:rgba(124,92,255,.18);border-color:var(--accent);color:var(--accent2)}
   .jtool-btn.danger:hover{color:var(--red);border-color:var(--red)}
@@ -364,14 +378,14 @@
       <div class="logo"></div>
       <b>HYPER<span>NOVA</span></b>
     </div>
-    <nav class="nav-links">
+    <nav class="nav-links" aria-label="主导航 / Main navigation">
       <a href="#calc" data-i18n="nav_calc">仓位计算器</a>
       <a href="#journal" data-i18n="nav_journal">交易日志</a>
       <a href="#features" data-i18n="nav_features">特性</a>
       <a href="#about" data-i18n="nav_about">关于</a>
-      <button id="langToggle" class="lang-btn">EN</button>
-      <a href="#calc" class="nav-cta" data-i18n="nav_cta">开始计算</a>
     </nav>
+    <button id="langToggle" class="lang-btn">EN</button>
+    <a href="#calc" class="nav-cta" data-i18n="nav_cta">开始计算</a>
   </div>
 </header>
 
@@ -398,7 +412,7 @@
         <h3><span class="n">1</span><span data-i18n="panel1_title">填写你的交易计划</span></h3>
 
         <div class="field">
-          <label data-i18n="label_account">账户总额 <span class="hint">（用于计算风险的本金）</span></label>
+          <label for="account" data-i18n="label_account">账户总额 <span class="hint">（用于计算风险的本金）</span></label>
           <div class="input-wrap">
             <input type="number" id="account" min="0" step="any">
             <span class="suffix">USDT</span>
@@ -406,7 +420,7 @@
         </div>
 
         <div class="field">
-          <label data-i18n="label_risk">单笔风险比例 <span class="hint">（建议 1%–2%，即最多愿意亏多少）</span></label>
+          <label for="risk" data-i18n="label_risk">单笔风险比例 <span class="hint">（建议 1%–2%，即最多愿意亏多少）</span></label>
           <div class="input-wrap">
             <input type="number" id="risk" value="1" min="0" step="any">
             <span class="suffix">%</span>
@@ -417,58 +431,58 @@
         </div>
 
         <div class="field">
-          <label data-i18n="label_symbol">标的 <span class="hint">（可选，如 BTC）</span></label>
+          <label for="symbol" data-i18n="label_symbol">标的 <span class="hint">（可选，如 BTC）</span></label>
           <div class="input-wrap"><input type="text" id="symbol" placeholder="BTC"></div>
         </div>
 
         <div class="two">
           <div class="field">
-            <label data-i18n="label_side">方向</label>
-            <div class="seg" id="side">
-              <button class="long active" data-side="long" data-i18n="btn_long">做多</button>
-              <button class="short" data-side="short" data-i18n="btn_short">做空</button>
+            <label id="lbl_side" data-i18n="label_side">方向</label>
+            <div class="seg" id="side" role="group" aria-labelledby="lbl_side">
+              <button type="button" class="long active" data-side="long" aria-pressed="true" data-i18n="btn_long">做多</button>
+              <button type="button" class="short" data-side="short" aria-pressed="false" data-i18n="btn_short">做空</button>
             </div>
           </div>
           <div class="field">
-            <label data-i18n="label_mode">保证金模式</label>
-            <div class="seg" id="mode">
-              <button class="mode active" data-mode="cross" data-i18n="btn_cross">全仓</button>
-              <button class="mode" data-mode="isolated" data-i18n="btn_isolated">逐仓</button>
+            <label id="lbl_mode" data-i18n="label_mode">保证金模式</label>
+            <div class="seg" id="mode" role="group" aria-labelledby="lbl_mode">
+              <button type="button" class="mode active" data-mode="cross" aria-pressed="true" data-i18n="btn_cross">全仓</button>
+              <button type="button" class="mode" data-mode="isolated" aria-pressed="false" data-i18n="btn_isolated">逐仓</button>
             </div>
           </div>
         </div>
 
         <div class="two">
           <div class="field">
-            <label data-i18n="label_entry">入场价</label>
+            <label for="entry" data-i18n="label_entry">入场价</label>
             <div class="input-wrap"><input type="number" id="entry" min="0" step="any"></div>
           </div>
           <div class="field">
-            <label data-i18n="label_stop">止损价</label>
+            <label for="stop" data-i18n="label_stop">止损价</label>
             <div class="input-wrap"><input type="number" id="stop" min="0" step="any"></div>
           </div>
         </div>
 
         <div class="field">
-          <label data-i18n="label_target">止盈价 <span class="hint">（可选，用于算盈亏比）</span></label>
+          <label for="target" data-i18n="label_target">止盈价 <span class="hint">（可选，用于算盈亏比）</span></label>
           <div class="input-wrap"><input type="number" id="target" min="0" step="any"></div>
         </div>
 
         <div class="field">
-          <label data-i18n="label_lev">杠杆倍数</label>
+          <label for="lev" data-i18n="label_lev">杠杆倍数</label>
           <div class="lev-row">
-            <input type="range" id="lev" min="1" max="100" value="10" step="1">
-            <div class="lev-num"><input type="number" id="levInput" min="1" max="100" value="10"><span>x</span></div>
+            <input type="range" id="lev" min="1" max="100" value="10" step="1" aria-label="杠杆倍数 / Leverage">
+            <div class="lev-num"><input type="number" id="levInput" min="1" max="100" value="10" aria-label="杠杆倍数（数值） / Leverage value"><span>x</span></div>
           </div>
         </div>
 
         <div class="two">
           <div class="field">
-            <label data-i18n="label_fee">手续费率 <span class="hint">(单边)</span></label>
+            <label for="fee" data-i18n="label_fee">手续费率 <span class="hint">(单边)</span></label>
             <div class="input-wrap"><input type="number" id="fee" value="0.05" min="0" step="any"><span class="suffix">%</span></div>
           </div>
           <div class="field">
-            <label data-i18n="label_mmr">维持保证金率 <span class="hint">(算强平)</span></label>
+            <label for="mmr" data-i18n="label_mmr">维持保证金率 <span class="hint">(算强平)</span></label>
             <div class="input-wrap"><input type="number" id="mmr" value="0.5" min="0" step="any"><span class="suffix">%</span></div>
           </div>
         </div>
@@ -495,15 +509,15 @@
           <div class="row"><span class="k" data-i18n="row_margin">所需保证金</span><span class="v accent" id="margin">—</span></div>
           <div class="row"><span class="k" data-i18n="row_liq">预估强平价</span><span class="v" id="liq">—</span></div>
           <div class="row"><span class="k"><span data-i18n="row_rr">盈亏比 (R:R)</span> <span id="rrBadge"></span></span><span class="v" id="rr">—</span></div>
-          <div class="row"><span class="k" data-i18n="row_fee">手续费 (开+平)</span><span class="v" id="feeAmt">—</span></div>
+          <div class="row"><span class="k" data-i18n="row_fee">手续费（开仓+止损离场）</span><span class="v" id="feeAmt">—</span></div>
           <div class="row"><span class="k" data-i18n="row_netwin">止盈达成 · 净盈利</span><span class="v green" id="netWin">—</span></div>
           <div class="row"><span class="k" data-i18n="row_netloss">止损触发 · 净亏损</span><span class="v red" id="netLoss">—</span></div>
         </div>
 
         <div class="viz-label" id="vizLabel" data-i18n="viz_label" style="display:none">价格结构</div>
-        <canvas id="tradeViz" height="82" style="display:none"></canvas>
+        <canvas id="tradeViz" height="82" style="display:none" role="img" aria-label="价格结构示意图：入场、止损、止盈与强平价的相对位置 / Price structure diagram"></canvas>
 
-        <div id="alerts"></div>
+        <div id="alerts" role="status" aria-live="polite" aria-atomic="false"></div>
 
         <div class="result-btns" id="resultBtns" style="display:none">
           <button class="btn btn-ghost" id="copyResult" data-i18n="copy_result">复制结果</button>
@@ -532,14 +546,14 @@
       <div class="panel">
         <h3><span class="n">+</span><span data-i18n="journal_add_title">记录一笔交易</span></h3>
         <div class="jform">
-          <div class="field"><label data-i18n="j_date">日期</label><input type="date" id="j_date"></div>
-          <div class="field"><label data-i18n="j_symbol">标的</label><input type="text" id="j_symbol" placeholder="BTC"></div>
-          <div class="field"><label data-i18n="label_side">方向</label>
+          <div class="field"><label for="j_date" data-i18n="j_date">日期</label><input type="date" id="j_date"></div>
+          <div class="field"><label for="j_symbol" data-i18n="j_symbol">标的</label><input type="text" id="j_symbol" placeholder="BTC"></div>
+          <div class="field"><label for="j_side" data-i18n="label_side">方向</label>
             <select id="j_side"><option value="long" data-i18n="btn_long">做多</option><option value="short" data-i18n="btn_short">做空</option></select>
           </div>
-          <div class="field"><label data-i18n="j_risk">本笔风险 1R <span class="hint">（止损会亏多少）</span></label><div class="input-wrap"><input type="number" id="j_risk" min="0" step="any"><span class="suffix">USDT</span></div></div>
-          <div class="field jspan2"><label data-i18n="j_pnl">实际盈亏 <span class="hint">（正=盈利，负=亏损）</span></label><div class="input-wrap"><input type="number" id="j_pnl" step="any"><span class="suffix">USDT</span></div></div>
-          <div class="field jspan2"><label data-i18n="j_note">备注（可选）</label><input type="text" id="j_note"></div>
+          <div class="field"><label for="j_risk" data-i18n="j_risk">本笔风险 1R <span class="hint">（止损会亏多少）</span></label><div class="input-wrap"><input type="number" id="j_risk" min="0" step="any"><span class="suffix">USDT</span></div></div>
+          <div class="field jspan2"><label for="j_pnl" data-i18n="j_pnl">实际盈亏 <span class="hint">（正=盈利，负=亏损）</span></label><div class="input-wrap"><input type="number" id="j_pnl" step="any"><span class="suffix">USDT</span></div></div>
+          <div class="field jspan2"><label for="j_note" data-i18n="j_note">备注（可选）</label><input type="text" id="j_note"></div>
         </div>
         <button class="btn btn-primary jbtn" id="j_add" data-i18n="j_add_btn">添加交易</button>
         <button class="btn btn-ghost jbtn" id="j_cancel" data-i18n="j_cancel" style="display:none">取消编辑</button>
@@ -563,12 +577,12 @@
           <div class="row"><span class="k" data-i18n="jr_maxdd">最大回撤</span><span class="v red" id="jr_maxdd">—</span></div>
         </div>
         <div class="jchart-label" data-i18n="j_equity">资金曲线（累计盈亏）</div>
-        <canvas id="j_chart" height="150"></canvas>
+        <canvas id="j_chart" height="150" role="img" aria-label="资金曲线图：按交易顺序累计的盈亏 / Equity curve chart"></canvas>
         <div class="jtools">
           <button class="jtool-btn" id="j_export" data-i18n="j_export">导出备份</button>
           <button class="jtool-btn" id="j_import" data-i18n="j_import">导入</button>
           <button class="jtool-btn danger" id="j_clear" data-i18n="j_clear">清空全部</button>
-          <input type="file" id="j_file" accept="application/json,.json" style="display:none">
+          <input type="file" id="j_file" accept="application/json,.json" style="display:none" aria-label="选择要导入的交易日志备份文件 / Choose a journal backup file to import">
         </div>
       </div>
     </div>
@@ -617,7 +631,7 @@
 <footer>
   <div class="wrap foot">
     <div class="brand"><div class="logo" style="width:24px;height:24px"></div><b style="font-size:15px">HYPER<span>NOVA</span></b></div>
-    <div data-i18n="footer">© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v2.3</div>
+    <div data-i18n="footer">© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v2.4</div>
   </div>
 </footer>
 
@@ -645,7 +659,7 @@
       btn_long:'做多', btn_short:'做空', btn_cross:'全仓', btn_isolated:'逐仓',
       res_qty_label:'建议开仓数量', res_notional_label:'名义价值',
       row_risk:'单笔风险金额', row_stopdist:'止损距离', row_margin:'所需保证金',
-      row_liq:'预估强平价', row_rr:'盈亏比 (R:R)', row_fee:'手续费 (开+平)',
+      row_liq:'预估强平价', row_rr:'盈亏比 (R:R)', row_fee:'手续费（开仓+止损离场）',
       row_netwin:'止盈达成 · 净盈利', row_netloss:'止损触发 · 净亏损',
       privacy:'所有计算均在你的浏览器本地完成，不会上传你的任何交易数据；本站不加载任何第三方统计脚本，也不收集个人信息。',
       disclaimer:'⚠️ <b>免责声明：</b>本工具仅供学习与参考，所有计算结果不构成任何投资建议。加密货币合约交易风险极高，可能导致本金全部损失，请独立判断并自行承担风险。',
@@ -660,7 +674,7 @@
       about_p1:'HYPERNOVA 是一个面向加密交易者的工具站，目标是把专业、可靠的交易工具做得人人都会用。',
       about_p2:'仓位计算器是这里的第一个工具。未来还会加入更多帮助你做出更理性决策的功能。',
       about_p3:'本站坚持：计算纯本地完成 · 不收集你的交易数据 · 不需要连接钱包。',
-      footer:'© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v2.3',
+      footer:'© 2026 HYPERNOVA · 仅供学习参考，不构成投资建议 · v2.4',
       nav_journal:'交易日志',
       journal_h:'交易复盘日志',
       journal_intro:'记录每笔已结束的交易，自动算出你的真实胜率、期望值和资金曲线。盈亏比是交易结束后才知道的——这里用「R 倍数」衡量。数据只存在你的浏览器本地，不上传。',
@@ -701,7 +715,7 @@
       btn_long:'Long', btn_short:'Short', btn_cross:'Cross', btn_isolated:'Isolated',
       res_qty_label:'Suggested position', res_notional_label:'Notional value',
       row_risk:'Risk amount', row_stopdist:'Stop distance', row_margin:'Margin required',
-      row_liq:'Est. liquidation', row_rr:'Risk : Reward', row_fee:'Fees (in + out)',
+      row_liq:'Est. liquidation', row_rr:'Risk : Reward', row_fee:'Fees (entry + stop exit)',
       row_netwin:'At take-profit · net', row_netloss:'At stop · net loss',
       privacy:'All calculations run locally in your browser. Your trade data is never uploaded — this site loads no third-party analytics scripts and collects no personal information.',
       disclaimer:'⚠️ <b>Disclaimer:</b> This tool is for learning and reference only and is not investment advice. Crypto futures trading is extremely risky and can lead to total loss of capital. Make your own decisions and bear your own risk.',
@@ -716,7 +730,7 @@
       about_p1:'HYPERNOVA is a toolkit for crypto traders, built to make professional, reliable trading tools that anyone can use.',
       about_p2:'The position calculator is the first tool here. More features to help you make rational decisions are coming.',
       about_p3:'Our principles: calculations stay local · we do not collect your trade data · no wallet connection required.',
-      footer:'© 2026 HYPERNOVA · For educational reference only, not investment advice · v2.3',
+      footer:'© 2026 HYPERNOVA · For educational reference only, not investment advice · v2.4',
       nav_journal:'Journal',
       journal_h:'Trade Journal',
       journal_intro:'Log every closed trade and see your real win rate, expectancy and equity curve. Your R:R is only known after a trade closes — here it is measured as an R-multiple. Data stays in your browser, never uploaded.',
@@ -766,7 +780,11 @@
       copied:"已复制 ✓",
       jClearConfirm:"确定清空所有交易记录吗？此操作不可撤销。",
       dirTargetLong:"止盈方向提醒：做多的止盈应在入场价【上方】，当前设在了下方，盈亏比无意义。",
-      dirTargetShort:"止盈方向提醒：做空的止盈应在入场价【下方】，当前设在了上方，盈亏比无意义。"
+      dirTargetShort:"止盈方向提醒：做空的止盈应在入场价【下方】，当前设在了上方，盈亏比无意义。",
+      negInput:"输入里有负数。账户总额、风险比例、价格与费率都必须是正数，请检查后重填。",
+      riskZero:"单笔风险比例必须大于 0，否则算不出仓位。建议填 1%–2%。",
+      mmrBad:"维持保证金率应远小于 100%（常见 0.4%–1%）。当前值算不出有意义的强平价。",
+      accountMissing:"请先填写账户总额——没有本金就无法反推该开多大仓位。"
     },
     en: {
       liqSafe:"Very low · safe from liquidation",
@@ -793,7 +811,11 @@
       copied:"Copied ✓",
       jClearConfirm:"Clear ALL trades? This cannot be undone.",
       dirTargetLong:"Take-profit note: for a LONG it should be ABOVE entry; it is set below, so the R:R is meaningless.",
-      dirTargetShort:"Take-profit note: for a SHORT it should be BELOW entry; it is set above, so the R:R is meaningless."
+      dirTargetShort:"Take-profit note: for a SHORT it should be BELOW entry; it is set above, so the R:R is meaningless.",
+      negInput:"Negative values detected. Account size, risk, prices and fee rates must all be positive — please check your inputs.",
+      riskZero:"Risk per trade must be greater than 0, otherwise there is no position to size. 1%–2% is the usual range.",
+      mmrBad:"Maintenance margin rate should be far below 100% (typically 0.4%–1%). The current value cannot produce a meaningful liquidation price.",
+      accountMissing:"Enter your account size first — without capital there is nothing to size the position against"
     }
   };
 
@@ -924,6 +946,13 @@
 
     var alerts = [];
 
+    // 非法输入拦截：负数、风险为 0、维持保证金率荒谬
+    var negative = account<0 || riskPct<0 || entry<0 || stop<0 || target<0 || feePct<0 || mmr<0;
+    if(negative) alerts.push(["danger", M.negInput]);
+    if(!negative && mmr>=1) alerts.push(["danger", M.mmrBad]);
+    if(!negative && riskPct<=0 && account>0 && entry>0 && stop>0) alerts.push(["danger", M.riskZero]);
+    if(!negative && account<=0 && (entry>0 || stop>0)) alerts.push(["warn", M.accountMissing]);
+
     var riskAmt = account * riskPct;
     var stopDistAbs = Math.abs(entry - stop);
     var stopDistPct = entry>0 ? stopDistAbs/entry : 0;
@@ -946,13 +975,15 @@
     // 强平价
     var liq = NaN, liqImpossible = false;
     if(entry>0 && lev>0 && qty>0){
+      // 强平条件：账户权益 = 维持保证金，且维持保证金按【强平价】计价（不是入场价）
       if(marginMode==="isolated"){
-        if(side==="long") liq = entry*(1 - 1/lev + mmr);
-        else              liq = entry*(1 + 1/lev - mmr);
+        // 逐仓：保证金 = 名义/杠杆
+        if(side==="long") liq = entry*(1 - 1/lev)/(1 - mmr);
+        else              liq = entry*(1 + 1/lev)/(1 + mmr);
       } else {
-        var maint = notional*mmr;
-        if(side==="long") liq = entry - (account - maint)/qty;
-        else              liq = entry + (account - maint)/qty;
+        // 全仓：整个账户余额充当保证金
+        if(side==="long") liq = (entry - account/qty)/(1 - mmr);
+        else              liq = (entry + account/qty)/(1 + mmr);
         if(side==="long" && liq<=0) liqImpossible = true;
       }
     }
@@ -965,11 +996,16 @@
       reward = qty*rewardDist;
     }
 
-    var feeAmt = notional*feePct*2;
-    var netWin = reward - feeAmt;
+    // 平仓腿按实际离场价计价，不是按入场名义价值
+    var feeOpen = notional*feePct;
+    var feeStopLeg = qty*stop*feePct;
+    var feeTargetLeg = (target>0 ? qty*target : 0)*feePct;
+    var feeAmt = feeOpen + feeStopLeg;              // 展示口径：开仓 + 止损离场（与净亏损对得上）
+    var netWin = reward - feeOpen - feeTargetLeg;
     var netLoss = riskAmt + feeAmt;
 
-    var ready = account>0 && entry>0 && stop>0 && !dirInvalid;
+    var ready = account>0 && entry>0 && stop>0 && !dirInvalid
+                && !negative && riskPct>0 && mmr<1;
 
     // ---- 渲染 ----
     var _sym=($("symbol").value||"").trim().toUpperCase();
@@ -991,11 +1027,11 @@
       if(rr>=2){ b.className="rr-badge rr-good"; b.textContent=M.rrGood; }
       else { b.className="rr-badge rr-bad"; b.textContent=M.rrBad; }
       $("netWin").textContent = "+"+fmt(netWin,2)+" USDT";
-      $("netLoss").textContent = "−"+fmt(netLoss,2)+" USDT";
+      $("netLoss").textContent = "−"+fmt(Math.abs(netLoss),2)+" USDT";
     } else {
       $("rr").textContent="—"; $("rrBadge").textContent="";
       $("netWin").textContent="—";
-      $("netLoss").textContent = ready ? "−"+fmt(netLoss,2)+" USDT" : "—";
+      $("netLoss").textContent = ready ? "−"+fmt(Math.abs(netLoss),2)+" USDT" : "—";
     }
 
     // ---- 护栏警告 ----
@@ -1072,7 +1108,10 @@
     if(p.mmr) $("mmr").value=p.mmr;
     if(p.mode==="isolated"||p.mode==="cross"){
       marginMode=p.mode;
-      document.querySelectorAll("#mode button").forEach(function(b){ b.classList.toggle("active", b.dataset.mode===p.mode); });
+      document.querySelectorAll("#mode button").forEach(function(b){
+        var on = b.dataset.mode===p.mode;
+        b.classList.toggle("active", on); b.setAttribute("aria-pressed", on?"true":"false");
+      });
     }
   }
 
@@ -1083,7 +1122,10 @@
   $("lev").addEventListener("input", function(){ $("levInput").value=$("lev").value; });
   $("levInput").addEventListener("input", function(){
     var v=Math.round(parseFloat($("levInput").value)); if(isNaN(v)) return;
-    v=Math.max(1,Math.min(100,v)); $("lev").value=v; calc(); savePrefs();
+    var clamped=Math.max(1,Math.min(100,v));
+    // 超出 1–100 时立刻回写，避免输入框显示 500 而引擎按 100 计算
+    if(clamped!==v) $("levInput").value=clamped;
+    $("lev").value=clamped; calc(); savePrefs();
   });
   $("levInput").addEventListener("change", function(){
     var v=Math.round(parseFloat($("levInput").value)); if(isNaN(v))v=1; v=Math.max(1,Math.min(100,v));
@@ -1092,16 +1134,16 @@
   document.querySelectorAll("#side button").forEach(function(btn){
     btn.addEventListener("click", function(){
       side = btn.dataset.side;
-      document.querySelectorAll("#side button").forEach(function(b){ b.classList.remove("active"); });
-      btn.classList.add("active");
+      document.querySelectorAll("#side button").forEach(function(b){ b.classList.remove("active"); b.setAttribute("aria-pressed","false"); });
+      btn.classList.add("active"); btn.setAttribute("aria-pressed","true");
       calc();
     });
   });
   document.querySelectorAll("#mode button").forEach(function(btn){
     btn.addEventListener("click", function(){
       marginMode = btn.dataset.mode;
-      document.querySelectorAll("#mode button").forEach(function(b){ b.classList.remove("active"); });
-      btn.classList.add("active");
+      document.querySelectorAll("#mode button").forEach(function(b){ b.classList.remove("active"); b.setAttribute("aria-pressed","false"); });
+      btn.classList.add("active"); btn.setAttribute("aria-pressed","true");
       calc(); savePrefs();
     });
   });
