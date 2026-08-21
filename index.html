@@ -236,14 +236,6 @@
     transition:background-color .15s,border-color .15s;
   }
   .nav-cta:hover{background:var(--accent);border-color:var(--accent)}
-  /* 320–360px 的小屏：英文导航标签更长，收紧间距与字号以免出现横滚条 */
-  @media(max-width:374px){
-    /* 与其让它横向滚动，不如换行——页面上不留任何可横滑的元素 */
-    .nav-links{gap:10px 14px;flex-wrap:wrap;overflow-x:visible}
-    .nav-links a{font-size:var(--fs-sm);padding:6px 0}
-    .wrap{padding:0 16px}
-    .nav{padding:10px 16px}
-  }
   @media(max-width:680px){
     /* 原先锚点链接在移动端整行隐藏，导致够不到「交易日志」。
        改为：第一行 品牌 + 语言 + CTA，第二行 锚点链接（可横向滚动） */
@@ -260,6 +252,14 @@
     .nav-links::-webkit-scrollbar{display:none}
     .nav-links a{white-space:nowrap;padding:9px 0}
     #lev{min-height:30px}
+  }
+  /* 320–374px 的小屏：英文导航标签更长，收紧间距以免出现横滚条 */
+  @media(max-width:374px){
+    /* 与其让它横向滚动，不如换行——页面上不留任何可横滑的元素 */
+    .nav-links{gap:10px 14px;flex-wrap:wrap;overflow-x:visible}
+    .nav-links a{font-size:var(--fs-sm);padding:6px 0}
+    .wrap{padding:0 16px}
+    .nav{padding:10px 16px}
   }
 
   /* ---------- Hero ---------- */
@@ -347,7 +347,7 @@
   .lev-num input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);outline:none}
   .lev-num span{color:var(--accent);font-weight:700;font-size:var(--fs-base)}
 
-  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 
   /* results */
   .result-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;gap:10px}
@@ -443,7 +443,7 @@
   .journal-intro{color:var(--muted);font-size:var(--fs-md);max-width:740px;margin-bottom:22px}
   .journal-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
   @media(max-width:860px){.journal-grid{grid-template-columns:1fr}}
-  .jform{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .jform{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
   .jform .jspan2{grid-column:1 / -1}
   .jbtn{width:100%;margin:4px 0 14px}
   #j_list{display:flex;flex-direction:column}
@@ -505,6 +505,25 @@
 
   /* 核心数字：实色青绿，不用渐变文字与发光 */
   #qty{color:var(--accent)}
+  /* iOS Safari 在输入框字号小于 16px 时，聚焦会自动放大整个页面，
+     且退出输入后不会缩回——表现为「页面变大、四个方向都能拖动」。
+     正确解法是把触屏设备上的表单控件抬到 16px；
+     绝不能用 viewport 的 maximum-scale=1 去禁缩放，那会让需要放大的用户
+     失去双指缩放能力。 */
+  @media(pointer:coarse){
+    input[type=number],input[type=text],input[type=date],select,textarea,
+    .lev-num input{
+      font-size:16px;
+    }
+  }
+  /* 部分安卓浏览器不上报 pointer:coarse，按宽度再兜一层 */
+  @media(max-width:860px){
+    input[type=number],input[type=text],input[type=date],select,textarea,
+    .lev-num input{
+      font-size:16px;
+    }
+  }
+
   /* 打印：交易员会把计算结果打印或存 PDF 归档 */
   @media print{
     :root{--bg:#fff;--panel:#fff;--panel2:#fff;--inset:#fff;
@@ -529,6 +548,18 @@
   /* 高对比度模式：让结构线可见 */
   @media(prefers-contrast:more){
     :root{--line:#3a4750;--line-strong:#55646e;--muted:#8b97a0;--text2:#c6d0d6}
+  }
+
+  /* ==========================================================
+     响应式覆盖（必须置于所有组件规则之后）
+     媒体查询本身不提升优先级；与组件规则同级时靠源码顺序决胜。
+     ========================================================== */
+  @media(max-width:374px){
+    /* 极窄屏两列排不下：日期框带原生选择器，撑不住就会挤成 170/64 */
+    .jform{grid-template-columns:minmax(0,1fr)}
+    .two{grid-template-columns:minmax(0,1fr)}
+    .jform .jspan2{grid-column:auto}
+    .jtools{flex-wrap:wrap}
   }
 </style>
 </head>
@@ -872,7 +903,7 @@
         <a href="#about" data-i18n="nav_about">关于</a>
       </nav>
       <dl class="foot-meta">
-        <div><dt class="caps" data-i18n="foot_version">版本</dt><dd>v3.3</dd></div>
+        <div><dt class="caps" data-i18n="foot_version">版本</dt><dd>v3.4</dd></div>
         <div><dt class="caps" data-i18n="foot_updated">最后更新</dt><dd>2026-08-21</dd></div>
         <div><dt class="caps" data-i18n="foot_data">数据存储</dt><dd data-i18n="foot_data_v">仅本机浏览器</dd></div>
       </dl>
