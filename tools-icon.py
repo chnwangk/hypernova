@@ -16,10 +16,11 @@ def geom():
     by0=12-BAR/2;    by1=12+BAR/2
     return [(x0,y0,x0+STEM,y1), (x1-STEM,y0,x1,y1), (x0,by0,x1,by1)]
 
-def png(size, radius=0.22):
+def png(size):
+    # 满幅不留圆角：圆角外是透明像素，在 Safari 这类浅色标签栏上会露出白边。
+    # 系统需要圆角时会自己裁切（如 iOS 主屏图标），不该由图标自己留透明区。
     S=size*SS
-    img=Image.new("RGBA",(S,S),(0,0,0,0)); d=ImageDraw.Draw(img)
-    d.rounded_rectangle([0,0,S-1,S-1], radius=S*radius, fill=BG+(255,))
+    img=Image.new("RGBA",(S,S),BG+(255,)); d=ImageDraw.Draw(img)
     u=S/24
     for (a,b,c,e) in geom(): d.rectangle([a*u,b*u,c*u,e*u], fill=FG+(255,))
     return img.resize((size,size), Image.LANCZOS)

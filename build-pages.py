@@ -129,7 +129,7 @@ CSS = """
 
 STR = {
  "zh": {"home":"返回计算器","terms":"服务条款","privacy":"隐私政策","changelog":"更新日志","github":"源码",
-        "updated":"最后更新","other":"/en/","otherLabel":"EN","otherHreflang":"en",
+        "updated":"最后更新","other":"/en/","otherLabel":"English","otherHreflang":"en",
         "note":"HYPERNOVA 是独立的第三方工具，与 Hyperliquid Labs 无隶属、赞助或背书关系。"
                "Hyperliquid 及其他提及的名称与标识为其各自所有者的商标。"
                "本站内容仅供研究与参考，不构成投资建议。",
@@ -201,8 +201,8 @@ def TPL(lang, doc, tokens, body):
 <meta name="robots" content="index, follow" />
 <meta name="theme-color" content="#04070a" />
 <meta name="color-scheme" content="dark" />
-<link rel="icon" href="/favicon.ico?v=5" sizes="16x16 32x32 48x48" />
-<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=5" sizes="180x180" />
+<link rel="icon" href="/favicon.ico?v=6" sizes="16x16 32x32 48x48" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=6" sizes="180x180" />
 <link rel="manifest" href="/site.webmanifest" />
 <style>
 {tokens}

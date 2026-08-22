@@ -25,6 +25,26 @@ def extract_table(s, name):
         return {mm.group(1): mm.group(2) for mm in re.finditer(r"(\w+):'((?:[^'\\]|\\.)*)'", block)}
     return parse(m.group(1)), parse(m.group(2))
 
+# ---------------------------------------------------------------
+# 带断言的替换。str.replace() 匹配不到时不会报错，只是原样返回——
+# 顶栏在 v4.4 改版后，语言切换那条规则就是这样静默失效的，英文版
+# 因此长期切不回中文而生成脚本仍然报“成功”。所有替换一律走这里：
+# 匹配次数不符预期就直接中止，宁可构建失败也不要输出坏页面。
+# ---------------------------------------------------------------
+def rep(s, old, new, want=1):
+    got = s.count(old)
+    if got != want:
+        sys.exit("build-en.py 替换失效：期望 %d 处，实际 %d 处\n  模式: %s\n"
+                 "  index.html 的结构可能已改动，请同步更新这条规则。"
+                 % (want, got, old[:110]))
+    return s.replace(old, new, want)
+
+def resub(s, pat, new, want=1):
+    s2, got = re.subn(pat, new, s, count=want)
+    if got != want:
+        sys.exit("build-en.py 正则替换失效：期望 %d 处，实际 %d 处\n  模式: %s" % (want, got, pat[:110]))
+    return s2
+
 def main():
     s = read(SRC)
     T_zh, T_en = extract_table(s, "T")
@@ -33,7 +53,7 @@ def main():
         sys.exit("以下文案缺少英文版本，请先补齐: %s" % ", ".join(missing))
 
     # 1) 语言标识
-    s = s.replace('<html lang="zh-CN" data-lang="zh">', '<html lang="en" data-lang="en">', 1)
+    s = rep(s, '<html lang="zh-CN" data-lang="zh">', '<html lang="en" data-lang="en">')
 
     # 2) 把所有 data-i18n 元素的内容替换为英文
     pat = re.compile(r'<([a-z0-9]+)([^>]*\bdata-i18n="([^"]+)"[^>]*)>(.*?)</\1>', re.S)
@@ -47,15 +67,15 @@ def main():
     s = pat.sub(sub, s)
 
     # 3) 头部元信息
-    s = re.sub(r'<title>.*?</title>', '<title>%s</title>' % T_en['title'], s, count=1)
-    s = s.replace('<link rel="canonical" href="https://hypernova.vip/" />',
-                  '<link rel="canonical" href="https://hypernova.vip/en/" />', 1)
-    s = s.replace('<meta property="og:url" content="https://hypernova.vip/" />',
-                  '<meta property="og:url" content="https://hypernova.vip/en/" />', 1)
-    s = s.replace('<meta property="og:locale" content="zh_CN" />',
-                  '<meta property="og:locale" content="en_US" />', 1)
-    s = s.replace('<meta property="og:locale:alternate" content="en_US" />',
-                  '<meta property="og:locale:alternate" content="zh_CN" />', 1)
+    s = resub(s, r'<title>.*?</title>', '<title>%s</title>' % T_en['title'])
+    s = rep(s, '<link rel="canonical" href="https://hypernova.vip/" />',
+               '<link rel="canonical" href="https://hypernova.vip/en/" />')
+    s = rep(s, '<meta property="og:url" content="https://hypernova.vip/" />',
+               '<meta property="og:url" content="https://hypernova.vip/en/" />')
+    s = rep(s, '<meta property="og:locale" content="zh_CN" />',
+               '<meta property="og:locale" content="en_US" />')
+    s = rep(s, '<meta property="og:locale:alternate" content="en_US" />',
+               '<meta property="og:locale:alternate" content="zh_CN" />')
     s = re.sub(r'<meta name="description" content="[^"]*" />',
                '<meta name="description" content="Position size calculator for Hyperliquid traders: enter a symbol and the contract&rsquo;s '
                'max leverage and maintenance margin are filled in automatically. Derive position size, required margin, estimated liquidation '
@@ -68,19 +88,33 @@ def main():
                'Every formula published. Runs locally." />', s, count=1)
 
     # 4) 语言切换链接反向
-    s = s.replace('<a href="/en/" id="langToggle" class="lang-btn" rel="alternate" hreflang="en" '
-                  'aria-label="View this page in English">EN</a>',
-                  '<a href="/" id="langToggle" class="lang-btn" rel="alternate" hreflang="zh-Hans" '
-                  'aria-label="以中文查看本页">中文</a>', 1)
+    s = rep(s,
+        '<a class="chip chip-lang" href="/en/" id="langToggle" rel="alternate" hreflang="en" '
+        'aria-label="View this page in English">English</a>',
+        '<a class="chip chip-lang" href="/" id="langToggle" rel="alternate" hreflang="zh-Hans" '
+        'aria-label="以中文查看本页">中文</a>')
 
     # 5) 站内链接指向英文版对应页面（只翻译文字而不改链接会把用户带回中文页）
-    s = s.replace('href="/terms/"', 'href="/en/terms/"')
-    s = s.replace('href="/privacy/"', 'href="/en/privacy/"')
-    s = s.replace('href="/changelog/"', 'href="/en/changelog/"')
+    s = rep(s, 'href="/terms/"',     'href="/en/terms/"',     s.count('href="/terms/"'))
+    s = rep(s, 'href="/privacy/"',   'href="/en/privacy/"',   s.count('href="/privacy/"'))
+    s = rep(s, 'href="/changelog/"', 'href="/en/changelog/"', s.count('href="/changelog/"'))
+    for _h, _n in (('href="/terms/"',1), ('href="/privacy/"',1), ('href="/changelog/"',1)):
+        if s.count(_h.replace('/','/en/',1)) < _n:
+            sys.exit("站内链接未指向英文版：%s" % _h)
 
     # 6) 结构化数据里的语言与地址
-    s = s.replace('"@id": "https://hypernova.vip/#website"', '"@id": "https://hypernova.vip/en/#website"')
-    s = s.replace('"@id": "https://hypernova.vip/#app"', '"@id": "https://hypernova.vip/en/#app"')
+    s = rep(s, '"@id": "https://hypernova.vip/#website"', '"@id": "https://hypernova.vip/en/#website"',
+            s.count('"@id": "https://hypernova.vip/#website"'))
+    s = rep(s, '"@id": "https://hypernova.vip/#app"', '"@id": "https://hypernova.vip/en/#app"',
+            s.count('"@id": "https://hypernova.vip/#app"'))
+
+    # 收尾自检：英文页必须能切回中文，且不得残留指向自身的语言切换
+    if 'href="/" id="langToggle"' not in s:
+        sys.exit("生成失败：英文页缺少回到中文的语言切换")
+    if 'href="/en/" id="langToggle"' in s:
+        sys.exit("生成失败：英文页的语言切换仍指向自身 /en/")
+    if 'lang="zh-CN"' in s:
+        sys.exit("生成失败：英文页仍残留 lang=\"zh-CN\"")
 
     os.makedirs("en", exist_ok=True)
     io.open(OUT, "w", encoding="utf-8").write(s)

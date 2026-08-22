@@ -13,8 +13,8 @@
 <meta name="robots" content="index, follow" />
 <meta name="theme-color" content="#04070a" />
 <meta name="color-scheme" content="dark" />
-<link rel="icon" href="/favicon.ico?v=5" sizes="16x16 32x32 48x48" />
-<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=5" sizes="180x180" />
+<link rel="icon" href="/favicon.ico?v=6" sizes="16x16 32x32 48x48" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=6" sizes="180x180" />
 <link rel="manifest" href="/site.webmanifest" />
 <style>
   :root{
@@ -184,7 +184,7 @@
     <a class="chip chip-brand" href="/" aria-label="HYPERNOVA"><b>HYPER<span>NOVA</span></b></a>
     <div class="chip-end">
       <a class="chip" href="/">返回计算器</a>
-      <a class="chip chip-lang" href="/en/changelog/" rel="alternate" hreflang="en">EN</a>
+      <a class="chip chip-lang" href="/en/changelog/" rel="alternate" hreflang="en">English</a>
     </div>
   </div>
 </header>
@@ -194,6 +194,15 @@
   <h1>更新日志</h1>
   <div class="updated">最后更新 2026-08-22</div>
   <p class="lede">本页记录 HYPERNOVA 的全部公开变更，包括修复过的错误。计算工具的可信度取决于它是否愿意承认自己错过什么——所以修复条目和新功能一样完整列出。</p>
+
+      <section class="rel">
+        <div class="rel-h"><span class="rel-v">v4.3 – 5.2</span><span class="rel-d">2026-08-22</span></div>
+        <div class="chg"><span class="tag fix">修复</span><p>英文版页面的语言切换指向了它自己，导致切到英文后无法切回中文。原因是生成脚本里的替换规则仍针对改版前的顶栏结构，而这类替换匹配不到时不会报错，只会原样跳过。现已把生成脚本的全部替换改为匹配失败即中止构建，并在输出前校验英文页确实能切回中文。</p></div>
+        <div class="chg"><span class="tag imp">改进</span><p>语言切换改为标出目标语言并用该语言书写：中文界面显示 English，英文界面显示 中文，八个页面一致。</p></div>
+        <div class="chg"><span class="tag imp">改进</span><p>标的列表改按 24 小时成交额降序排列，BTC、ETH、HYPE 等实际会交易的合约排在最前，不再是字母序。合约参数接口相应改为 metaAndAssetCtxs。</p></div>
+        <div class="chg"><span class="tag fix">修复</span><p>站点图标的圆角外原本是透明像素，在浅色标签栏上会显示成一圈白边。图标改为满幅，圆角交由系统按平台习惯自行裁切。</p></div>
+        <div class="chg"><span class="tag imp">改进</span><p>顶栏重做为并排的 chip 结构，品牌字标、导航与操作入口分区，并在移动端保持单行不换行。</p></div>
+      </section>
 
       <section class="rel">
         <div class="rel-h"><span class="rel-v">v4.2</span><span class="rel-d">2026-08-22</span></div>

@@ -14,8 +14,8 @@
 <meta name="robots" content="index, follow, max-image-preview:large" />
 <meta name="theme-color" content="#06070b" />
 <meta name="color-scheme" content="dark" />
-<link rel="icon" href="/favicon.ico?v=5" sizes="16x16 32x32 48x48" />
-<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=5" sizes="180x180" />
+<link rel="icon" href="/favicon.ico?v=6" sizes="16x16 32x32 48x48" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=6" sizes="180x180" />
 <link rel="manifest" href="/site.webmanifest" />
 <!-- 社交分享卡片 -->
 <meta property="og:title" content="HYPERNOVA &middot; Hyperliquid Position Calculator" />
@@ -650,7 +650,7 @@
       <a class="chip" href="#about" data-i18n="nav_about">About</a>
     </nav>
     <div class="chip-group chip-end">
-      <a class="chip chip-lang" href="/en/" id="langToggle" rel="alternate" hreflang="en" aria-label="View this page in English">EN</a>
+      <a class="chip chip-lang" href="/" id="langToggle" rel="alternate" hreflang="zh-Hans" aria-label="以中文查看本页">中文</a>
       <a class="chip chip-cta" href="#calc" data-i18n="nav_cta">Start</a>
     </div>
   </div>
@@ -1621,20 +1621,25 @@
 
   /* ==========================================================
      Hyperliquid 合约参数
-     只请求一个公开的合约清单接口（{"type":"meta"}），不携带任何用户数据。
+     只请求一个公开的合约清单接口（{"type":"metaAndAssetCtxs"}），不携带任何
+     用户数据。除杠杆/精度外还取 24h 成交额，用于把标的按活跃度排序。
      结果缓存 24 小时。任何失败都必须静默降级——计算器在离线状态下
      仍须完整可用，这是这段代码唯一不能妥协的约束。
      ========================================================== */
   var HL_URL   = 'https://api.hyperliquid.xyz/info';
-  var HL_CACHE = 'hn_hl_meta_v1';
+  var HL_CACHE = 'hn_hl_meta_v2';
   var HL_TTL   = 24*3600*1000;
-  var HL_ASSETS = null;          // { BTC: {maxLeverage, szDecimals}, ... }
+  var HL_ASSETS = null;          // { BTC: {lev, dec, vlm}, ... }
 
   function hlApply(universe){
-    var m = {};
+    var m = {}, order = [];
     universe.forEach(function(u){
       if(u && u.name && u.maxLeverage && !u.isDelisted){
-        m[u.name.toUpperCase()] = {lev:u.maxLeverage, dec:u.szDecimals};
+        var k = u.name.toUpperCase();
+        var v = parseFloat(u.vlm);
+        if(!isFinite(v) || v<0) v = 0;
+        m[k] = {lev:u.maxLeverage, dec:u.szDecimals, vlm:v};
+        order.push(k);
       }
     });
     if(!Object.keys(m).length) return;
@@ -1642,7 +1647,13 @@
     var dl = $("hlAssets");
     if(dl){
       var frag = document.createDocumentFragment();
-      Object.keys(m).sort().forEach(function(name){
+      // 按 24h 成交额降序：BTC / ETH / SOL 这类主流合约排在最前，
+      // 用户展开下拉时第一眼就能看到自己实际会交易的标的。
+      // 成交额相同（含全部为 0 的降级情形）时回落到字母序，保证顺序稳定。
+      order.sort(function(a,b){
+        return (m[b].vlm - m[a].vlm) || (a<b ? -1 : a>b ? 1 : 0);
+      });
+      order.forEach(function(name){
         var o=document.createElement("option"); o.value=name; frag.appendChild(o);
       });
       dl.innerHTML=""; dl.appendChild(frag);
@@ -1662,14 +1673,24 @@
     fetch(HL_URL, {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({type:'meta'}),
+      body:JSON.stringify({type:'metaAndAssetCtxs'}),
       signal: ctrl ? ctrl.signal : undefined
     })
     .then(function(r){ if(!r.ok) throw 0; return r.json(); })
     .then(function(d){
-      if(!d || !d.universe) throw 0;
-      try{ localStorage.setItem(HL_CACHE, JSON.stringify({t:Date.now(), u:d.universe})); }catch(e){}
-      hlApply(d.universe);
+      // metaAndAssetCtxs 返回 [meta, ctxs]，两个数组按下标一一对应。
+      // 行情部分缺失时不该拖垮杠杆/精度——照常降级到无排序信息。
+      var meta = (d && d[0]) || null, ctxs = (d && d[1]) || [];
+      if(!meta || !meta.universe) throw 0;
+      var u = meta.universe.map(function(a, i){
+        var c = ctxs[i];
+        return {
+          name:a.name, maxLeverage:a.maxLeverage, szDecimals:a.szDecimals,
+          isDelisted:a.isDelisted, vlm: c ? c.dayNtlVlm : 0
+        };
+      });
+      try{ localStorage.setItem(HL_CACHE, JSON.stringify({t:Date.now(), u:u})); }catch(e){}
+      hlApply(u);
     })
     .catch(function(err){
       // 网络失败要静默降级；但代码错误必须暴露出来，否则 bug 会被这里吞掉

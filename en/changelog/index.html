@@ -13,8 +13,8 @@
 <meta name="robots" content="index, follow" />
 <meta name="theme-color" content="#04070a" />
 <meta name="color-scheme" content="dark" />
-<link rel="icon" href="/favicon.ico?v=5" sizes="16x16 32x32 48x48" />
-<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=5" sizes="180x180" />
+<link rel="icon" href="/favicon.ico?v=6" sizes="16x16 32x32 48x48" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=6" sizes="180x180" />
 <link rel="manifest" href="/site.webmanifest" />
 <style>
   :root{
@@ -194,6 +194,15 @@
   <h1>Changelog</h1>
   <div class="updated">Last updated 2026-08-22</div>
   <p class="lede">Every public change to HYPERNOVA is recorded here, including bugs that were fixed. A calculation tool is only as trustworthy as its willingness to admit what it got wrong — so fixes are listed as fully as new features.</p>
+
+      <section class="rel">
+        <div class="rel-h"><span class="rel-v">v4.3 – 5.2</span><span class="rel-d">2026-08-22</span></div>
+        <div class="chg"><span class="tag fix">Fixed</span><p>The language switch on the English pages pointed at itself, so once you switched to English there was no way back to Chinese. The generator&#x27;s replacement rule still targeted the pre-redesign header markup, and a replacement that matches nothing fails silently rather than raising. Every replacement in the generator now aborts the build when it fails to match, and the output is checked for a working route back to Chinese before it is written.</p></div>
+        <div class="chg"><span class="tag imp">Improved</span><p>The language switch now names the target language in that language: Chinese pages show English, English pages show 中文. Consistent across all eight pages.</p></div>
+        <div class="chg"><span class="tag imp">Improved</span><p>The instrument list is now ordered by 24-hour notional volume rather than alphabetically, so BTC, ETH and HYPE appear first. Contract parameters are fetched from metaAndAssetCtxs accordingly.</p></div>
+        <div class="chg"><span class="tag fix">Fixed</span><p>The site icon left transparent pixels outside its rounded corners, which rendered as a white ring on light tab bars. The icon is now full-bleed; rounding is left to the platform.</p></div>
+        <div class="chg"><span class="tag imp">Improved</span><p>The header was rebuilt as a row of chips, separating the wordmark, navigation and actions, and stays on a single line on mobile.</p></div>
+      </section>
 
       <section class="rel">
         <div class="rel-h"><span class="rel-v">v4.2</span><span class="rel-d">2026-08-22</span></div>
