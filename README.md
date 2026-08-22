@@ -13,7 +13,8 @@ en/terms/ en/privacy/ en/changelog/ 英文内容页  ┘ 请勿直接编辑
 pages/legal.{zh,en}.json      服务条款与隐私政策内容
 pages/changelog.{zh,en}.json  更新日志内容
 build-en.py           英文主页生成脚本
-build-pages.py        法务页面生成脚本
+build-pages.py        内容页生成脚本
+tools-icon.py         图标生成脚本（H 字母章，改动后需同步推进 ?v= 版本号）
 404.html          品牌化 404 页
 _headers          Cloudflare 安全头与缓存策略
 wrangler.jsonc    Cloudflare Workers 静态资源配置
@@ -31,7 +32,13 @@ site.webmanifest  PWA 清单
 ```bash
 python3 build-en.py      # 重新生成英文主页
 python3 build-pages.py   # 改了 pages/*.json 后重新生成内容页
+python3 tools-icon.py    # 重新生成图标
 ```
+
+改图标后**必须同步推进 HTML 与 manifest 里的 `?v=` 版本号**。浏览器的
+favicon 缓存按 URL 记，不换 URL 就不会重新拉取——Safari 尤其顽固，
+其缓存位于 `~/Library/Safari/Favicon Cache/`，与无痕浏览共用，
+硬刷新与无痕窗口都绕不过。
 
 `build-pages.py` 的设计令牌直接从 `index.html` 的 `:root` 块读取后注入，
 不复制第二份。改了配色或字号刻度，重跑一次法务页面就会跟着变。
