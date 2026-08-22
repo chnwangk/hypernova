@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-lang="zh">
+<html lang="en" data-lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="format-detection" content="telephone=no,date=no,address=no,email=no" />
-<title>HYPERNOVA · 加密合约仓位计算器</title>
-<meta name="description" content="面向 Hyperliquid 交易者的合约仓位计算器：填入标的即自动带出该合约的最大杠杆与维持保证金率，由单笔可承受亏损反推开仓数量、所需保证金、预估强制平仓价与盈亏比，全部公式公开。运算在本地浏览器完成，不上传交易数据。" />
+<title>HYPERNOVA · Crypto Position Calculator</title>
+<meta name="description" content="Position size calculator for Hyperliquid traders: enter a symbol and the contract&rsquo;s max leverage and maintenance margin are filled in automatically. Derive position size, required margin, estimated liquidation price and R:R from the loss you can accept. Every formula is published. All computation runs locally in your browser." />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='5.3' fill='%2304070a'/><g fill='none' stroke='%232dd4bf' stroke-width='2.2' stroke-linecap='square'><path d='M8 4.1H4.6v15.8H8'/><path d='M16 4.1h3.4v15.8H16'/></g><circle cx='12' cy='12' r='2.9' fill='%232dd4bf'/></svg>" />
-<link rel="canonical" href="https://hypernova.vip/" />
+<link rel="canonical" href="https://hypernova.vip/en/" />
 <link rel="alternate" hreflang="zh-Hans" href="https://hypernova.vip/" />
 <link rel="alternate" hreflang="en" href="https://hypernova.vip/en/" />
 <link rel="alternate" hreflang="x-default" href="https://hypernova.vip/" />
@@ -18,18 +18,18 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="manifest" href="/site.webmanifest" />
 <!-- 社交分享卡片 -->
-<meta property="og:title" content="HYPERNOVA · 加密合约仓位计算器" />
-<meta property="og:description" content="由风险反推仓位规模，估算强制平仓价与盈亏比，全部公式公开。运算在本地完成，不上传交易数据。" />
+<meta property="og:title" content="HYPERNOVA &middot; Hyperliquid Position Calculator" />
+<meta property="og:description" content="Size positions from risk, with Hyperliquid contract parameters filled in automatically. Every formula published. Runs locally." />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://hypernova.vip/" />
+<meta property="og:url" content="https://hypernova.vip/en/" />
 <meta property="og:image" content="https://hypernova.vip/og.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="HYPERNOVA · Crypto Position Calculator" />
 <meta name="twitter:description" content="Size positions from risk, estimate liquidation and R:R, with every formula published. Runs locally; no data leaves your device." />
 <meta name="twitter:image" content="https://hypernova.vip/og.png" />
 <meta property="og:site_name" content="HYPERNOVA" />
-<meta property="og:locale" content="zh_CN" />
-<meta property="og:locale:alternate" content="en_US" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:locale:alternate" content="zh_CN" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content="HYPERNOVA 加密合约仓位计算器" />
@@ -42,7 +42,7 @@
   "@graph": [
     {
       "@type": "WebSite",
-      "@id": "https://hypernova.vip/#website",
+      "@id": "https://hypernova.vip/en/#website",
       "url": "https://hypernova.vip/",
       "name": "HYPERNOVA",
       "description": "面向加密交易者的风险管理工具站。",
@@ -50,11 +50,11 @@
     },
     {
       "@type": "WebApplication",
-      "@id": "https://hypernova.vip/#app",
+      "@id": "https://hypernova.vip/en/#app",
       "name": "HYPERNOVA 加密仓位计算器",
       "alternateName": "HYPERNOVA Crypto Position Size Calculator",
       "url": "https://hypernova.vip/",
-      "isPartOf": { "@id": "https://hypernova.vip/#website" },
+      "isPartOf": { "@id": "https://hypernova.vip/en/#website" },
       "applicationCategory": "FinanceApplication",
       "operatingSystem": "Any (web browser)",
       "browserRequirements": "Requires JavaScript",
@@ -631,24 +631,24 @@
       <b>HYPER<span>NOVA</span></b>
     </div>
     <nav class="nav-links" aria-label="主导航 / Main navigation">
-      <a href="#calc" data-i18n="nav_calc">仓位计算器</a>
-      <a href="#journal" data-i18n="nav_journal">交易日志</a>
-      <a href="#method" data-i18n="nav_features">计算方法</a>
-      <a href="#about" data-i18n="nav_about">关于</a>
+      <a href="#calc" data-i18n="nav_calc">Calculator</a>
+      <a href="#journal" data-i18n="nav_journal">Journal</a>
+      <a href="#method" data-i18n="nav_features">Methodology</a>
+      <a href="#about" data-i18n="nav_about">About</a>
     </nav>
-    <a href="/en/" id="langToggle" class="lang-btn" rel="alternate" hreflang="en" aria-label="View this page in English">EN</a>
-    <a href="#calc" class="nav-cta" data-i18n="nav_cta">开始计算</a>
+    <a href="/" id="langToggle" class="lang-btn" rel="alternate" hreflang="zh-Hans" aria-label="以中文查看本页">中文</a>
+    <a href="#calc" class="nav-cta" data-i18n="nav_cta">Start</a>
   </div>
 </header>
 
 <!-- ===== HERO ===== -->
 <div class="wrap hero">
-  <div class="pill"> <span data-i18n="hero_pill">全部运算在本地浏览器完成 · 不上传任何交易数据</span></div>
-  <h1 data-i18n="hero_h1">先定义风险<br><span class="grad">再决定仓位规模</span></h1>
-  <p data-i18n="hero_p">专业的仓位管理不依赖盘感，而依赖对单笔风险的量化。设定本笔交易可承受的最大亏损后，HYPERNOVA 据此计算应开仓数量、所需保证金与预估强制平仓价格，并在杠杆过高致使强平价先于止损被触及时提示风险。</p>
+  <div class="pill"> <span data-i18n="hero_pill">All computation runs locally · no trade data is transmitted</span></div>
+  <h1 data-i18n="hero_h1">Define the risk first<br><span class="grad">then size the position</span></h1>
+  <p data-i18n="hero_p">Disciplined position management rests on quantified risk rather than intuition. Once the maximum acceptable loss for a trade is defined, HYPERNOVA derives the position size, the margin required and the estimated liquidation price, and flags the case where leverage places liquidation ahead of the stop.</p>
   <div class="hero-btns">
-    <a href="#calc"><button class="btn btn-primary" data-i18n="hero_btn1">开始计算</button></a>
-    <a href="#method"><button class="btn btn-ghost" data-i18n="hero_btn2">查看计算方法</button></a>
+    <a href="#calc"><button class="btn btn-primary" data-i18n="hero_btn1">Start calculation</button></a>
+    <a href="#method"><button class="btn btn-ghost" data-i18n="hero_btn2">View methodology</button></a>
   </div>
 </div>
 
@@ -656,16 +656,16 @@
 <section id="calc">
   <div class="wrap">
     <div class="sec-title">01 &nbsp;Calculator</div>
-    <div class="sec-h" data-i18n="calc_h">加密合约仓位计算器</div>
+    <div class="sec-h" data-i18n="calc_h">Crypto Futures Position Calculator</div>
 
     <div class="calc">
       <!-- INPUTS -->
       <div class="panel">
-        <h3><span data-i18n="panel1_title">交易参数</span></h3>
+        <h3><span data-i18n="panel1_title">Trade parameters</span></h3>
         <div class="panel-body">
 
         <div class="field">
-          <label for="account" data-i18n="label_account">账户总额 <span class="hint">计入风险计算的可用本金</span></label>
+          <label for="account" data-i18n="label_account">Account Size <span class="hint">capital against which risk is measured</span></label>
           <div class="input-wrap">
             <input type="number" id="account" min="0" step="any">
             <span class="suffix">USDT</span>
@@ -673,7 +673,7 @@
         </div>
 
         <div class="field">
-          <label for="risk" data-i18n="label_risk">单笔风险比例 <span class="hint">本笔可承受的最大亏损占账户比例，通行区间 1%–2%</span></label>
+          <label for="risk" data-i18n="label_risk">Risk per Trade <span class="hint">maximum acceptable loss as a share of the account; 1%–2% is standard</span></label>
           <div class="input-wrap">
             <input type="number" id="risk" value="1" min="0" step="any">
             <span class="suffix">%</span>
@@ -684,7 +684,7 @@
         </div>
 
         <div class="field">
-          <label for="symbol" data-i18n="label_symbol">标的 <span class="hint">填入后自动带出该合约的杠杆上限与维持保证金率</span></label>
+          <label for="symbol" data-i18n="label_symbol">Symbol <span class="hint">fills in the contract&rsquo;s leverage cap and maintenance margin</span></label>
           <div class="input-wrap"><input type="text" id="symbol" placeholder="BTC" list="hlAssets" autocomplete="off" autocapitalize="characters" spellcheck="false"></div>
             <datalist id="hlAssets"></datalist>
             <div class="asset-note" id="assetNote" role="status" aria-live="polite"></div>
@@ -692,39 +692,39 @@
 
         <div class="two">
           <div class="field">
-            <label id="lbl_side" data-i18n="label_side">方向</label>
+            <label id="lbl_side" data-i18n="label_side">Direction</label>
             <div class="seg" id="side" role="group" aria-labelledby="lbl_side">
-              <button type="button" class="long active" data-side="long" aria-pressed="true" data-i18n="btn_long">做多</button>
-              <button type="button" class="short" data-side="short" aria-pressed="false" data-i18n="btn_short">做空</button>
+              <button type="button" class="long active" data-side="long" aria-pressed="true" data-i18n="btn_long">Long</button>
+              <button type="button" class="short" data-side="short" aria-pressed="false" data-i18n="btn_short">Short</button>
             </div>
           </div>
           <div class="field">
-            <label id="lbl_mode" data-i18n="label_mode">保证金模式</label>
+            <label id="lbl_mode" data-i18n="label_mode">Margin Mode</label>
             <div class="seg" id="mode" role="group" aria-labelledby="lbl_mode">
-              <button type="button" class="mode active" data-mode="cross" aria-pressed="true" data-i18n="btn_cross">全仓</button>
-              <button type="button" class="mode" data-mode="isolated" aria-pressed="false" data-i18n="btn_isolated">逐仓</button>
+              <button type="button" class="mode active" data-mode="cross" aria-pressed="true" data-i18n="btn_cross">Cross</button>
+              <button type="button" class="mode" data-mode="isolated" aria-pressed="false" data-i18n="btn_isolated">Isolated</button>
             </div>
           </div>
         </div>
 
         <div class="two">
           <div class="field">
-            <label for="entry" data-i18n="label_entry">入场价</label>
+            <label for="entry" data-i18n="label_entry">Entry Price</label>
             <div class="input-wrap"><input type="number" id="entry" min="0" step="any"></div>
           </div>
           <div class="field">
-            <label for="stop" data-i18n="label_stop">止损价</label>
+            <label for="stop" data-i18n="label_stop">Stop-Loss</label>
             <div class="input-wrap"><input type="number" id="stop" min="0" step="any"></div>
           </div>
         </div>
 
         <div class="field">
-          <label for="target" data-i18n="label_target">止盈价 <span class="hint">选填，用于计算盈亏比</span></label>
+          <label for="target" data-i18n="label_target">Take-Profit <span class="hint">optional, used to compute R:R</span></label>
           <div class="input-wrap"><input type="number" id="target" min="0" step="any"></div>
         </div>
 
         <div class="field">
-          <label for="lev" data-i18n="label_lev">杠杆倍数</label>
+          <label for="lev" data-i18n="label_lev">Leverage</label>
           <div class="lev-row">
             <input type="range" id="lev" min="1" max="100" value="10" step="1" aria-label="杠杆倍数 / Leverage">
             <div class="lev-num"><input type="number" id="levInput" min="1" max="100" value="10" aria-label="杠杆倍数（数值） / Leverage value"><span>x</span></div>
@@ -733,11 +733,11 @@
 
         <div class="two">
           <div class="field">
-            <label for="fee" data-i18n="label_fee">手续费率 <span class="hint">单边</span></label>
+            <label for="fee" data-i18n="label_fee">Fee Rate <span class="hint">per side</span></label>
             <div class="input-wrap"><input type="number" id="fee" value="0.05" min="0" step="any"><span class="suffix">%</span></div>
           </div>
           <div class="field">
-            <label for="mmr" data-i18n="label_mmr">维持保证金率 <span class="hint">填入标的后自动带出，也可手动覆盖</span></label>
+            <label for="mmr" data-i18n="label_mmr">Maintenance Margin <span class="hint">filled in automatically from the symbol; can be overridden</span></label>
             <div class="input-wrap"><input type="number" id="mmr" value="1.25" min="0" step="any"><span class="suffix">%</span></div>
           </div>
         </div>
@@ -746,16 +746,16 @@
 
       <!-- RESULTS -->
       <div class="panel">
-        <h3><span data-i18n="panel2_title">计算结果</span></h3>
+        <h3><span data-i18n="panel2_title">Results</span></h3>
         <div class="panel-body">
 
         <div class="stat-row">
           <div class="stat">
-            <span class="big-sub" data-i18n="res_qty_label">应开仓数量</span>
+            <span class="big-sub" data-i18n="res_qty_label">Position size</span>
             <span class="big-num accent" id="qty">—</span>
           </div>
           <div class="stat stat-alt">
-            <span class="big-sub" data-i18n="res_notional_label">名义价值</span>
+            <span class="big-sub" data-i18n="res_notional_label">Notional value</span>
             <span class="big-num big-num-sub" id="notional">—</span>
           </div>
         </div>
@@ -763,32 +763,32 @@
         <div class="divider"></div>
 
         <div class="rows">
-          <div class="row"><span class="k" data-i18n="row_risk">单笔风险金额</span><span class="v red" id="riskAmt">—</span></div>
-          <div class="row"><span class="k" data-i18n="row_stopdist">止损距离</span><span class="v" id="stopDist">—</span></div>
-          <div class="row"><span class="k" data-i18n="row_margin">所需保证金</span><span class="v accent" id="margin">—</span></div>
-          <div class="row"><span class="k" data-i18n="row_liq">预估强制平仓价</span><span class="v" id="liq">—</span></div>
-          <div class="row"><span class="k"><span data-i18n="row_rr">盈亏比 R:R</span> <span id="rrBadge"></span></span><span class="v" id="rr">—</span></div>
-          <div class="row"><span class="k" data-i18n="row_fee">手续费 开仓+止损离场</span><span class="v" id="feeAmt">—</span></div>
-          <div class="row"><span class="k" data-i18n="row_netwin">止盈成交 · 净盈利</span><span class="v green" id="netWin">—</span></div>
-          <div class="row"><span class="k" data-i18n="row_netloss">止损成交 · 净亏损</span><span class="v red" id="netLoss">—</span></div>
+          <div class="row"><span class="k" data-i18n="row_risk">Risk amount</span><span class="v red" id="riskAmt">—</span></div>
+          <div class="row"><span class="k" data-i18n="row_stopdist">Stop distance</span><span class="v" id="stopDist">—</span></div>
+          <div class="row"><span class="k" data-i18n="row_margin">Margin required</span><span class="v accent" id="margin">—</span></div>
+          <div class="row"><span class="k" data-i18n="row_liq">Est. liquidation price</span><span class="v" id="liq">—</span></div>
+          <div class="row"><span class="k"><span data-i18n="row_rr">Risk : Reward</span> <span id="rrBadge"></span></span><span class="v" id="rr">—</span></div>
+          <div class="row"><span class="k" data-i18n="row_fee">Fees, entry + stop exit</span><span class="v" id="feeAmt">—</span></div>
+          <div class="row"><span class="k" data-i18n="row_netwin">Net profit at take-profit</span><span class="v green" id="netWin">—</span></div>
+          <div class="row"><span class="k" data-i18n="row_netloss">Net loss at stop</span><span class="v red" id="netLoss">—</span></div>
         </div>
 
-        <div class="viz-label" id="vizLabel" data-i18n="viz_label" style="display:none">价格结构　入场 / 止损 / 止盈 / 强平</div>
+        <div class="viz-label" id="vizLabel" data-i18n="viz_label" style="display:none">Price structure&#12288;entry / stop / target / liquidation</div>
         <canvas id="tradeViz" height="82" style="display:none" role="img" aria-label="价格结构示意图：入场、止损、止盈与强平价的相对位置 / Price structure diagram"></canvas>
 
         <div id="alerts" role="status" aria-live="polite" aria-atomic="false"></div>
 
         <div class="result-btns" id="resultBtns" style="display:none">
-          <button class="btn btn-ghost" id="copyResult" data-i18n="copy_result">复制结果</button>
-          <button class="btn btn-ghost" id="toJournal" data-i18n="to_journal">录入交易日志</button>
+          <button class="btn btn-ghost" id="copyResult" data-i18n="copy_result">Copy</button>
+          <button class="btn btn-ghost" id="toJournal" data-i18n="to_journal">Record in journal</button>
         </div>
         </div>
       </div>
     </div>
 
-    <div class="privacy"><span class="lock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8.2 10.5V7.8a3.8 3.8 0 0 1 7.6 0v2.7"/></svg></span> <span data-i18n="privacy">全部计算均在您的浏览器本地完成，您填写的账户金额、价格与仓位参数不会离开本机。站点仅向 Hyperliquid 官方接口请求一份公开的合约清单（最大杠杆与下单精度），该请求不包含您的任何输入，结果缓存 24 小时；请求失败不影响计算器使用。除此之外不加载任何第三方资源，不含统计脚本，不收集个人信息。</span></div>
+    <div class="privacy"><span class="lock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8.2 10.5V7.8a3.8 3.8 0 0 1 7.6 0v2.7"/></svg></span> <span data-i18n="privacy">All computation is performed locally in your browser; the account size, prices and position parameters you enter never leave your device. The site makes one request to Hyperliquid\'s public API for the contract list (max leverage and size precision). That request contains none of your input, the result is cached for 24 hours, and a failed request does not affect the calculator. Nothing else is loaded from third parties: no analytics scripts, no personal information collected.</span></div>
 
-    <div class="disclaimer" data-i18n="disclaimer"><b>风险披露</b>　本工具输出的全部数值均为基于所填参数的理论估算，仅供研究与参考，不构成投资建议、要约或任何形式的承诺。加密货币衍生品交易具有高度风险：价格剧烈波动、流动性不足、各交易所保证金与强平规则存在差异，以及极端行情下的滑点，均可能使实际结果与本页估算产生显著偏离，并可能导致本金全部损失。请在充分理解上述风险后独立作出决策，并自行承担由此产生的全部后果。</div>
+    <div class="disclaimer" data-i18n="disclaimer"><b>Risk disclosure</b>&#12288;All figures produced by this tool are theoretical estimates derived from the parameters entered. They are provided for research and reference only and do not constitute investment advice, an offer, or any form of undertaking. Trading crypto derivatives carries a high degree of risk: price volatility, insufficient liquidity, differences between exchanges in margin and liquidation rules, and slippage under extreme conditions may cause actual outcomes to diverge materially from these estimates, and may result in the total loss of capital. Please make independent decisions only after fully understanding these risks, and accept full responsibility for the consequences.</div>
   </div>
 </section>
 
@@ -796,53 +796,53 @@
 <section id="journal">
   <div class="wrap">
     <div class="sec-title">02 &nbsp;Journal</div>
-    <div class="sec-h" data-i18n="journal_h">交易复盘日志</div>
-    <p class="journal-intro" data-i18n="journal_intro">记录已平仓的交易，自动统计真实胜率、每笔期望值、盈利因子与资金曲线。单笔盈亏以 R 倍数计量，即实际盈亏与该笔止损风险的比值，从而使不同仓位规模的交易可以横向比较。全部记录仅保存于本机浏览器，不会上传。</p>
+    <div class="sec-h" data-i18n="journal_h">Trade Journal</div>
+    <p class="journal-intro" data-i18n="journal_intro">Record closed trades to obtain your realised win rate, per-trade expectancy, profit factor and equity curve. Each outcome is measured as an R-multiple — the realised profit or loss divided by the risk taken on that trade — so trades of different sizes remain comparable. All records are held in your browser and are never uploaded.</p>
 
     <div class="journal-grid">
       <!-- 录入 + 列表 -->
       <div class="panel">
-        <h3><span data-i18n="journal_add_title">录入交易</span></h3>
+        <h3><span data-i18n="journal_add_title">Record a trade</span></h3>
         <div class="panel-body">
         <div class="jform">
-          <div class="field"><label for="j_date" data-i18n="j_date">日期</label><input type="date" id="j_date"></div>
-          <div class="field"><label for="j_symbol" data-i18n="j_symbol">标的</label><input type="text" id="j_symbol" placeholder="BTC"></div>
-          <div class="field"><label for="j_side" data-i18n="label_side">方向</label>
-            <select id="j_side"><option value="long" data-i18n="btn_long">做多</option><option value="short" data-i18n="btn_short">做空</option></select>
+          <div class="field"><label for="j_date" data-i18n="j_date">Date</label><input type="date" id="j_date"></div>
+          <div class="field"><label for="j_symbol" data-i18n="j_symbol">Symbol</label><input type="text" id="j_symbol" placeholder="BTC"></div>
+          <div class="field"><label for="j_side" data-i18n="label_side">Direction</label>
+            <select id="j_side"><option value="long" data-i18n="btn_long">Long</option><option value="short" data-i18n="btn_short">Short</option></select>
           </div>
-          <div class="field"><label for="j_risk" data-i18n="j_risk">本笔风险 1R <span class="hint">止损触发时的亏损金额</span></label><div class="input-wrap"><input type="number" id="j_risk" min="0" step="any"><span class="suffix">USDT</span></div></div>
-          <div class="field jspan2"><label for="j_pnl" data-i18n="j_pnl">实际盈亏 <span class="hint">盈利为正，亏损为负</span></label><div class="input-wrap"><input type="number" id="j_pnl" step="any"><span class="suffix">USDT</span></div></div>
-          <div class="field jspan2"><label for="j_note" data-i18n="j_note">备注 选填</label><input type="text" id="j_note"></div>
+          <div class="field"><label for="j_risk" data-i18n="j_risk">Risk 1R <span class="hint">loss incurred if the stop is hit</span></label><div class="input-wrap"><input type="number" id="j_risk" min="0" step="any"><span class="suffix">USDT</span></div></div>
+          <div class="field jspan2"><label for="j_pnl" data-i18n="j_pnl">Realised P/L <span class="hint">positive for profit, negative for loss</span></label><div class="input-wrap"><input type="number" id="j_pnl" step="any"><span class="suffix">USDT</span></div></div>
+          <div class="field jspan2"><label for="j_note" data-i18n="j_note">Note, optional</label><input type="text" id="j_note"></div>
         </div>
-        <button class="btn btn-primary jbtn" id="j_add" data-i18n="j_add_btn">录入</button>
-        <button class="btn btn-ghost jbtn" id="j_cancel" data-i18n="j_cancel" style="display:none">取消编辑</button>
+        <button class="btn btn-primary jbtn" id="j_add" data-i18n="j_add_btn">Record</button>
+        <button class="btn btn-ghost jbtn" id="j_cancel" data-i18n="j_cancel" style="display:none">Cancel edit</button>
         <div id="j_list"></div>
         </div>
       </div>
 
       <!-- 统计 + 图表 -->
       <div class="panel">
-        <h3><span data-i18n="journal_stats_title">统计结果</span></h3>
+        <h3><span data-i18n="journal_stats_title">Statistics</span></h3>
         <div class="panel-body">
         <div class="rows">
-          <div class="row"><span class="k" data-i18n="jr_total">交易笔数</span><span class="v" id="jr_total">—</span></div>
-          <div class="row"><span class="k" data-i18n="jr_winrate">胜率</span><span class="v" id="jr_winrate">—</span></div>
-          <div class="row"><span class="k" data-i18n="jr_expectancy">每笔期望值</span><span class="v accent" id="jr_expectancy">—</span></div>
-          <div class="row"><span class="k" data-i18n="jr_avgwin">平均盈利</span><span class="v green" id="jr_avgwin">—</span></div>
-          <div class="row"><span class="k" data-i18n="jr_avgloss">平均亏损</span><span class="v red" id="jr_avgloss">—</span></div>
-          <div class="row"><span class="k" data-i18n="jr_pf">盈利因子</span><span class="v" id="jr_pf">—</span></div>
-          <div class="row"><span class="k" data-i18n="jr_streak">最大连胜 / 连亏</span><span class="v" id="jr_streak">—</span></div>
-          <div class="row"><span class="k" data-i18n="jr_best">最佳交易</span><span class="v green" id="jr_best">—</span></div>
-          <div class="row"><span class="k" data-i18n="jr_worst">最差交易</span><span class="v red" id="jr_worst">—</span></div>
-          <div class="row"><span class="k" data-i18n="jr_totalpnl">累计盈亏</span><span class="v" id="jr_totalpnl">—</span></div>
-          <div class="row"><span class="k" data-i18n="jr_maxdd">最大回撤</span><span class="v red" id="jr_maxdd">—</span></div>
+          <div class="row"><span class="k" data-i18n="jr_total">Trades recorded</span><span class="v" id="jr_total">—</span></div>
+          <div class="row"><span class="k" data-i18n="jr_winrate">Win rate</span><span class="v" id="jr_winrate">—</span></div>
+          <div class="row"><span class="k" data-i18n="jr_expectancy">Expectancy per trade</span><span class="v accent" id="jr_expectancy">—</span></div>
+          <div class="row"><span class="k" data-i18n="jr_avgwin">Avg win</span><span class="v green" id="jr_avgwin">—</span></div>
+          <div class="row"><span class="k" data-i18n="jr_avgloss">Avg loss</span><span class="v red" id="jr_avgloss">—</span></div>
+          <div class="row"><span class="k" data-i18n="jr_pf">Profit factor</span><span class="v" id="jr_pf">—</span></div>
+          <div class="row"><span class="k" data-i18n="jr_streak">Max win / loss streak</span><span class="v" id="jr_streak">—</span></div>
+          <div class="row"><span class="k" data-i18n="jr_best">Best trade</span><span class="v green" id="jr_best">—</span></div>
+          <div class="row"><span class="k" data-i18n="jr_worst">Worst trade</span><span class="v red" id="jr_worst">—</span></div>
+          <div class="row"><span class="k" data-i18n="jr_totalpnl">Total P/L</span><span class="v" id="jr_totalpnl">—</span></div>
+          <div class="row"><span class="k" data-i18n="jr_maxdd">Max drawdown</span><span class="v red" id="jr_maxdd">—</span></div>
         </div>
-        <div class="jchart-label" data-i18n="j_equity">资金曲线（累计盈亏）</div>
+        <div class="jchart-label" data-i18n="j_equity">Equity curve (cumulative P/L)</div>
         <canvas id="j_chart" height="150" role="img" aria-label="资金曲线图：按交易顺序累计的盈亏 / Equity curve chart"></canvas>
         <div class="jtools">
-          <button class="jtool-btn" id="j_export" data-i18n="j_export">导出备份</button>
-          <button class="jtool-btn" id="j_import" data-i18n="j_import">导入</button>
-          <button class="jtool-btn danger" id="j_clear" data-i18n="j_clear">清空全部</button>
+          <button class="jtool-btn" id="j_export" data-i18n="j_export">Export</button>
+          <button class="jtool-btn" id="j_import" data-i18n="j_import">Import</button>
+          <button class="jtool-btn danger" id="j_clear" data-i18n="j_clear">Clear all</button>
           <input type="file" id="j_file" accept="application/json,.json" style="display:none" aria-label="选择要导入的交易日志备份文件 / Choose a journal backup file to import">
         </div>
         </div>
@@ -855,22 +855,22 @@
 <section id="features">
   <div class="wrap">
     <div class="sec-title">03 &nbsp;Principles</div>
-    <div class="sec-h" data-i18n="feat_h">为什么以风险为起点</div>
+    <div class="sec-h" data-i18n="feat_h">Why risk comes first</div>
     <div class="feat">
       <div class="fcard reveal">
         <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.2"/><path d="M12 1.5v3.5M12 19v3.5M1.5 12h3.5M19 12h3.5"/></svg></div>
-        <h4 data-i18n="feat1_t">先确定亏损上限，再确定仓位</h4>
-        <p data-i18n="feat1_p">专业仓位管理的顺序，是先量化单笔可承受亏损，再由止损距离反推应开仓数量；而非先决定开多大仓，再被动接受相应的亏损敞口。</p>
+        <h4 data-i18n="feat1_t">Loss limit first, size second</h4>
+        <p data-i18n="feat1_p">Disciplined sizing quantifies the acceptable loss first, then derives the position size from the stop distance — rather than choosing a size first and passively accepting whatever exposure follows.</p>
       </div>
       <div class="fcard reveal">
         <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l7.5 2.8v5.7c0 4.8-3.2 8-7.5 10.5-4.3-2.5-7.5-5.7-7.5-10.5V5.3L12 2.5z"/><path d="M9 12l2 2 4-4.2"/></svg></div>
-        <h4 data-i18n="feat2_t">强制平仓价前置校验</h4>
-        <p data-i18n="feat2_p">杠杆过高时，强制平仓价可能先于止损价被触及，止损将失去保护作用。本工具计算强平价位并在该情形下发出风险提示。</p>
+        <h4 data-i18n="feat2_t">Liquidation checked in advance</h4>
+        <p data-i18n="feat2_p">When leverage is too high the liquidation price can be reached before the stop, leaving the stop without protective effect. The tool computes the liquidation price and raises a warning in that case.</p>
       </div>
       <div class="fcard reveal">
         <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M6 21h12M5 7h14M5 7l-2.5 5.5a3 3 0 006 0L6 7M19 7l-2.5 5.5a3 3 0 006 0L19 7"/></svg></div>
-        <h4 data-i18n="feat3_t">盈亏比与费后净额</h4>
-        <p data-i18n="feat3_p">自动计算风险回报比（R:R），并给出扣除双边手续费后的净盈利与净亏损，避免以毛利估算一笔交易的实际价值。</p>
+        <h4 data-i18n="feat3_t">R:R and net-of-fee outcomes</h4>
+        <p data-i18n="feat3_p">The risk-to-reward ratio is computed automatically, alongside net profit and net loss after fees on both legs, so a trade is never assessed on gross figures alone.</p>
       </div>
     </div>
   </div>
@@ -881,68 +881,68 @@
 <section id="method">
   <div class="wrap">
     <div class="sec-title">04 &nbsp;Methodology</div>
-    <div class="sec-h" data-i18n="method_h">计算方法</div>
-    <p class="sec-lede" data-i18n="method_lede">本页公开工具使用的全部公式。所有数值均由下列公式直接得出，不含任何未披露的调整项。符号约定：E 为入场价，S 为止损价，T 为止盈价，A 为账户总额，r 为单笔风险比例，L 为杠杆倍数，m 为维持保证金率，f 为单边手续费率，Q 为开仓数量，N 为名义价值。</p>
+    <div class="sec-h" data-i18n="method_h">Methodology</div>
+    <p class="sec-lede" data-i18n="method_lede">Every formula used by this tool is published below. All figures follow directly from them, with no undisclosed adjustments. Notation: E entry price, S stop price, T target price, A account size, r risk per trade, L leverage, m maintenance margin rate, f fee rate per side, Q position size, N notional value.</p>
 
     <div class="method-grid">
       <div class="mcard">
-        <div class="mcard-h" data-i18n="m1_t">一、仓位规模</div>
-        <p class="mcard-p" data-i18n="m1_p">先由账户总额与风险比例得出本笔可承受的亏损金额，再以止损距离反推开仓数量。仓位规模由风险决定，与杠杆无关。</p>
+        <div class="mcard-h" data-i18n="m1_t">I. Position size</div>
+        <p class="mcard-p" data-i18n="m1_p">The acceptable loss follows from the account size and the risk rate; the position size is then derived from the stop distance. Size is determined by risk, independently of leverage.</p>
         <div class="formula">
-          <div class="f-row"><span class="f-l" data-i18n="f_risk">风险金额</span><span class="f-r">R = A × r</span></div>
-          <div class="f-row"><span class="f-l" data-i18n="f_qty">开仓数量</span><span class="f-r">Q = R ÷ |E − S|</span></div>
-          <div class="f-row"><span class="f-l" data-i18n="f_notional">名义价值</span><span class="f-r">N = Q × E</span></div>
-          <div class="f-row"><span class="f-l" data-i18n="f_margin">所需保证金</span><span class="f-r">M = N ÷ L</span></div>
+          <div class="f-row"><span class="f-l" data-i18n="f_risk">Risk amount</span><span class="f-r">R = A × r</span></div>
+          <div class="f-row"><span class="f-l" data-i18n="f_qty">Position size</span><span class="f-r">Q = R ÷ |E − S|</span></div>
+          <div class="f-row"><span class="f-l" data-i18n="f_notional">Notional value</span><span class="f-r">N = Q × E</span></div>
+          <div class="f-row"><span class="f-l" data-i18n="f_margin">Margin required</span><span class="f-r">M = N ÷ L</span></div>
         </div>
       </div>
 
       <div class="mcard">
-        <div class="mcard-h" data-i18n="m2_t">二、强制平仓价</div>
-        <p class="mcard-p" data-i18n="m2_p">强平条件为账户权益等于维持保证金，且维持保证金按强平时的价格计价（而非入场价）。下列为该条件的精确解，非线性近似。全仓模式假设账户内仅此一笔持仓。</p>
+        <div class="mcard-h" data-i18n="m2_t">II. Liquidation price</div>
+        <p class="mcard-p" data-i18n="m2_p">Liquidation occurs where account equity equals the maintenance margin, with that margin valued at the liquidation price rather than at entry. The expressions below are the exact solution to that condition, not a linear approximation. Cross margin assumes this is the only open position.</p>
         <div class="formula">
-          <div class="f-row"><span class="f-l" data-i18n="f_iso_l">逐仓 · 多</span><span class="f-r">E × (1 − 1/L) ÷ (1 − m)</span></div>
-          <div class="f-row"><span class="f-l" data-i18n="f_iso_s">逐仓 · 空</span><span class="f-r">E × (1 + 1/L) ÷ (1 + m)</span></div>
-          <div class="f-row"><span class="f-l" data-i18n="f_cross_l">全仓 · 多</span><span class="f-r">(E − A/Q) ÷ (1 − m)</span></div>
-          <div class="f-row"><span class="f-l" data-i18n="f_cross_s">全仓 · 空</span><span class="f-r">(E + A/Q) ÷ (1 + m)</span></div>
+          <div class="f-row"><span class="f-l" data-i18n="f_iso_l">Isolated · long</span><span class="f-r">E × (1 − 1/L) ÷ (1 − m)</span></div>
+          <div class="f-row"><span class="f-l" data-i18n="f_iso_s">Isolated · short</span><span class="f-r">E × (1 + 1/L) ÷ (1 + m)</span></div>
+          <div class="f-row"><span class="f-l" data-i18n="f_cross_l">Cross · long</span><span class="f-r">(E − A/Q) ÷ (1 − m)</span></div>
+          <div class="f-row"><span class="f-l" data-i18n="f_cross_s">Cross · short</span><span class="f-r">(E + A/Q) ÷ (1 + m)</span></div>
         </div>
       </div>
 
       <div class="mcard">
-        <div class="mcard-h" data-i18n="m3_t">三、手续费与净盈亏</div>
-        <p class="mcard-p" data-i18n="m3_p">开仓腿按入场价计费，平仓腿按实际离场价计费。因此止损离场与止盈离场的费用并不相同，本页「手续费」一行采用止损离场口径，与「净亏损」严格对应。</p>
+        <div class="mcard-h" data-i18n="m3_t">III. Fees and net result</div>
+        <p class="mcard-p" data-i18n="m3_p">The entry leg is charged at the entry price and the exit leg at the actual exit price, so a stop exit and a target exit do not cost the same. The Fees row on this page uses the stop-exit basis, which reconciles exactly with the net loss figure.</p>
         <div class="formula">
-          <div class="f-row"><span class="f-l" data-i18n="f_fee_open">开仓费</span><span class="f-r">F₀ = N × f</span></div>
-          <div class="f-row"><span class="f-l" data-i18n="f_fee_stop">止损离场费</span><span class="f-r">F<sub>s</sub> = Q × S × f</span></div>
-          <div class="f-row"><span class="f-l" data-i18n="f_fee_tgt">止盈离场费</span><span class="f-r">F<sub>t</sub> = Q × T × f</span></div>
-          <div class="f-row"><span class="f-l" data-i18n="f_netloss">净亏损</span><span class="f-r">R + F₀ + F<sub>s</sub></span></div>
-          <div class="f-row"><span class="f-l" data-i18n="f_netwin">净盈利</span><span class="f-r">Q × |T − E| − F₀ − F<sub>t</sub></span></div>
+          <div class="f-row"><span class="f-l" data-i18n="f_fee_open">Entry fee</span><span class="f-r">F₀ = N × f</span></div>
+          <div class="f-row"><span class="f-l" data-i18n="f_fee_stop">Stop-exit fee</span><span class="f-r">F<sub>s</sub> = Q × S × f</span></div>
+          <div class="f-row"><span class="f-l" data-i18n="f_fee_tgt">Target-exit fee</span><span class="f-r">F<sub>t</sub> = Q × T × f</span></div>
+          <div class="f-row"><span class="f-l" data-i18n="f_netloss">Net loss</span><span class="f-r">R + F₀ + F<sub>s</sub></span></div>
+          <div class="f-row"><span class="f-l" data-i18n="f_netwin">Net profit</span><span class="f-r">Q × |T − E| − F₀ − F<sub>t</sub></span></div>
         </div>
       </div>
 
       <div class="mcard">
-        <div class="mcard-h" data-i18n="m4_t">四、盈亏比与 R 倍数</div>
-        <p class="mcard-p" data-i18n="m4_p">盈亏比为止盈距离与止损距离之比，在开仓前即可确定。R 倍数为交易结束后的实际盈亏与该笔止损风险之比，用于横向比较不同规模的交易。</p>
+        <div class="mcard-h" data-i18n="m4_t">IV. R:R and R-multiples</div>
+        <p class="mcard-p" data-i18n="m4_p">The risk-to-reward ratio is the target distance divided by the stop distance and is known before entry. The R-multiple is the realised result divided by the risk taken on that trade, which makes trades of different sizes comparable.</p>
         <div class="formula">
-          <div class="f-row"><span class="f-l" data-i18n="f_rr">盈亏比</span><span class="f-r">|T − E| ÷ |E − S|</span></div>
-          <div class="f-row"><span class="f-l" data-i18n="f_rmult">R 倍数</span><span class="f-r" data-i18n="fx_rmult">实际盈亏 ÷ 该笔风险</span></div>
-          <div class="f-row"><span class="f-l" data-i18n="f_exp">期望值</span><span class="f-r" data-i18n="fx_exp">Σ(R 倍数) ÷ 交易笔数</span></div>
-          <div class="f-row"><span class="f-l" data-i18n="f_pf">盈利因子</span><span class="f-r" data-i18n="fx_pf">总盈利 ÷ |总亏损|</span></div>
+          <div class="f-row"><span class="f-l" data-i18n="f_rr">Risk : reward</span><span class="f-r">|T − E| ÷ |E − S|</span></div>
+          <div class="f-row"><span class="f-l" data-i18n="f_rmult">R-multiple</span><span class="f-r" data-i18n="fx_rmult">Realised P/L ÷ risk taken</span></div>
+          <div class="f-row"><span class="f-l" data-i18n="f_exp">Expectancy</span><span class="f-r" data-i18n="fx_exp">Σ(R-multiples) ÷ number of trades</span></div>
+          <div class="f-row"><span class="f-l" data-i18n="f_pf">Profit factor</span><span class="f-r" data-i18n="fx_pf">Gross profit ÷ |gross loss|</span></div>
         </div>
       </div>
     </div>
 
-    <p class="method-note" data-i18n="method_note">口径说明：填写标的后，维持保证金率按 Hyperliquid 的规则自动带出——维持保证金率 = 1 ÷ (2 × 该合约最大杠杆)，数据取自其公开合约清单。需要注意两点：其一，Hyperliquid 对大额仓位设有保证金分档（例如 BTC 名义价值超过 1.5 亿美元后最大杠杆降至 20x），本页按第一档计算，对该门槛以下的仓位均准确；其二，强平价仍为理论估算，实际数值还受资金费用、已实现盈亏与账户内其他持仓影响。请以交易所页面显示的数值为准。</p>
+    <p class="method-note" data-i18n="method_note">Basis of estimation: once a symbol is entered, the maintenance margin rate is derived from Hyperliquid&rsquo;s rule &mdash; maintenance margin = 1 &divide; (2 &times; the contract&rsquo;s max leverage) &mdash; using their public contract list. Two caveats. First, Hyperliquid applies tiered margin to large positions (for example BTC drops to 20x max leverage above $150M notional); this page uses the first tier, which is accurate for any position below that threshold. Second, the liquidation price remains a theoretical estimate: the actual level is also affected by funding costs, realised P/L and other positions in the account. Always defer to the value displayed by your exchange.</p>
   </div>
 </section>
 
 <section id="about">
   <div class="wrap">
     <div class="sec-title">05 &nbsp;About</div>
-    <div class="sec-h" data-i18n="about_h">关于 HYPERNOVA</div>
+    <div class="sec-h" data-i18n="about_h">About HYPERNOVA</div>
     <div class="about reveal">
-      <p data-i18n="about_p1">HYPERNOVA 是面向加密衍生品交易者的风险管理工具站，目标是把机构通行的仓位管理方法，做成任何人都能直接使用的工具。</p>
-      <p data-i18n="about_p2">仓位计算器与交易复盘日志是目前已上线的两项工具。后续将继续扩充与风险控制相关的功能，并保持计算方法完全公开。</p>
-      <p style="color:var(--muted);font-size:13px;margin-bottom:0" data-i18n="about_p3">本站长期遵循三条原则：您输入的交易参数只在本机参与运算；不收集、不上传交易数据；不要求连接钱包。对外仅请求 Hyperliquid 的公开合约参数，不含任何用户信息。</p>
+      <p data-i18n="about_p1">HYPERNOVA is a risk-management toolkit for crypto derivatives traders, built to make institutional position-sizing methods directly usable by anyone.</p>
+      <p data-i18n="about_p2">The position calculator and the trade journal are the two tools currently available. Further risk-control features will follow, and the calculation methods will remain fully published.</p>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:0" data-i18n="about_p3">Three standing principles: the parameters you enter are used only on your own device; no trade data is collected or uploaded; no wallet connection is required. The only outbound request fetches public contract parameters from Hyperliquid and carries no user information.</p>
     </div>
   </div>
 </section>
@@ -953,22 +953,22 @@
     <div class="foot-top">
       <div class="foot-brand">
         <div class="brand brand-sm"><svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="M8 4.1H4.6v15.8H8"/><path d="M16 4.1h3.4v15.8H16"/><circle cx="12" cy="12" r="2.9" fill="currentColor" stroke="none"/></svg><b>HYPER<span>NOVA</span></b></div>
-        <p class="foot-desc" data-i18n="foot_desc">风险驱动的加密衍生品仓位管理工具。全部运算在本地完成。</p>
+        <p class="foot-desc" data-i18n="foot_desc">A risk-driven position management tool for crypto derivatives. All computation runs locally.</p>
       </div>
       <nav class="foot-links" aria-label="页脚导航 / Footer navigation">
-        <a href="#calc" data-i18n="nav_calc">仓位计算器</a>
-        <a href="#journal" data-i18n="nav_journal">交易日志</a>
-        <a href="#method" data-i18n="nav_features">计算方法</a>
-        <a href="#about" data-i18n="nav_about">关于</a>
+        <a href="#calc" data-i18n="nav_calc">Calculator</a>
+        <a href="#journal" data-i18n="nav_journal">Journal</a>
+        <a href="#method" data-i18n="nav_features">Methodology</a>
+        <a href="#about" data-i18n="nav_about">About</a>
       </nav>
       <dl class="foot-meta">
-        <div><dt class="caps" data-i18n="foot_version">版本</dt><dd>v4.1</dd></div>
-        <div><dt class="caps" data-i18n="foot_updated">最后更新</dt><dd>2026-08-21</dd></div>
-        <div><dt class="caps" data-i18n="foot_data">数据存储</dt><dd data-i18n="foot_data_v">仅本机浏览器</dd></div>
+        <div><dt class="caps" data-i18n="foot_version">Version</dt><dd>v4.1</dd></div>
+        <div><dt class="caps" data-i18n="foot_updated">Last updated</dt><dd>2026-08-21</dd></div>
+        <div><dt class="caps" data-i18n="foot_data">Data storage</dt><dd data-i18n="foot_data_v">Local browser only</dd></div>
       </dl>
     </div>
     <div class="foot-bottom">
-      <div data-i18n="footer">© 2026 HYPERNOVA · 本站内容仅供研究与参考，不构成投资建议</div>
+      <div data-i18n="footer">© 2026 HYPERNOVA · Provided for research and reference only; not investment advice</div>
     </div>
   </div>
 </footer>
