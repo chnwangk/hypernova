@@ -1630,6 +1630,7 @@
   var HL_CACHE = 'hn_hl_meta_v2';
   var HL_TTL   = 24*3600*1000;
   var HL_ASSETS = null;          // { BTC: {lev, dec, vlm}, ... }
+  var HL_TOP = 10;               // 钉在下拉最前的常用合约数量
 
   function hlApply(universe){
     var m = {}, order = [];
@@ -1647,13 +1648,21 @@
     var dl = $("hlAssets");
     if(dl){
       var frag = document.createDocumentFragment();
-      // 按 24h 成交额降序：BTC / ETH / SOL 这类主流合约排在最前，
-      // 用户展开下拉时第一眼就能看到自己实际会交易的标的。
-      // 成交额相同（含全部为 0 的降级情形）时回落到字母序，保证顺序稳定。
-      order.sort(function(a,b){
-        return (m[b].vlm - m[a].vlm) || (a<b ? -1 : a>b ? 1 : 0);
-      });
-      order.forEach(function(name){
+      // 排序分两段，因为这两件事互相冲突：
+      //   · 纯字母序——整体可预期，但开头是 0G、2Z、AAVE 这类几乎没人碰的标的；
+      //   · 纯成交额序——头部很准，但前 20 名之后只占 5% 的成交额，顺序在用户眼里
+      //     就是一串噪音（TAO、WLD、CASHCAT、XPL……），想找某个标的只能从头翻。
+      // 因此：24h 成交额最高的 HL_TOP 个钉在最前（人们真正在交易的），其余一律
+      // 回到字母序（可以直接跳到某个字母去找）。已钉住的不再重复出现，否则
+      // 输入过滤时会看到两条一模一样的。
+      var alpha = order.slice().sort();
+      var top = order.filter(function(n){ return m[n].vlm > 0; })
+                     .sort(function(a,b){ return m[b].vlm - m[a].vlm; })
+                     .slice(0, HL_TOP);
+      var pinned = {};
+      top.forEach(function(n){ pinned[n] = 1; });
+      // 行情缺失时 top 为空，自动退回纯字母序——与加入成交额之前的行为一致。
+      top.concat(alpha.filter(function(n){ return !pinned[n]; })).forEach(function(name){
         var o=document.createElement("option"); o.value=name; frag.appendChild(o);
       });
       dl.innerHTML=""; dl.appendChild(frag);

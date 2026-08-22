@@ -19,7 +19,7 @@
           ],
           [
             "Improved",
-            "The instrument list is now ordered by 24-hour notional volume rather than alphabetically, so BTC, ETH and HYPE appear first. Contract parameters are fetched from metaAndAssetCtxs accordingly."
+            "The instrument list is now in two parts: the ten contracts with the highest 24-hour notional volume are pinned to the top, and everything else is alphabetical. A purely alphabetical list puts barely-traded instruments such as 0G, 2Z and AAVE at the front; a purely volume-ordered one makes everything past the top twenty — some 5% of volume — impossible to look up. Contract parameters now come from metaAndAssetCtxs, falling back to plain alphabetical order if market data is unavailable."
           ],
           [
             "Fixed",
