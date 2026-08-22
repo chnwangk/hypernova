@@ -4,12 +4,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="format-detection" content="telephone=no,date=no,address=no,email=no" />
-<title>Privacy Policy · HYPERNOVA</title>
-<meta name="description" content="This page explains what HYPERNOVA collects, what it does not, and where data is held. The short answer: the site collects no personal information, and" />
-<link rel="canonical" href="https://hypernova.vip/en/privacy/" />
-<link rel="alternate" hreflang="zh-Hans" href="https://hypernova.vip/privacy/" />
-<link rel="alternate" hreflang="en" href="https://hypernova.vip/en/privacy/" />
-<link rel="alternate" hreflang="x-default" href="https://hypernova.vip/privacy/" />
+<title>Changelog · HYPERNOVA</title>
+<meta name="description" content="Every public change to HYPERNOVA is recorded here, including bugs that were fixed. A calculation tool is only as trustworthy as its willingness to adm" />
+<link rel="canonical" href="https://hypernova.vip/en/changelog/" />
+<link rel="alternate" hreflang="zh-Hans" href="https://hypernova.vip/changelog/" />
+<link rel="alternate" hreflang="en" href="https://hypernova.vip/en/changelog/" />
+<link rel="alternate" hreflang="x-default" href="https://hypernova.vip/changelog/" />
 <meta name="robots" content="index, follow" />
 <meta name="theme-color" content="#04070a" />
 <meta name="color-scheme" content="dark" />
@@ -177,67 +177,82 @@
     <a class="brand" href="/en/" aria-label="HYPERNOVA"><svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="M8 4.1H4.6v15.8H8"/><path d="M16 4.1h3.4v15.8H16"/><circle cx="12" cy="12" r="2.9" fill="currentColor" stroke="none"/></svg><b>HYPER<span>NOVA</span></b></a>
     <div class="nav-right">
       <a href="/en/">Back to calculator</a>
-      <a href="/privacy/" class="lang-btn" rel="alternate" hreflang="zh-Hans">中文</a>
+      <a href="/changelog/" class="lang-btn" rel="alternate" hreflang="zh-Hans">中文</a>
     </div>
   </div>
 </header>
 
 <main class="wrap">
-  <div class="eyebrow">Legal</div>
-  <h1>Privacy Policy</h1>
+  <div class="eyebrow">Release notes</div>
+  <h1>Changelog</h1>
   <div class="updated">Last updated 2026-08-22</div>
-  <p class="lede">This page explains what HYPERNOVA collects, what it does not, and where data is held. The short answer: the site collects no personal information, and the trade parameters you enter never leave your device.</p>
+  <p class="lede">Every public change to HYPERNOVA is recorded here, including bugs that were fixed. A calculation tool is only as trustworthy as its willingness to admit what it got wrong — so fixes are listed as fully as new features.</p>
 
-      <section class="doc">
-        <h2>1. What the site does not collect</h2>
-        <p>There is no account system. No registration, no sign-in, and no wallet connection is required.</p>
-        <p>The site sets no cookies and loads no third-party analytics, advertising or tracking scripts.</p>
-        <p>The account size, entry price, stop price, target price, leverage and every other parameter you enter — together with every record in the trade journal — are never uploaded to any server, including this site&#x27;s own. All computation happens in your browser.</p>
+      <section class="rel">
+        <div class="rel-h"><span class="rel-v">v4.2</span><span class="rel-d">2026-08-22</span></div>
+        <div class="chg"><span class="tag add">Added</span><p>Standalone Terms of Service and Privacy Policy pages, in both languages. The privacy policy lists item by item what the site stores on your device and what its single outbound request is.</p></div>
+        <div class="chg"><span class="tag add">Added</span><p>Footer links to the legal pages, a contact address and the source repository, plus a statement of non-affiliation with Hyperliquid Labs.</p></div>
+        <div class="chg"><span class="tag imp">Improved</span><p>Organisation details added to the structured data; the sitemap now covers six URLs with bilingual alternates.</p></div>
       </section>
 
-      <section class="doc">
-        <h2>2. Data stored on your device</h2>
-        <p>So that you need not re-enter everything on your next visit, the site stores a small amount of data in your browser&#x27;s localStorage. It stays on your device and the site cannot read it remotely:</p>
-        <p class="item">· hn_calc_prefs — frequently used calculator inputs (account size, risk rate, leverage, fee rate, margin mode)</p>
-        <p class="item">· hn_trades — all trade journal records</p>
-        <p class="item">· hn_jprefs — the symbol and direction last used in the journal form</p>
-        <p class="item">· hn_hl_meta_v1 — cached Hyperliquid contract parameters, valid for 24 hours</p>
-        <p>Clearing your browser data removes all of the above. The site also provides a &quot;Clear all&quot; button for the journal and an &quot;Export&quot; function that writes your records to a file you keep yourself.</p>
+      <section class="rel">
+        <div class="rel-h"><span class="rel-v">v4.1</span><span class="rel-d">2026-08-22</span></div>
+        <div class="chg"><span class="tag imp">Improved</span><p>Chinese and English now live at separate URLs (/ and /en/) with reciprocal hreflang. Previously both languages shared one URL, so search engines could only index one of them.</p></div>
+        <div class="chg"><span class="tag fix">Fixed</span><p>The 17 formula labels in the methodology section had never been translated since v3.0 — that entire section still showed Chinese labels in the English view. All are now bilingual.</p></div>
       </section>
 
-      <section class="doc">
-        <h2>3. The one outbound request</h2>
-        <p>The site sends a single request to Hyperliquid&#x27;s public API to retrieve the contract list (maximum leverage and size precision for each contract):</p>
-        <p class="code">POST https://api.hyperliquid.xyz/info  with body {&quot;type&quot;:&quot;meta&quot;}</p>
-        <p>The request contains none of your input; it is a fixed query. The response is cached in your browser for 24 hours. If the request fails, the site falls back silently to manual entry and functionality is unaffected.</p>
-        <p>As with any network request, Hyperliquid&#x27;s servers will observe your IP address in the process. That is inherent to network communication and cannot be avoided on your behalf.</p>
+      <section class="rel">
+        <div class="rel-h"><span class="rel-v">v4.0</span><span class="rel-d">2026-08-22</span></div>
+        <div class="chg"><span class="tag add">Added</span><p>Entering a symbol now fills in that contract&#x27;s maximum leverage and maintenance margin rate from Hyperliquid, and caps the leverage slider at the real limit.</p></div>
+        <div class="chg"><span class="tag fix">Fixed</span><p>The maintenance margin rate previously defaulted to a fixed 0.5%, whereas the actual range is 1.25%–16.67%. That error placed the liquidation price further away than it really is — under-reporting liquidation risk, which is the worst possible direction for a tool built around liquidation warnings.</p></div>
+        <div class="chg"><span class="tag imp">Improved</span><p>Position size is rounded to the contract&#x27;s size precision, and notional value, margin, fees and net result are all derived from the rounded figure, so the numbers correspond to a position you can actually open.</p></div>
       </section>
 
-      <section class="doc">
-        <h2>4. Hosting logs</h2>
-        <p>The site is hosted on Cloudflare. As with every website, the host&#x27;s servers record standard access logs, typically including IP address, browser identifier, timestamp and the path requested, for security and troubleshooting purposes.</p>
-        <p>That data is handled by Cloudflare under its own policies. The site&#x27;s operator does not actively read, analyse or retain those logs, and builds no user profiles from them.</p>
+      <section class="rel">
+        <div class="rel-h"><span class="rel-v">v3.3 – 3.6</span><span class="rel-d">2026-08-22</span></div>
+        <div class="chg"><span class="tag fix">Fixed</span><p>The whole page could be dragged sideways on mobile. The cause was form fields below 16px, which makes iOS Safari zoom the page on focus without zooming back out. Touch devices now use 16px fields — rather than disabling zoom, which would take away the ability to magnify the page.</p></div>
+        <div class="chg"><span class="tag fix">Fixed</span><p>Several mobile layout faults: hints sharing a line with labels pushed two-column fields out of alignment, the headline figure wrapped when the symbol was long, price-structure labels overlapped at high leverage, and the journal date field was clipped.</p></div>
+        <div class="chg"><span class="tag fix">Fixed</span><p>Hero text ran to the edge of the screen, and centring left both margins ragged. Long body text is now justified.</p></div>
       </section>
 
-      <section class="doc">
-        <h2>5. Sharing and cross-border transfer</h2>
-        <p>The site collects no personal data, so there is no sale, sharing or cross-border transfer of personal data to speak of.</p>
-        <p>No information about you will be provided to third parties for any commercial purpose — because the site does not hold any.</p>
+      <section class="rel">
+        <div class="rel-h"><span class="rel-v">v3.0 – 3.2</span><span class="rel-d">2026-08-21</span></div>
+        <div class="chg"><span class="tag add">Added</span><p>Methodology section: all 17 formulas published, covering position sizing, liquidation price in four cases, per-leg fee calculation and the definition of R-multiples, together with the sources of divergence from any given exchange.</p></div>
+        <div class="chg"><span class="tag imp">Improved</span><p>Visual language rebuilt towards an institutional terminal: hue-tinted neutrals, deeper semantic colours, a single hairline weight, restrained motion. The brand mark became a single-colour geometric form with no gradient.</p></div>
+        <div class="chg"><span class="tag imp">Improved</span><p>Copy formalised across both languages in over a hundred places; the disclaimer rewritten as a proper risk disclosure.</p></div>
       </section>
 
-      <section class="doc">
-        <h2>6. Children</h2>
-        <p>The site is not directed at minors and does not knowingly collect information from them.</p>
+      <section class="rel">
+        <div class="rel-h"><span class="rel-v">v2.4</span><span class="rel-d">2026-08-21</span></div>
+        <div class="chg"><span class="tag fix">Fixed</span><p>The liquidation price used a linear approximation whose short-side result was optimistic — placing liquidation further away than it truly is. Replaced with the exact solution.</p></div>
+        <div class="chg"><span class="tag fix">Fixed</span><p>Fees previously charged both legs at the entry price. The exit leg is now charged at the actual exit price, so the fee figure reconciles exactly with the net result.</p></div>
+        <div class="chg"><span class="tag fix">Fixed</span><p>Negative values and a zero risk rate previously produced meaningless output in silence, including a double-negative display such as &quot;−-525.00&quot;. These inputs are now rejected with an explanation.</p></div>
+        <div class="chg"><span class="tag imp">Improved</span><p>Accessibility completed: labels associated with fields, button states exposed, and risk warnings announced by screen readers.</p></div>
       </section>
 
-      <section class="doc">
-        <h2>7. Changes to this policy</h2>
-        <p>This policy may be updated as features change. Should any future feature introduce an outbound request or data collection, this page will be revised and the date at the top updated accordingly.</p>
+      <section class="rel">
+        <div class="rel-h"><span class="rel-v">v2.3</span><span class="rel-d">2026-08-21</span></div>
+        <div class="chg"><span class="tag add">Added</span><p>Sitemap, custom robots file, security headers, a complete icon set, structured data and a branded 404 page.</p></div>
+        <div class="chg"><span class="tag fix">Fixed</span><p>The privacy note claimed the site carried &quot;anonymous visit analytics&quot; when in fact it loaded no analytics at all. The wording now matches reality.</p></div>
       </section>
 
-      <section class="doc">
-        <h2>8. Contact</h2>
-        <p>Questions about this policy may be sent to contact@hypernova.vip.</p>
+      <section class="rel">
+        <div class="rel-h"><span class="rel-v">v2.0 – 2.2</span><span class="rel-d">2026-06-17</span></div>
+        <div class="chg"><span class="tag add">Added</span><p>Take-profit direction validation, risk-rate shortcut buttons, one-click copy of results, and the price-structure visualisation.</p></div>
+        <div class="chg"><span class="tag fix">Fixed</span><p>Liquidation price displayed as 0.0000 for low-priced instruments.</p></div>
+        <div class="chg"><span class="tag imp">Improved</span><p>Visual direction moved towards a trading terminal: near-black surfaces, tabular figures, line icons.</p></div>
+      </section>
+
+      <section class="rel">
+        <div class="rel-h"><span class="rel-v">v1.8 – 1.9</span><span class="rel-d">2026-06-09</span></div>
+        <div class="chg"><span class="tag add">Added</span><p>Trade journal: record closed trades and obtain your realised win rate, per-trade expectancy, profit factor and equity curve, with export and import. All records stay in your own browser.</p></div>
+      </section>
+
+      <section class="rel">
+        <div class="rel-h"><span class="rel-v">v1.0 – 1.7</span><span class="rel-d">2026-06-08</span></div>
+        <div class="chg"><span class="tag add">Added</span><p>Position calculator launched: derive position size, required margin, estimated liquidation price and R:R from the loss you can accept.</p></div>
+        <div class="chg"><span class="tag add">Added</span><p>Bilingual interface, liquidation warnings, and an alert for an excessive risk rate.</p></div>
+        <div class="chg"><span class="tag fix">Fixed</span><p>An inverted stop (above entry for a long, below entry for a short) previously produced meaningless output; it is now caught and explained.</p></div>
       </section>
 
   <a class="backlink" href="/en/">← Back to calculator</a>

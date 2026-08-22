@@ -76,6 +76,7 @@ def main():
     # 5) 站内链接指向英文版对应页面（只翻译文字而不改链接会把用户带回中文页）
     s = s.replace('href="/terms/"', 'href="/en/terms/"')
     s = s.replace('href="/privacy/"', 'href="/en/privacy/"')
+    s = s.replace('href="/changelog/"', 'href="/en/changelog/"')
 
     # 6) 结构化数据里的语言与地址
     s = s.replace('"@id": "https://hypernova.vip/#website"', '"@id": "https://hypernova.vip/en/#website"')

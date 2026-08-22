@@ -1,0 +1,57 @@
+{
+  "changelog": {
+    "slug": "changelog",
+    "title": "Changelog",
+    "updated": "2026-08-22",
+    "lede": "Every public change to HYPERNOVA is recorded here, including bugs that were fixed. A calculation tool is only as trustworthy as its willingness to admit what it got wrong — so fixes are listed as fully as new features.",
+    "releases": [
+      {"v":"4.2","date":"2026-08-22","items":[
+        ["Added","Standalone Terms of Service and Privacy Policy pages, in both languages. The privacy policy lists item by item what the site stores on your device and what its single outbound request is."],
+        ["Added","Footer links to the legal pages, a contact address and the source repository, plus a statement of non-affiliation with Hyperliquid Labs."],
+        ["Improved","Organisation details added to the structured data; the sitemap now covers six URLs with bilingual alternates."]
+      ]},
+      {"v":"4.1","date":"2026-08-22","items":[
+        ["Improved","Chinese and English now live at separate URLs (/ and /en/) with reciprocal hreflang. Previously both languages shared one URL, so search engines could only index one of them."],
+        ["Fixed","The 17 formula labels in the methodology section had never been translated since v3.0 — that entire section still showed Chinese labels in the English view. All are now bilingual."]
+      ]},
+      {"v":"4.0","date":"2026-08-22","items":[
+        ["Added","Entering a symbol now fills in that contract's maximum leverage and maintenance margin rate from Hyperliquid, and caps the leverage slider at the real limit."],
+        ["Fixed","The maintenance margin rate previously defaulted to a fixed 0.5%, whereas the actual range is 1.25%–16.67%. That error placed the liquidation price further away than it really is — under-reporting liquidation risk, which is the worst possible direction for a tool built around liquidation warnings."],
+        ["Improved","Position size is rounded to the contract's size precision, and notional value, margin, fees and net result are all derived from the rounded figure, so the numbers correspond to a position you can actually open."]
+      ]},
+      {"v":"3.3 – 3.6","date":"2026-08-22","items":[
+        ["Fixed","The whole page could be dragged sideways on mobile. The cause was form fields below 16px, which makes iOS Safari zoom the page on focus without zooming back out. Touch devices now use 16px fields — rather than disabling zoom, which would take away the ability to magnify the page."],
+        ["Fixed","Several mobile layout faults: hints sharing a line with labels pushed two-column fields out of alignment, the headline figure wrapped when the symbol was long, price-structure labels overlapped at high leverage, and the journal date field was clipped."],
+        ["Fixed","Hero text ran to the edge of the screen, and centring left both margins ragged. Long body text is now justified."]
+      ]},
+      {"v":"3.0 – 3.2","date":"2026-08-21","items":[
+        ["Added","Methodology section: all 17 formulas published, covering position sizing, liquidation price in four cases, per-leg fee calculation and the definition of R-multiples, together with the sources of divergence from any given exchange."],
+        ["Improved","Visual language rebuilt towards an institutional terminal: hue-tinted neutrals, deeper semantic colours, a single hairline weight, restrained motion. The brand mark became a single-colour geometric form with no gradient."],
+        ["Improved","Copy formalised across both languages in over a hundred places; the disclaimer rewritten as a proper risk disclosure."]
+      ]},
+      {"v":"2.4","date":"2026-08-21","items":[
+        ["Fixed","The liquidation price used a linear approximation whose short-side result was optimistic — placing liquidation further away than it truly is. Replaced with the exact solution."],
+        ["Fixed","Fees previously charged both legs at the entry price. The exit leg is now charged at the actual exit price, so the fee figure reconciles exactly with the net result."],
+        ["Fixed","Negative values and a zero risk rate previously produced meaningless output in silence, including a double-negative display such as \"−-525.00\". These inputs are now rejected with an explanation."],
+        ["Improved","Accessibility completed: labels associated with fields, button states exposed, and risk warnings announced by screen readers."]
+      ]},
+      {"v":"2.3","date":"2026-08-21","items":[
+        ["Added","Sitemap, custom robots file, security headers, a complete icon set, structured data and a branded 404 page."],
+        ["Fixed","The privacy note claimed the site carried \"anonymous visit analytics\" when in fact it loaded no analytics at all. The wording now matches reality."]
+      ]},
+      {"v":"2.0 – 2.2","date":"2026-06-17","items":[
+        ["Added","Take-profit direction validation, risk-rate shortcut buttons, one-click copy of results, and the price-structure visualisation."],
+        ["Fixed","Liquidation price displayed as 0.0000 for low-priced instruments."],
+        ["Improved","Visual direction moved towards a trading terminal: near-black surfaces, tabular figures, line icons."]
+      ]},
+      {"v":"1.8 – 1.9","date":"2026-06-09","items":[
+        ["Added","Trade journal: record closed trades and obtain your realised win rate, per-trade expectancy, profit factor and equity curve, with export and import. All records stay in your own browser."]
+      ]},
+      {"v":"1.0 – 1.7","date":"2026-06-08","items":[
+        ["Added","Position calculator launched: derive position size, required margin, estimated liquidation price and R:R from the loss you can accept."],
+        ["Added","Bilingual interface, liquidation warnings, and an alert for an excessive risk rate."],
+        ["Fixed","An inverted stop (above entry for a long, below entry for a short) previously produced meaningless output; it is now caught and explained."]
+      ]}
+    ]
+  }
+}

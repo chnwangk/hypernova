@@ -120,6 +120,29 @@
     background:var(--inset);border:1px solid var(--line);border-radius:var(--r-sm);padding:10px 13px;overflow-x:auto}
   .doc p.item{padding-left:14px}
 
+  /* 更新日志 */
+  .rel{border-top:1px solid var(--line);padding:22px 0}
+  .rel:first-of-type{border-top:none;padding-top:0}
+  .rel-h{display:flex;align-items:baseline;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  .rel-v{font-family:var(--mono);font-size:var(--fs-lg);font-weight:700;color:var(--accent);letter-spacing:-.01em}
+  .rel-d{font-family:var(--mono);font-size:var(--fs-xs);color:var(--faint)}
+  .chg{display:flex;gap:12px;padding:7px 0;align-items:baseline}
+  .tag{
+    flex-shrink:0;min-width:52px;text-align:center;
+    font-size:var(--fs-micro);font-weight:700;letter-spacing:.06em;
+    padding:2px 7px;border-radius:var(--r-sm);border:1px solid;
+  }
+  .tag.add{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 40%,transparent);
+           background:color-mix(in srgb,var(--accent) 10%,transparent)}
+  .tag.fix{color:var(--amber-text);border-color:color-mix(in srgb,var(--amber) 40%,transparent);
+           background:color-mix(in srgb,var(--amber) 10%,transparent)}
+  .tag.imp{color:var(--muted);border-color:var(--line-strong)}
+  .chg p{color:var(--muted);font-size:var(--fs-base);line-height:1.8;margin:0;text-wrap:pretty}
+  @media(max-width:560px){
+    .chg{flex-direction:column;gap:5px}
+    .tag{align-self:flex-start;min-width:0}
+  }
+
   .backlink{display:inline-flex;align-items:center;gap:7px;margin-top:8px;
     color:var(--accent);font-size:var(--fs-sm);font-weight:600}
   .backlink:hover{color:var(--text)}
@@ -230,6 +253,7 @@
       <span>© 2026 HYPERNOVA</span><span class="sep">·</span>
       <a href="/en/terms/">Terms of Service</a><span class="sep">·</span>
       <a href="/en/privacy/">Privacy Policy</a><span class="sep">·</span>
+      <a href="/en/changelog/">Changelog</a><span class="sep">·</span>
       <a href="https://github.com/chnwangk/hypernova" rel="noopener">Source</a><span class="sep">·</span>
       <a href="mailto:contact@hypernova.vip">contact@hypernova.vip</a>
     </div>

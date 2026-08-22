@@ -12,6 +12,8 @@
 import io, json, os, re, sys, html
 
 SITE = "https://hypernova.vip"
+EYEBROW = {"zh": {"legal":"法务", "releases":"版本记录"},
+           "en": {"legal":"Legal", "releases":"Release notes"}}
 
 def read(p): return io.open(p, encoding="utf-8").read()
 
@@ -76,6 +78,29 @@ CSS = """
     background:var(--inset);border:1px solid var(--line);border-radius:var(--r-sm);padding:10px 13px;overflow-x:auto}
   .doc p.item{padding-left:14px}
 
+  /* 更新日志 */
+  .rel{border-top:1px solid var(--line);padding:22px 0}
+  .rel:first-of-type{border-top:none;padding-top:0}
+  .rel-h{display:flex;align-items:baseline;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  .rel-v{font-family:var(--mono);font-size:var(--fs-lg);font-weight:700;color:var(--accent);letter-spacing:-.01em}
+  .rel-d{font-family:var(--mono);font-size:var(--fs-xs);color:var(--faint)}
+  .chg{display:flex;gap:12px;padding:7px 0;align-items:baseline}
+  .tag{
+    flex-shrink:0;min-width:52px;text-align:center;
+    font-size:var(--fs-micro);font-weight:700;letter-spacing:.06em;
+    padding:2px 7px;border-radius:var(--r-sm);border:1px solid;
+  }
+  .tag.add{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 40%,transparent);
+           background:color-mix(in srgb,var(--accent) 10%,transparent)}
+  .tag.fix{color:var(--amber-text);border-color:color-mix(in srgb,var(--amber) 40%,transparent);
+           background:color-mix(in srgb,var(--amber) 10%,transparent)}
+  .tag.imp{color:var(--muted);border-color:var(--line-strong)}
+  .chg p{color:var(--muted);font-size:var(--fs-base);line-height:1.8;margin:0;text-wrap:pretty}
+  @media(max-width:560px){
+    .chg{flex-direction:column;gap:5px}
+    .tag{align-self:flex-start;min-width:0}
+  }
+
   .backlink{display:inline-flex;align-items:center;gap:7px;margin-top:8px;
     color:var(--accent);font-size:var(--fs-sm);font-weight:600}
   .backlink:hover{color:var(--text)}
@@ -104,13 +129,13 @@ CSS = """
 """
 
 STR = {
- "zh": {"home":"返回计算器","terms":"服务条款","privacy":"隐私政策","github":"源码",
+ "zh": {"home":"返回计算器","terms":"服务条款","privacy":"隐私政策","changelog":"更新日志","github":"源码",
         "updated":"最后更新","other":"/en/","otherLabel":"EN","otherHreflang":"en",
         "note":"HYPERNOVA 是独立的第三方工具，与 Hyperliquid Labs 无隶属、赞助或背书关系。"
                "Hyperliquid 及其他提及的名称与标识为其各自所有者的商标。"
                "本站内容仅供研究与参考，不构成投资建议。",
         "copy":"© 2026 HYPERNOVA"},
- "en": {"home":"Back to calculator","terms":"Terms of Service","privacy":"Privacy Policy","github":"Source",
+ "en": {"home":"Back to calculator","terms":"Terms of Service","privacy":"Privacy Policy","changelog":"Changelog","github":"Source",
         "updated":"Last updated","other":"/","otherLabel":"中文","otherHreflang":"zh-Hans",
         "note":"HYPERNOVA is an independent third-party tool with no affiliation, sponsorship or endorsement "
                "relationship with Hyperliquid Labs. Hyperliquid and any other names or marks mentioned are "
@@ -128,6 +153,20 @@ def build(lang, key, doc, tokens):
     htmllang = "zh-CN" if lang=="zh" else "en"
 
     body=[]
+    if "releases" in doc:
+        TAGCLS={"新增":"add","修复":"fix","改进":"imp",
+                "Added":"add","Fixed":"fix","Improved":"imp"}
+        for r in doc["releases"]:
+            rows=[]
+            for typ, text in r["items"]:
+                rows.append('        <div class="chg"><span class="tag %s">%s</span><p>%s</p></div>'
+                            % (TAGCLS.get(typ,"imp"), html.escape(typ), html.escape(text)))
+            body.append('      <section class="rel">\n'
+                        '        <div class="rel-h"><span class="rel-v">v%s</span>'
+                        '<span class="rel-d">%s</span></div>\n%s\n      </section>'
+                        % (html.escape(r["v"]), html.escape(r["date"]), "\n".join(rows)))
+        return TPL(lang, doc, tokens, body)
+
     for title, paras in doc["sections"]:
         ps=[]
         for p in paras:
@@ -137,7 +176,14 @@ def build(lang, key, doc, tokens):
             ps.append("        <p%s>%s</p>" % (cls, html.escape(p)))
         body.append('      <section class="doc">\n        <h2>%s</h2>\n%s\n      </section>'
                     % (html.escape(title), "\n".join(ps)))
+    return TPL(lang, doc, tokens, body)
 
+def TPL(lang, doc, tokens, body):
+    L = STR[lang]
+    base = "" if lang=="zh" else "/en"
+    other_base = "/en" if lang=="zh" else ""
+    url = "%s%s/%s/" % (SITE, base, doc["slug"])
+    htmllang = "zh-CN" if lang=="zh" else "en"
     zh_url = "%s/%s/" % (SITE, doc["slug"])
     en_url = "%s/en/%s/" % (SITE, doc["slug"])
 
@@ -192,6 +238,7 @@ def build(lang, key, doc, tokens):
       <span>{copy}</span><span class="sep">·</span>
       <a href="{base}/terms/">{terms}</a><span class="sep">·</span>
       <a href="{base}/privacy/">{privacy}</a><span class="sep">·</span>
+      <a href="{base}/changelog/">{changelog}</a><span class="sep">·</span>
       <a href="https://github.com/chnwangk/hypernova" rel="noopener">{github}</a><span class="sep">·</span>
       <a href="mailto:contact@hypernova.vip">contact@hypernova.vip</a>
     </div>
@@ -206,20 +253,24 @@ def build(lang, key, doc, tokens):
            tokens=tokens, css=CSS, mark=MARK,
            home=("/" if lang=="zh" else "/en/"), home_label=L["home"],
            other=(other_base+"/"), slug=doc["slug"], oh=L["otherHreflang"], ol=L["otherLabel"],
-           eyebrow=("Legal" if lang=="en" else "法务"),
+           eyebrow=EYEBROW[lang]["releases" if "releases" in doc else "legal"],
            updated_label=L["updated"], updated=doc["updated"],
            lede=html.escape(doc["lede"]), body="\n\n".join(body),
            copy=L["copy"], terms=L["terms"], privacy=L["privacy"], github=L["github"],
+           changelog=L["changelog"],
            note=html.escape(L["note"]), base=base)
 
 def main():
     tokens = tokens_from_index()
-    zh = json.load(io.open("pages/legal.zh.json", encoding="utf-8"))
-    en = json.load(io.open("pages/legal.en.json", encoding="utf-8"))
+    zh, en = {}, {}
+    for name in ("legal", "changelog"):
+        zh.update(json.load(io.open("pages/%s.zh.json" % name, encoding="utf-8")))
+        en.update(json.load(io.open("pages/%s.en.json" % name, encoding="utf-8")))
     for k in zh:
         if k not in en: sys.exit("英文缺少文档: %s" % k)
-        if len(zh[k]["sections"]) != len(en[k]["sections"]):
-            sys.exit("文档 %s 的中英章节数不一致" % k)
+        key = "releases" if "releases" in zh[k] else "sections"
+        if key not in en[k] or len(zh[k][key]) != len(en[k][key]):
+            sys.exit("文档 %s 的中英条目数不一致" % k)
     n=0
     for lang, data in (("zh", zh), ("en", en)):
         for key, doc in data.items():

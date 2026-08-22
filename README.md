@@ -8,10 +8,10 @@
 ```
 index.html            中文版（唯一真源）
 en/index.html         英文版（由 build-en.py 生成，请勿直接编辑）
-terms/ privacy/       法务页面中文版      ┐ 由 build-pages.py 生成
-en/terms/ en/privacy/ 法务页面英文版      ┘ 请勿直接编辑
-pages/legal.zh.json   法务内容（中文）
-pages/legal.en.json   法务内容（英文）
+terms/ privacy/ changelog/          中文内容页  ┐ 由 build-pages.py 生成
+en/terms/ en/privacy/ en/changelog/ 英文内容页  ┘ 请勿直接编辑
+pages/legal.{zh,en}.json      服务条款与隐私政策内容
+pages/changelog.{zh,en}.json  更新日志内容
 build-en.py           英文主页生成脚本
 build-pages.py        法务页面生成脚本
 404.html          品牌化 404 页
@@ -30,7 +30,7 @@ site.webmanifest  PWA 清单
 
 ```bash
 python3 build-en.py      # 重新生成英文主页
-python3 build-pages.py   # 改了 pages/legal.*.json 后重新生成法务页
+python3 build-pages.py   # 改了 pages/*.json 后重新生成内容页
 ```
 
 `build-pages.py` 的设计令牌直接从 `index.html` 的 `:root` 块读取后注入，
