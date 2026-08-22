@@ -6,7 +6,7 @@
 <meta name="format-detection" content="telephone=no,date=no,address=no,email=no" />
 <title>HYPERNOVA · Define the risk, then size the position</title>
 <meta name="description" content="Position size calculator for Hyperliquid traders: enter a symbol and the contract&rsquo;s max leverage and maintenance margin are filled in automatically. Derive position size, required margin, estimated liquidation price and R:R from the loss you can accept. Every formula is published. All computation runs locally in your browser." />
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='5.3' fill='%2304070a'/><g fill='%232dd4bf'><rect x='1.35' y='1.35' width='6.25' height='3.5'/><rect x='1.35' y='1.35' width='3.5' height='21.3'/><rect x='1.35' y='19.15' width='6.25' height='3.5'/><rect x='16.4' y='1.35' width='6.25' height='3.5'/><rect x='19.15' y='1.35' width='3.5' height='21.3'/><rect x='16.4' y='19.15' width='6.25' height='3.5'/><circle cx='12' cy='12' r='4'/></g></svg>" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='5.3' fill='%2304070a'/><g fill='%232dd4bf'><rect x='4.92' y='5' width='3.08' height='14'/><rect x='16' y='5' width='3.08' height='14'/><rect x='4.92' y='10.64' width='14.15' height='2.71'/></g></svg>" />
 <link rel="canonical" href="https://hypernova.vip/en/" />
 <link rel="alternate" hreflang="zh-Hans" href="https://hypernova.vip/" />
 <link rel="alternate" hreflang="en" href="https://hypernova.vip/en/" />
@@ -233,7 +233,7 @@
   .chip-group{display:flex;align-items:center;gap:4px}
   .chip-end{margin-left:auto;gap:6px}
 
-  .chip-brand{padding:0 16px 0 13px;color:var(--text);gap:9px}
+  .chip-brand{padding:0 17px;color:var(--text)}
   /* 字标：单一字重 + 宽字距。此前用 700/300 双字重区分 HYPER 与 NOVA，
      但 Light 在 17px 下发虚，小尺寸撑不住；单字重更稳，也更像成套的标识。 */
   .chip-brand b{
@@ -252,9 +252,6 @@
   /* 标记：单色几何图形，随文字取色。方括号夹住一个点——
      爆发力被限定在明确的边界内，正是本工具在做的事。不使用渐变。 */
   .brand{display:flex;align-items:center;gap:9px;color:var(--text)}
-  /* 标记高度取字高的约 1.2 倍：24px 时标记会压过字标，16px 又显从属，18px 平衡 */
-  .chip-brand .logo,.brand .logo{width:18px;height:18px;flex-shrink:0;display:block}
-  .brand-sm .logo{width:16px;height:16px}
   .brand-sm .logo{width:22px;height:22px}
   /* 字标：单一颜色，靠字重而非颜色区分两段 */
   .brand b{font-size:var(--fs-xl);font-weight:700;letter-spacing:.03em;line-height:1}
@@ -644,7 +641,6 @@
 <header>
   <div class="wrap nav">
     <a class="chip chip-brand" href="#top" aria-label="HYPERNOVA">
-      <svg class="logo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.05 3.35h4.6v2.9H6.95v11.5h1.7v2.9h-4.6z"/><path d="M19.95 3.35h-4.6v2.9h1.7v11.5h-1.7v2.9h4.6z"/><circle cx="12" cy="12" r="3.1"/></svg>
       <b>HYPER<span>NOVA</span></b>
     </a>
     <nav class="chip-group" aria-label="主导航 / Main navigation">
@@ -971,7 +967,7 @@
   <div class="wrap">
     <div class="foot-top">
       <div class="foot-brand">
-        <div class="brand brand-sm"><svg class="logo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.05 3.35h4.6v2.9H6.95v11.5h1.7v2.9h-4.6z"/><path d="M19.95 3.35h-4.6v2.9h1.7v11.5h-1.7v2.9h4.6z"/><circle cx="12" cy="12" r="3.1"/></svg><b>HYPER<span>NOVA</span></b></div>
+        <div class="brand brand-sm"><b>HYPER<span>NOVA</span></b></div>
         <p class="foot-desc" data-i18n="foot_desc">A risk-driven position management tool for crypto derivatives. All computation runs locally.</p>
       </div>
       <nav class="foot-links" aria-label="页脚导航 / Footer navigation">
@@ -986,7 +982,7 @@
         <a href="https://github.com/chnwangk/hypernova" rel="noopener" data-i18n="nav_source">Source</a>
       </nav>
       <dl class="foot-meta">
-        <div><dt class="caps" data-i18n="foot_version">Version</dt><dd>v4.5</dd></div>
+        <div><dt class="caps" data-i18n="foot_version">Version</dt><dd>v4.6</dd></div>
         <div><dt class="caps" data-i18n="foot_updated">Last updated</dt><dd>2026-08-21</dd></div>
         <div><dt class="caps" data-i18n="foot_data">Data storage</dt><dd data-i18n="foot_data_v">Local browser only</dd></div>
       </dl>

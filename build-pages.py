@@ -23,11 +23,6 @@ def tokens_from_index():
     if not m: sys.exit("无法从 index.html 提取 :root 令牌块")
     return m.group(1)
 
-MARK = ('<svg class="logo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">'
-        '<path d="M4.05 3.35h4.6v2.9H6.95v11.5h1.7v2.9h-4.6z"/>'
-        '<path d="M19.95 3.35h-4.6v2.9h1.7v11.5h-1.7v2.9h4.6z"/>'
-        '<circle cx="12" cy="12" r="3.1"/></svg>')
-
 CSS = """
   *{box-sizing:border-box;margin:0;padding:0}
   html{background:var(--bg);-webkit-text-size-adjust:100%;overflow-x:clip;scroll-padding-top:84px}
@@ -57,9 +52,7 @@ CSS = """
     transition:background-color .15s,border-color .15s,color .15s;
   }
   .chip:hover{background:var(--panel);border-color:var(--line-strong);color:var(--text)}
-  .chip-brand{padding:0 16px 0 13px;color:var(--text)}
-  .chip-brand .logo{width:18px;height:18px;flex-shrink:0;display:block}
-  .chip-brand{gap:9px}
+  .chip-brand{padding:0 17px;color:var(--text)}
   .chip-brand b{font-family:var(--wordmark);font-size:17px;font-weight:500;letter-spacing:.1em;line-height:1}
   .chip-brand span{font-weight:500;letter-spacing:.1em}
   .chip-end{margin-left:auto;display:flex;align-items:center;gap:6px}
@@ -219,7 +212,7 @@ def TPL(lang, doc, tokens, body):
 <body>
 <header>
   <div class="wrap nav">
-    <a class="chip chip-brand" href="{home}" aria-label="HYPERNOVA">{mark}<b>HYPER<span>NOVA</span></b></a>
+    <a class="chip chip-brand" href="{home}" aria-label="HYPERNOVA"><b>HYPER<span>NOVA</span></b></a>
     <div class="chip-end">
       <a class="chip" href="{home}">{home_label}</a>
       <a class="chip chip-lang" href="{other}{slug}/" rel="alternate" hreflang="{oh}">{ol}</a>
@@ -256,7 +249,7 @@ def TPL(lang, doc, tokens, body):
 """.format(htmllang=htmllang, title=html.escape(doc["title"]),
            desc=html.escape(doc["lede"][:150]), url=url,
            zh_url=zh_url, en_url=en_url,
-           tokens=tokens, css=CSS, mark=MARK,
+           tokens=tokens, css=CSS,
            home=("/" if lang=="zh" else "/en/"), home_label=L["home"],
            other=(other_base+"/"), slug=doc["slug"], oh=L["otherHreflang"], ol=L["otherLabel"],
            eyebrow=EYEBROW[lang]["releases" if "releases" in doc else "legal"],
