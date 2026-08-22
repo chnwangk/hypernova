@@ -6,9 +6,14 @@
 ## 仓库结构
 
 ```
-index.html        中文版（唯一真源）
-en/index.html     英文版（由 build-en.py 自动生成，请勿直接编辑）
-build-en.py       英文版生成脚本
+index.html            中文版（唯一真源）
+en/index.html         英文版（由 build-en.py 生成，请勿直接编辑）
+terms/ privacy/       法务页面中文版      ┐ 由 build-pages.py 生成
+en/terms/ en/privacy/ 法务页面英文版      ┘ 请勿直接编辑
+pages/legal.zh.json   法务内容（中文）
+pages/legal.en.json   法务内容（英文）
+build-en.py           英文主页生成脚本
+build-pages.py        法务页面生成脚本
 404.html          品牌化 404 页
 _headers          Cloudflare 安全头与缓存策略
 wrangler.jsonc    Cloudflare Workers 静态资源配置
@@ -24,8 +29,12 @@ site.webmanifest  PWA 清单
 **所有内容改动只改 `index.html`**，改完必须重新生成英文版：
 
 ```bash
-python3 build-en.py
+python3 build-en.py      # 重新生成英文主页
+python3 build-pages.py   # 改了 pages/legal.*.json 后重新生成法务页
 ```
+
+`build-pages.py` 的设计令牌直接从 `index.html` 的 `:root` 块读取后注入，
+不复制第二份。改了配色或字号刻度，重跑一次法务页面就会跟着变。
 
 英文版由中文版加上 i18n 文案表生成。两份手工维护的文件必然漂移——
 本项目此前就出现过静态 HTML 与文案表不一致达 43 处、以及计算方法章节

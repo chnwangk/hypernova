@@ -19,4 +19,40 @@
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
+  <url>
+    <loc>https://hypernova.vip/terms/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://hypernova.vip/terms/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hypernova.vip/en/terms/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hypernova.vip/terms/"/>
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://hypernova.vip/en/terms/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://hypernova.vip/terms/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hypernova.vip/en/terms/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hypernova.vip/terms/"/>
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.45</priority>
+  </url>
+  <url>
+    <loc>https://hypernova.vip/privacy/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://hypernova.vip/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hypernova.vip/en/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hypernova.vip/privacy/"/>
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://hypernova.vip/en/privacy/</loc>
+    <xhtml:link rel="alternate" hreflang="zh-Hans" href="https://hypernova.vip/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://hypernova.vip/en/privacy/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://hypernova.vip/privacy/"/>
+    <lastmod>2026-08-22</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.45</priority>
+  </url>
 </urlset>

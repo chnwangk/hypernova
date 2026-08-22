@@ -73,7 +73,11 @@ def main():
                   '<a href="/" id="langToggle" class="lang-btn" rel="alternate" hreflang="zh-Hans" '
                   'aria-label="以中文查看本页">中文</a>', 1)
 
-    # 5) 结构化数据里的语言与地址
+    # 5) 站内链接指向英文版对应页面（只翻译文字而不改链接会把用户带回中文页）
+    s = s.replace('href="/terms/"', 'href="/en/terms/"')
+    s = s.replace('href="/privacy/"', 'href="/en/privacy/"')
+
+    # 6) 结构化数据里的语言与地址
     s = s.replace('"@id": "https://hypernova.vip/#website"', '"@id": "https://hypernova.vip/en/#website"')
     s = s.replace('"@id": "https://hypernova.vip/#app"', '"@id": "https://hypernova.vip/en/#app"')
 

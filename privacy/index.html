@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="format-detection" content="telephone=no,date=no,address=no,email=no" />
+<title>隐私政策 · HYPERNOVA</title>
+<meta name="description" content="本页说明 HYPERNOVA 收集什么、不收集什么，以及数据存放在哪里。结论先行：本站不收集您的任何个人信息，您填写的交易参数不会离开您的设备。" />
+<link rel="canonical" href="https://hypernova.vip/privacy/" />
+<link rel="alternate" hreflang="zh-Hans" href="https://hypernova.vip/privacy/" />
+<link rel="alternate" hreflang="en" href="https://hypernova.vip/en/privacy/" />
+<link rel="alternate" hreflang="x-default" href="https://hypernova.vip/privacy/" />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#04070a" />
+<meta name="color-scheme" content="dark" />
+<link rel="icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<style>
+  :root{
+    /* 表面：中性色统一带一点青调，与数据主色同源，避免中性灰的廉价感 */
+    --bg:#04070a;
+    --bg2:#070b0f;
+    --panel:#0a0f14;
+    --panel2:#0e141a;
+    --inset:#05090c;
+
+    /* 结构线：主线只有一档，另两档仅用于极弱分隔与强调边界 */
+    --line:#1a232b;
+    --line-strong:#27333c;
+    --line-soft:#121a20;
+
+    /* 文字：四级，正文不用纯白，带极轻青调 */
+    --text:#e6edf0;
+    --text2:#a6b3ba;
+    --muted:#6b7a83;
+    --faint:#4e5b64;
+
+    /* 语义色：整体加深去饱和。亮色系在金融语境里显消费级 */
+    --accent:#2dd4bf;
+    --accent-deep:#14a89a;
+    --brand:#6d5ce0;
+    --brand-hover:#5c4cc9;
+    --green:#26a37c;
+    --green-text:#4cbf9c;
+    --red:#e0687f;
+    --red-text:#eb8497;
+    --amber:#d99a35;
+    --amber-text:#e0ad5c;
+
+    /* 圆角：再收一档，贴近专业终端的直角感 */
+    --r-lg:8px;
+    --r:6px;
+    --r-sm:4px;
+
+    /* 排版刻度 */
+    --fs-micro:11px;
+    --fs-xs:12px;
+    --fs-sm:13px;
+    --fs-base:14px;
+    --fs-md:15px;
+    --fs-lg:16px;
+    --fs-xl:18px;
+    --fs-sec:23px;      /* 分区标题 */
+    --fs-num:31px;      /* 结果区主数字 */
+    --fs-hero:46px;
+    --fs-hero-sm:31px;
+    --track-caps:.14em;
+
+    --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono","Roboto Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{background:var(--bg);-webkit-text-size-adjust:100%;overflow-x:clip;scroll-padding-top:84px}
+  body{
+    font-family:var(--sans);background:var(--bg);color:var(--text);
+    line-height:1.75;min-height:100vh;font-size:var(--fs-md);
+    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+    font-variant-numeric:lining-nums tabular-nums;overflow-x:clip;
+  }
+  a{color:inherit;text-decoration:none}
+  a,button{-webkit-tap-highlight-color:transparent}
+  ::selection{background:color-mix(in srgb, var(--accent) 24%, transparent)}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+  *{scrollbar-width:thin;scrollbar-color:var(--line-strong) transparent}
+  ::-webkit-scrollbar{width:10px}
+  ::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:99px;border:3px solid var(--bg);background-clip:padding-box}
+  .wrap{max-width:820px;margin:0 auto;padding:0 24px}
+
+  header{position:sticky;top:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;gap:22px;height:64px}
+  .brand{display:flex;align-items:center;gap:9px;color:var(--text)}
+  .brand .logo{width:26px;height:26px;flex-shrink:0;display:block}
+  .brand b{font-size:var(--fs-xl);font-weight:700;letter-spacing:.03em;line-height:1}
+  .brand span{font-weight:300;letter-spacing:.03em}
+  .nav-right{margin-left:auto;display:flex;align-items:center;gap:16px}
+  .nav-right a{color:var(--muted);font-size:var(--fs-sm);font-weight:600;transition:color .15s}
+  .nav-right a:hover{color:var(--text)}
+  .lang-btn{
+    background:var(--panel);border:1px solid var(--line);color:var(--muted);
+    padding:7px 12px;min-height:38px;border-radius:var(--r);display:inline-flex;align-items:center;
+    font-size:var(--fs-xs);font-weight:700;letter-spacing:.06em;
+  }
+  .lang-btn:hover{color:var(--text);border-color:var(--line-strong);background:var(--panel2)}
+
+  main{padding:52px 0 40px}
+  .eyebrow{font-size:var(--fs-micro);letter-spacing:.14em;color:var(--accent);font-weight:700;text-transform:uppercase;margin-bottom:10px}
+  h1{font-size:30px;font-weight:700;letter-spacing:-.02em;margin-bottom:10px;text-wrap:balance}
+  .updated{color:var(--faint);font-size:var(--fs-xs);font-family:var(--mono);margin-bottom:26px}
+  .lede{
+    color:var(--text2);font-size:var(--fs-lg);line-height:1.8;margin-bottom:34px;
+    border-left:2px solid var(--line-strong);padding-left:16px;text-wrap:pretty;
+  }
+  section.doc{margin-bottom:32px}
+  h2{font-size:var(--fs-lg);font-weight:700;margin-bottom:12px;letter-spacing:-.01em}
+  .doc p{color:var(--muted);font-size:var(--fs-base);line-height:1.85;margin-bottom:10px;text-wrap:pretty}
+  .doc p:last-child{margin-bottom:0}
+  .doc p.code{font-family:var(--mono);color:var(--accent);font-size:var(--fs-sm);
+    background:var(--inset);border:1px solid var(--line);border-radius:var(--r-sm);padding:10px 13px;overflow-x:auto}
+  .doc p.item{padding-left:14px}
+
+  .backlink{display:inline-flex;align-items:center;gap:7px;margin-top:8px;
+    color:var(--accent);font-size:var(--fs-sm);font-weight:600}
+  .backlink:hover{color:var(--text)}
+
+  footer{border-top:1px solid var(--line);margin-top:48px;color:var(--muted);font-size:var(--fs-sm)}
+  .foot{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;padding:24px 0}
+  .foot a{color:var(--muted);transition:color .15s}
+  .foot a:hover{color:var(--text)}
+  .foot .sep{color:var(--line-strong)}
+  .foot-note{border-top:1px solid var(--line-soft);padding:16px 0 26px;color:var(--faint);font-size:var(--fs-xs);line-height:1.7}
+
+  @media(max-width:680px){
+    main{padding:34px 0 26px}
+    h1{font-size:25px}
+    .lede,.doc p{text-align:justify;text-justify:inter-ideograph}
+    .nav{height:auto;flex-wrap:wrap;gap:10px;padding:10px 0}
+    .nav-right{gap:12px}
+  }
+  @media print{
+    :root{--bg:#fff;--panel:#fff;--inset:#fff;--text:#000;--text2:#222;--muted:#333;--faint:#555;
+          --line:#bbb;--line-strong:#888;--line-soft:#ddd}
+    body{background:#fff;color:#000}
+    header,footer,.backlink{display:none!important}
+  }
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="/" aria-label="HYPERNOVA"><svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="M8 4.1H4.6v15.8H8"/><path d="M16 4.1h3.4v15.8H16"/><circle cx="12" cy="12" r="2.9" fill="currentColor" stroke="none"/></svg><b>HYPER<span>NOVA</span></b></a>
+    <div class="nav-right">
+      <a href="/">返回计算器</a>
+      <a href="/en/privacy/" class="lang-btn" rel="alternate" hreflang="en">EN</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="eyebrow">法务</div>
+  <h1>隐私政策</h1>
+  <div class="updated">最后更新 2026-08-22</div>
+  <p class="lede">本页说明 HYPERNOVA 收集什么、不收集什么，以及数据存放在哪里。结论先行：本站不收集您的任何个人信息，您填写的交易参数不会离开您的设备。</p>
+
+      <section class="doc">
+        <h2>一、本站不收集的内容</h2>
+        <p>本站没有账号体系，不要求注册、登录，也不要求连接钱包。</p>
+        <p>本站不使用 Cookie，不加载任何第三方统计、广告或追踪脚本。</p>
+        <p>您在计算器中填写的账户金额、入场价、止损价、止盈价、杠杆等全部参数，以及交易日志中的每一条记录，都不会被上传到任何服务器——包括本站自己的服务器。这些运算完全在您的浏览器中完成。</p>
+      </section>
+
+      <section class="doc">
+        <h2>二、存放在您设备上的数据</h2>
+        <p>为了让您下次打开时不必重新填写，本站使用浏览器的 localStorage 保存少量数据。这些数据只存在于您的设备上，本站无法读取：</p>
+        <p class="item">· hn_calc_prefs —— 计算器的常用输入（账户总额、风险比例、杠杆、费率、保证金模式）</p>
+        <p class="item">· hn_trades —— 交易复盘日志的全部记录</p>
+        <p class="item">· hn_jprefs —— 日志表单上次使用的标的与方向</p>
+        <p class="item">· hn_hl_meta_v1 —— Hyperliquid 合约参数缓存，有效期 24 小时</p>
+        <p>清除浏览器数据即可删除以上全部内容。本站提供“清空全部”按钮删除交易日志，以及“导出备份”功能将日志导出为文件由您自行保管。</p>
+      </section>
+
+      <section class="doc">
+        <h2>三、唯一的对外请求</h2>
+        <p>本站向 Hyperliquid 的公开接口发送一个请求，用于获取合约清单（各合约的最大杠杆与下单数量精度）：</p>
+        <p class="code">POST https://api.hyperliquid.xyz/info  请求体 {&quot;type&quot;:&quot;meta&quot;}</p>
+        <p>该请求不包含您的任何输入，仅是一个固定的查询。返回结果在您的浏览器中缓存 24 小时。请求失败时本站静默降级为手动填写，功能不受影响。</p>
+        <p>与任何网络请求一样，Hyperliquid 的服务器会在此过程中获知您的 IP 地址。这是网络通信的固有属性，本站无法代为规避。</p>
+      </section>
+
+      <section class="doc">
+        <h2>四、托管方的访问日志</h2>
+        <p>本站托管于 Cloudflare。与所有网站一样，托管方的服务器会记录标准的访问日志，通常包括 IP 地址、浏览器标识、访问时间与请求的页面地址，用于安全防护与故障排查。</p>
+        <p>这部分数据由 Cloudflare 按其自身政策处理，本站运营者不主动读取、分析或留存这些日志，也没有据此构建任何用户画像。</p>
+      </section>
+
+      <section class="doc">
+        <h2>五、数据的跨境与共享</h2>
+        <p>本站不收集个人数据，因而不存在出售、共享或跨境传输个人数据的情形。</p>
+        <p>本站不会因任何商业目的向第三方提供您的信息——因为本站根本不持有这些信息。</p>
+      </section>
+
+      <section class="doc">
+        <h2>六、儿童</h2>
+        <p>本站不面向未成年人提供服务，也不会有意收集未成年人的任何信息。</p>
+      </section>
+
+      <section class="doc">
+        <h2>七、政策变更</h2>
+        <p>本政策可能随功能变化而更新。若未来新增任何会产生对外请求或数据收集的功能，本页将同步修改并更新页首日期。</p>
+      </section>
+
+      <section class="doc">
+        <h2>八、联系方式</h2>
+        <p>如对本政策有疑问，可通过 contact@hypernova.vip 联系。</p>
+      </section>
+
+  <a class="backlink" href="/">← 返回计算器</a>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <span>© 2026 HYPERNOVA</span><span class="sep">·</span>
+      <a href="/terms/">服务条款</a><span class="sep">·</span>
+      <a href="/privacy/">隐私政策</a><span class="sep">·</span>
+      <a href="https://github.com/chnwangk/hypernova" rel="noopener">源码</a><span class="sep">·</span>
+      <a href="mailto:contact@hypernova.vip">contact@hypernova.vip</a>
+    </div>
+    <div class="foot-note">HYPERNOVA 是独立的第三方工具，与 Hyperliquid Labs 无隶属、赞助或背书关系。Hyperliquid 及其他提及的名称与标识为其各自所有者的商标。本站内容仅供研究与参考，不构成投资建议。</div>
+  </div>
+</footer>
+</body>
+</html>
