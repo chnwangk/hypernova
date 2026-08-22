@@ -2,9 +2,19 @@
   "changelog": {
     "slug": "changelog",
     "title": "Changelog",
-    "updated": "2026-08-22",
+    "updated": "2026-08-23",
     "lede": "Every public change to HYPERNOVA is recorded here, including bugs that were fixed. A calculation tool is only as trustworthy as its willingness to admit what it got wrong — so fixes are listed as fully as new features.",
     "releases": [
+      {
+        "v": "5.3",
+        "date": "2026-08-23",
+        "items": [
+          [
+            "Changed",
+            "The per-trade risk presets are now 0.25% / 0.5% / 1% / 2%, replacing 0.5% / 1% / 2% / 3%: 3% has been dropped and 0.25% added, covering more conservative position sizing."
+          ]
+        ]
+      },
       {
         "v": "4.3 – 5.2",
         "date": "2026-08-22",
