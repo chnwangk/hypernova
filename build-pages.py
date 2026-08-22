@@ -23,10 +23,10 @@ def tokens_from_index():
     if not m: sys.exit("无法从 index.html 提取 :root 令牌块")
     return m.group(1)
 
-MARK = ('<svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" '
-        'stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true">'
-        '<path d="M8 4.1H4.6v15.8H8"/><path d="M16 4.1h3.4v15.8H16"/>'
-        '<circle cx="12" cy="12" r="2.9" fill="currentColor" stroke="none"/></svg>')
+MARK = ('<svg class="logo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">'
+        '<path d="M4.05 3.35h4.6v2.9H6.95v11.5h1.7v2.9h-4.6z"/>'
+        '<path d="M19.95 3.35h-4.6v2.9h1.7v11.5h-1.7v2.9h4.6z"/>'
+        '<circle cx="12" cy="12" r="3.1"/></svg>')
 
 CSS = """
   *{box-sizing:border-box;margin:0;padding:0}
@@ -58,9 +58,10 @@ CSS = """
   }
   .chip:hover{background:var(--panel);border-color:var(--line-strong);color:var(--text)}
   .chip-brand{padding:0 16px 0 13px;color:var(--text)}
-  .chip-brand .logo{width:24px;height:24px;flex-shrink:0;display:block}
-  .chip-brand b{font-size:var(--fs-xl);font-weight:700;letter-spacing:.03em;line-height:1}
-  .chip-brand span{font-weight:300;letter-spacing:.03em}
+  .chip-brand .logo{width:18px;height:18px;flex-shrink:0;display:block}
+  .chip-brand{gap:9px}
+  .chip-brand b{font-family:var(--wordmark);font-size:17px;font-weight:500;letter-spacing:.1em;line-height:1}
+  .chip-brand span{font-weight:500;letter-spacing:.1em}
   .chip-end{margin-left:auto;display:flex;align-items:center;gap:6px}
   .chip-lang{padding:0 13px;font-size:var(--fs-xs);font-weight:700;letter-spacing:.06em;color:var(--muted)}
 

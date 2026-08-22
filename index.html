@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="format-detection" content="telephone=no,date=no,address=no,email=no" />
-<title>HYPERNOVA · 加密合约仓位计算器</title>
+<title>HYPERNOVA · 先定义风险，再决定仓位</title>
 <meta name="description" content="面向 Hyperliquid 交易者的合约仓位计算器：填入标的即自动带出该合约的最大杠杆与维持保证金率，由单笔可承受亏损反推开仓数量、所需保证金、预估强制平仓价与盈亏比，全部公式公开。运算在本地浏览器完成，不上传交易数据。" />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='5.3' fill='%2304070a'/><g fill='%232dd4bf'><rect x='1.35' y='1.35' width='6.25' height='3.5'/><rect x='1.35' y='1.35' width='3.5' height='21.3'/><rect x='1.35' y='19.15' width='6.25' height='3.5'/><rect x='16.4' y='1.35' width='6.25' height='3.5'/><rect x='19.15' y='1.35' width='3.5' height='21.3'/><rect x='16.4' y='19.15' width='6.25' height='3.5'/><circle cx='12' cy='12' r='4'/></g></svg>" />
 <link rel="canonical" href="https://hypernova.vip/" />
@@ -137,6 +137,9 @@
     --track-caps:.14em;
 
     --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,Helvetica,Arial,sans-serif;
+    /* 字标专用字体栈：三者度量兼容，Mac/Windows/Linux 渲染几乎一致，
+       避免同一个品牌在不同设备上长得不一样 */
+    --wordmark:"Helvetica Neue",Helvetica,"Liberation Sans",Arial,sans-serif;
     --mono:ui-monospace,"SF Mono","JetBrains Mono","Roboto Mono",Menlo,Consolas,"Liberation Mono",monospace;
   }
   *{box-sizing:border-box;margin:0;padding:0}
@@ -230,7 +233,14 @@
   .chip-group{display:flex;align-items:center;gap:4px}
   .chip-end{margin-left:auto;gap:6px}
 
-  .chip-brand{padding:0 16px 0 13px;color:var(--text)}
+  .chip-brand{padding:0 16px 0 13px;color:var(--text);gap:9px}
+  /* 字标：单一字重 + 宽字距。此前用 700/300 双字重区分 HYPER 与 NOVA，
+     但 Light 在 17px 下发虚，小尺寸撑不住；单字重更稳，也更像成套的标识。 */
+  .chip-brand b{
+    font-family:var(--wordmark);
+    font-size:17px;font-weight:500;letter-spacing:.1em;line-height:1;
+  }
+  .chip-brand span{font-weight:500;letter-spacing:.1em}
   .chip-lang{
     padding:0 13px;font-size:var(--fs-xs);font-weight:700;letter-spacing:.06em;
     color:var(--muted);
@@ -242,7 +252,9 @@
   /* 标记：单色几何图形，随文字取色。方括号夹住一个点——
      爆发力被限定在明确的边界内，正是本工具在做的事。不使用渐变。 */
   .brand{display:flex;align-items:center;gap:9px;color:var(--text)}
-  .chip-brand .logo,.brand .logo{width:24px;height:24px;flex-shrink:0;display:block}
+  /* 标记高度取字高的约 1.2 倍：24px 时标记会压过字标，16px 又显从属，18px 平衡 */
+  .chip-brand .logo,.brand .logo{width:18px;height:18px;flex-shrink:0;display:block}
+  .brand-sm .logo{width:16px;height:16px}
   .brand-sm .logo{width:22px;height:22px}
   /* 字标：单一颜色，靠字重而非颜色区分两段 */
   .brand b{font-size:var(--fs-xl);font-weight:700;letter-spacing:.03em;line-height:1}
@@ -632,7 +644,7 @@
 <header>
   <div class="wrap nav">
     <a class="chip chip-brand" href="#top" aria-label="HYPERNOVA">
-      <svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="M8 4.1H4.6v15.8H8"/><path d="M16 4.1h3.4v15.8H16"/><circle cx="12" cy="12" r="2.9" fill="currentColor" stroke="none"/></svg>
+      <svg class="logo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.05 3.35h4.6v2.9H6.95v11.5h1.7v2.9h-4.6z"/><path d="M19.95 3.35h-4.6v2.9h1.7v11.5h-1.7v2.9h4.6z"/><circle cx="12" cy="12" r="3.1"/></svg>
       <b>HYPER<span>NOVA</span></b>
     </a>
     <nav class="chip-group" aria-label="主导航 / Main navigation">
@@ -959,7 +971,7 @@
   <div class="wrap">
     <div class="foot-top">
       <div class="foot-brand">
-        <div class="brand brand-sm"><svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="M8 4.1H4.6v15.8H8"/><path d="M16 4.1h3.4v15.8H16"/><circle cx="12" cy="12" r="2.9" fill="currentColor" stroke="none"/></svg><b>HYPER<span>NOVA</span></b></div>
+        <div class="brand brand-sm"><svg class="logo" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.05 3.35h4.6v2.9H6.95v11.5h1.7v2.9h-4.6z"/><path d="M19.95 3.35h-4.6v2.9h1.7v11.5h-1.7v2.9h4.6z"/><circle cx="12" cy="12" r="3.1"/></svg><b>HYPER<span>NOVA</span></b></div>
         <p class="foot-desc" data-i18n="foot_desc">风险驱动的加密衍生品仓位管理工具。全部运算在本地完成。</p>
       </div>
       <nav class="foot-links" aria-label="页脚导航 / Footer navigation">
@@ -974,7 +986,7 @@
         <a href="https://github.com/chnwangk/hypernova" rel="noopener" data-i18n="nav_source">源码</a>
       </nav>
       <dl class="foot-meta">
-        <div><dt class="caps" data-i18n="foot_version">版本</dt><dd>v4.4</dd></div>
+        <div><dt class="caps" data-i18n="foot_version">版本</dt><dd>v4.5</dd></div>
         <div><dt class="caps" data-i18n="foot_updated">最后更新</dt><dd>2026-08-21</dd></div>
         <div><dt class="caps" data-i18n="foot_data">数据存储</dt><dd data-i18n="foot_data_v">仅本机浏览器</dd></div>
       </dl>
@@ -991,7 +1003,7 @@
   /* ---------- i18n 静态文字表 ---------- */
   var T = {
     zh: {
-      title:'HYPERNOVA · 加密合约仓位计算器',
+      title:'HYPERNOVA · 先定义风险，再决定仓位',
       nav_calc:'仓位计算器', nav_features:'计算方法', nav_about:'关于', nav_cta:'开始计算',
       hero_pill:'全部运算在本地浏览器完成 · 不上传任何交易数据',
       hero_h1:'先定义风险<br><span class="grad">再决定仓位规模</span>',
@@ -1082,7 +1094,7 @@
       copy_result:'复制结果', j_clear:'清空全部'
     },
     en: {
-      title:'HYPERNOVA · Crypto Position Calculator',
+      title:'HYPERNOVA · Define the risk, then size the position',
       nav_calc:'Calculator', nav_features:'Methodology', nav_about:'About', nav_cta:'Start',
       hero_pill:'All computation runs locally · no trade data is transmitted',
       hero_h1:'Define the risk first<br><span class="grad">then size the position</span>',
