@@ -6,7 +6,7 @@
 <meta name="format-detection" content="telephone=no,date=no,address=no,email=no" />
 <title>HYPERNOVA · Crypto Position Calculator</title>
 <meta name="description" content="Position size calculator for Hyperliquid traders: enter a symbol and the contract&rsquo;s max leverage and maintenance margin are filled in automatically. Derive position size, required margin, estimated liquidation price and R:R from the loss you can accept. Every formula is published. All computation runs locally in your browser." />
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='5.3' fill='%2304070a'/><g fill='none' stroke='%232dd4bf' stroke-width='2.2' stroke-linecap='square'><path d='M8 4.1H4.6v15.8H8'/><path d='M16 4.1h3.4v15.8H16'/></g><circle cx='12' cy='12' r='2.9' fill='%232dd4bf'/></svg>" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><rect width='24' height='24' rx='5.3' fill='%2304070a'/><g fill='%232dd4bf'><rect x='1.35' y='1.35' width='6.25' height='3.5'/><rect x='1.35' y='1.35' width='3.5' height='21.3'/><rect x='1.35' y='19.15' width='6.25' height='3.5'/><rect x='16.4' y='1.35' width='6.25' height='3.5'/><rect x='19.15' y='1.35' width='3.5' height='21.3'/><rect x='16.4' y='19.15' width='6.25' height='3.5'/><circle cx='12' cy='12' r='4'/></g></svg>" />
 <link rel="canonical" href="https://hypernova.vip/en/" />
 <link rel="alternate" hreflang="zh-Hans" href="https://hypernova.vip/" />
 <link rel="alternate" hreflang="en" href="https://hypernova.vip/en/" />
@@ -208,63 +208,56 @@
   }
   .wrap{max-width:1140px;margin:0 auto;padding:0 24px}
 
-  /* ---------- Nav ---------- */
-  header{
-    position:sticky;top:0;z-index:50;
-    backdrop-filter:saturate(150%) blur(14px);
-    -webkit-backdrop-filter:saturate(150%) blur(14px);
-    background:color-mix(in srgb, var(--bg) 82%, transparent);
-    border-bottom:1px solid var(--line);
-    transition:background-color .2s ease, border-color .2s ease;
+  /* ---------- 顶栏：浮动小块 ----------
+     不用整条横栏，而是一组各自带不透明底色的小块浮在页面上。
+     这样内容从小块之间滚过去，不会出现「透过半透明栏叠字」的问题——
+     也就不再需要滚动状态切换（那套依赖 IntersectionObserver 的方案
+     在标签页不可见时回调会被浏览器挂起，本身就不够稳）。 */
+  header{position:sticky;top:0;z-index:50;padding:14px 0;pointer-events:none}
+  header .wrap{pointer-events:none}
+  header a,header nav{pointer-events:auto}
+  .nav{display:flex;align-items:center;gap:10px}
+
+  .chip{
+    display:inline-flex;align-items:center;gap:8px;
+    height:44px;padding:0 15px;
+    background:var(--panel2);border:1px solid var(--line);border-radius:var(--r-lg);
+    color:var(--text2);font-size:var(--fs-sm);font-weight:600;letter-spacing:.01em;
+    white-space:nowrap;
+    transition:background-color .15s,border-color .15s,color .15s;
   }
-  /* 页面滚动后顶栏转为不透明，边界更实 */
-  header.scrolled{background:var(--bg);border-bottom-color:var(--line-strong)}
-  /* 不支持毛玻璃的浏览器直接用实底，避免文字叠字 */
-  @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
-    header{background:var(--bg)}
+  .chip:hover{background:var(--panel);border-color:var(--line-strong);color:var(--text)}
+  .chip-group{display:flex;align-items:center;gap:4px}
+  .chip-end{margin-left:auto;gap:6px}
+
+  .chip-brand{padding:0 16px 0 13px;color:var(--text)}
+  .chip-lang{
+    padding:0 13px;font-size:var(--fs-xs);font-weight:700;letter-spacing:.06em;
+    color:var(--muted);
   }
-  .nav{display:flex;align-items:center;gap:22px;height:64px}
+  .chip-cta{
+    background:var(--accent-deep);border-color:var(--accent-deep);color:#04100e;font-weight:700;
+  }
+  .chip-cta:hover{background:var(--accent);border-color:var(--accent);color:#04100e}
   /* 标记：单色几何图形，随文字取色。方括号夹住一个点——
      爆发力被限定在明确的边界内，正是本工具在做的事。不使用渐变。 */
   .brand{display:flex;align-items:center;gap:9px;color:var(--text)}
-  .brand .logo{width:26px;height:26px;flex-shrink:0;display:block}
+  .chip-brand .logo,.brand .logo{width:24px;height:24px;flex-shrink:0;display:block}
   .brand-sm .logo{width:22px;height:22px}
   /* 字标：单一颜色，靠字重而非颜色区分两段 */
   .brand b{font-size:var(--fs-xl);font-weight:700;letter-spacing:.03em;line-height:1}
   .brand span{font-weight:300;letter-spacing:.03em}
   .brand-sm b{font-size:var(--fs-md)}
-  .nav-links{display:flex;gap:22px;align-items:center;margin-left:auto}
-  .nav-links a{color:var(--muted);font-size:var(--fs-base);font-weight:600;transition:color .15s}
-  .nav-links a:hover{color:var(--text)}
-  .lang-btn{
-    background:var(--panel);border:1px solid var(--line);color:var(--muted);
-    padding:7px 12px;min-height:38px;border-radius:var(--r);
-    font-size:var(--fs-xs);font-weight:700;letter-spacing:.06em;cursor:pointer;
-    transition:color .15s,border-color .15s,background-color .15s;
-  }
-  .lang-btn:hover{color:var(--text);border-color:var(--line-strong);background:var(--panel2)}
-  .nav-cta{
-    background:var(--accent-deep);border:1px solid var(--accent-deep);
-    color:#04100e;padding:8px 15px;border-radius:var(--r);
-    font-size:var(--fs-sm);font-weight:700;letter-spacing:.01em;
-    transition:background-color .15s,border-color .15s;
-  }
-  .nav-cta:hover{background:var(--accent);border-color:var(--accent)}
   @media(max-width:680px){
-    /* 原先锚点链接在移动端整行隐藏，导致够不到「交易日志」。
-       改为：第一行 品牌 + 语言 + CTA，第二行 锚点链接（可横向滚动） */
-    .nav{height:auto;flex-wrap:wrap;gap:10px;padding:10px 20px}  /* 保留 .wrap 的左右留白 */
-    .brand{order:1}
-    .lang-btn{order:2;margin-left:auto}
-    .nav-cta{order:3}
-    .nav-links{
-      order:4;width:100%;margin-left:0;gap:16px;overflow-x:auto;
-      -webkit-overflow-scrolling:touch;scrollbar-width:none;
-      /* 万一放不下需要横滚，也不把滚动传导给整个页面 */
-      overscroll-behavior-x:contain;
-    }
-    .nav-links::-webkit-scrollbar{display:none}
-    .nav-links a{white-space:nowrap;padding:9px 0}
+    /* 第一行：品牌 + 语言 + CTA；第二行：导航小块（换行，不横滚） */
+    header{padding:10px 0}
+    .nav{flex-wrap:wrap;gap:6px}
+    .chip-brand{order:1}
+    .chip-end{order:2;margin-left:auto}
+    .chip-group:not(.chip-end){order:3;width:100%;flex-wrap:wrap;gap:6px}
+    .chip{height:40px;padding:0 13px;font-size:var(--fs-xs)}
+    .chip-brand{padding:0 14px 0 11px}
+    .chip-brand b{font-size:var(--fs-md)}
     #lev{min-height:30px}
   }
   /* 320–374px 的小屏：英文导航标签更长，收紧间距以免出现横滚条 */
@@ -633,23 +626,25 @@
 </head>
 <body>
 
-<div id="topSentinel" aria-hidden="true" style="position:absolute;top:0;left:0;width:1px;height:1px;pointer-events:none"></div>
+<span id="top" aria-hidden="true"></span>
 
 <!-- ===== NAV ===== -->
 <header>
   <div class="wrap nav">
-    <div class="brand">
+    <a class="chip chip-brand" href="#top" aria-label="HYPERNOVA">
       <svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="M8 4.1H4.6v15.8H8"/><path d="M16 4.1h3.4v15.8H16"/><circle cx="12" cy="12" r="2.9" fill="currentColor" stroke="none"/></svg>
       <b>HYPER<span>NOVA</span></b>
-    </div>
-    <nav class="nav-links" aria-label="主导航 / Main navigation">
-      <a href="#calc" data-i18n="nav_calc">Calculator</a>
-      <a href="#journal" data-i18n="nav_journal">Journal</a>
-      <a href="#method" data-i18n="nav_features">Methodology</a>
-      <a href="#about" data-i18n="nav_about">About</a>
+    </a>
+    <nav class="chip-group" aria-label="主导航 / Main navigation">
+      <a class="chip" href="#calc" data-i18n="nav_calc">Calculator</a>
+      <a class="chip" href="#journal" data-i18n="nav_journal">Journal</a>
+      <a class="chip" href="#method" data-i18n="nav_features">Methodology</a>
+      <a class="chip" href="#about" data-i18n="nav_about">About</a>
     </nav>
-    <a href="/" id="langToggle" class="lang-btn" rel="alternate" hreflang="zh-Hans" aria-label="以中文查看本页">中文</a>
-    <a href="#calc" class="nav-cta" data-i18n="nav_cta">Start</a>
+    <div class="chip-group chip-end">
+      <a class="chip chip-lang" href="/en/" id="langToggle" rel="alternate" hreflang="en" aria-label="View this page in English">EN</a>
+      <a class="chip chip-cta" href="#calc" data-i18n="nav_cta">Start</a>
+    </div>
   </div>
 </header>
 
@@ -979,7 +974,7 @@
         <a href="https://github.com/chnwangk/hypernova" rel="noopener" data-i18n="nav_source">Source</a>
       </nav>
       <dl class="foot-meta">
-        <div><dt class="caps" data-i18n="foot_version">Version</dt><dd>v4.3</dd></div>
+        <div><dt class="caps" data-i18n="foot_version">Version</dt><dd>v4.4</dd></div>
         <div><dt class="caps" data-i18n="foot_updated">Last updated</dt><dd>2026-08-21</dd></div>
         <div><dt class="caps" data-i18n="foot_data">Data storage</dt><dd data-i18n="foot_data_v">Local browser only</dd></div>
       </dl>
@@ -1600,6 +1595,20 @@
     if(ready) drawTradeViz({entry:entry,stop:stop,target:target,liq:liq,liqImpossible:liqImpossible,names:M.vizNames,
       fmtPrice:fmtPx});
     markRiskQuick();
+    updateTitle(ready, qty, _sym);
+  }
+
+  /* 标签页标题带上算出的仓位数量。
+     交易类站点的通行做法是把最有用的实时信息放在标题最前面
+     （交易所把价格放在最前，用户不用切标签就能看到）。
+     对本工具而言，最有用的就是算出来的开仓数量。 */
+  function updateTitle(ready, qty, sym){
+    var base = T[LANG].title;
+    if(ready && isFinite(qty) && qty>0){
+      document.title = fmtQty(qty) + (sym ? (" " + sym) : "") + " · HYPERNOVA";
+    } else {
+      document.title = base;
+    }
   }
 
   /* ==========================================================
@@ -2005,16 +2014,6 @@
   $("j_import").addEventListener("click", function(){ $("j_file").click(); });
   $("j_file").addEventListener("change", function(e){ if(e.target.files&&e.target.files[0]){ importTrades(e.target.files[0]); e.target.value=""; } });
   window.addEventListener("resize", function(){ calc(); drawEquityChart(); });
-
-  /* 顶栏吸顶态：用哨兵元素 + IntersectionObserver 判定，
-     不监听 scroll、不依赖 rAF（后者在标签页不可见时会被浏览器暂停）。 */
-  (function(){
-    var hd=document.querySelector("header"), sentinel=$("topSentinel");
-    if(!hd||!sentinel||!("IntersectionObserver" in window)) return;
-    new IntersectionObserver(function(entries){
-      hd.classList.toggle("scrolled", !entries[0].isIntersecting);
-    }, {threshold:0}).observe(sentinel);
-  })();
 
   restorePrefs();
   applyI18n();

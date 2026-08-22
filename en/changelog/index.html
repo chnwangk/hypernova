@@ -88,21 +88,23 @@
   ::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:99px;border:3px solid var(--bg);background-clip:padding-box}
   .wrap{max-width:820px;margin:0 auto;padding:0 24px}
 
-  header{position:sticky;top:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--line)}
-  .nav{display:flex;align-items:center;gap:22px;height:64px}
-  .brand{display:flex;align-items:center;gap:9px;color:var(--text)}
-  .brand .logo{width:26px;height:26px;flex-shrink:0;display:block}
-  .brand b{font-size:var(--fs-xl);font-weight:700;letter-spacing:.03em;line-height:1}
-  .brand span{font-weight:300;letter-spacing:.03em}
-  .nav-right{margin-left:auto;display:flex;align-items:center;gap:16px}
-  .nav-right a{color:var(--muted);font-size:var(--fs-sm);font-weight:600;transition:color .15s}
-  .nav-right a:hover{color:var(--text)}
-  .lang-btn{
-    background:var(--panel);border:1px solid var(--line);color:var(--muted);
-    padding:7px 12px;min-height:38px;border-radius:var(--r);display:inline-flex;align-items:center;
-    font-size:var(--fs-xs);font-weight:700;letter-spacing:.06em;
+  /* 顶栏：与主页一致的浮动小块，各自带不透明底色，不设整条横栏 */
+  header{position:sticky;top:0;z-index:50;padding:14px 0;pointer-events:none}
+  header a{pointer-events:auto}
+  .nav{display:flex;align-items:center;gap:10px}
+  .chip{
+    display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 15px;
+    background:var(--panel2);border:1px solid var(--line);border-radius:var(--r-lg);
+    color:var(--text2);font-size:var(--fs-sm);font-weight:600;white-space:nowrap;
+    transition:background-color .15s,border-color .15s,color .15s;
   }
-  .lang-btn:hover{color:var(--text);border-color:var(--line-strong);background:var(--panel2)}
+  .chip:hover{background:var(--panel);border-color:var(--line-strong);color:var(--text)}
+  .chip-brand{padding:0 16px 0 13px;color:var(--text)}
+  .chip-brand .logo{width:24px;height:24px;flex-shrink:0;display:block}
+  .chip-brand b{font-size:var(--fs-xl);font-weight:700;letter-spacing:.03em;line-height:1}
+  .chip-brand span{font-weight:300;letter-spacing:.03em}
+  .chip-end{margin-left:auto;display:flex;align-items:center;gap:6px}
+  .chip-lang{padding:0 13px;font-size:var(--fs-xs);font-weight:700;letter-spacing:.06em;color:var(--muted)}
 
   main{padding:52px 0 40px}
   .eyebrow{font-size:var(--fs-micro);letter-spacing:.14em;color:var(--accent);font-weight:700;text-transform:uppercase;margin-bottom:10px}
@@ -158,8 +160,11 @@
     main{padding:34px 0 26px}
     h1{font-size:25px}
     .lede,.doc p{text-align:justify;text-justify:inter-ideograph}
-    .nav{height:auto;flex-wrap:wrap;gap:10px;padding:10px 0}
-    .nav-right{gap:12px}
+    header{padding:10px 0}
+    .nav{flex-wrap:wrap;gap:6px}
+    .chip{height:40px;padding:0 13px;font-size:var(--fs-xs)}
+    .chip-brand{padding:0 14px 0 11px}
+    .chip-brand b{font-size:var(--fs-md)}
   }
   @media print{
     :root{--bg:#fff;--panel:#fff;--inset:#fff;--text:#000;--text2:#222;--muted:#333;--faint:#555;
@@ -174,10 +179,10 @@
 <body>
 <header>
   <div class="wrap nav">
-    <a class="brand" href="/en/" aria-label="HYPERNOVA"><svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="M8 4.1H4.6v15.8H8"/><path d="M16 4.1h3.4v15.8H16"/><circle cx="12" cy="12" r="2.9" fill="currentColor" stroke="none"/></svg><b>HYPER<span>NOVA</span></b></a>
-    <div class="nav-right">
-      <a href="/en/">Back to calculator</a>
-      <a href="/changelog/" class="lang-btn" rel="alternate" hreflang="zh-Hans">中文</a>
+    <a class="chip chip-brand" href="/en/" aria-label="HYPERNOVA"><svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square" stroke-linejoin="miter" aria-hidden="true"><path d="M8 4.1H4.6v15.8H8"/><path d="M16 4.1h3.4v15.8H16"/><circle cx="12" cy="12" r="2.9" fill="currentColor" stroke="none"/></svg><b>HYPER<span>NOVA</span></b></a>
+    <div class="chip-end">
+      <a class="chip" href="/en/">Back to calculator</a>
+      <a class="chip chip-lang" href="/changelog/" rel="alternate" hreflang="zh-Hans">中文</a>
     </div>
   </div>
 </header>
