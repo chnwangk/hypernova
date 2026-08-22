@@ -752,7 +752,7 @@
           </div>
           <div class="field">
             <label for="mmr" data-i18n="label_mmr">Maintenance Margin <span class="hint">filled in automatically from the symbol; can be overridden</span></label>
-            <div class="input-wrap"><input type="number" id="mmr" value="1.25" min="0" step="any"><span class="suffix">%</span></div>
+            <div class="input-wrap"><input type="number" id="mmr" min="0" step="any"><span class="suffix">%</span></div>
           </div>
         </div>
         </div>
@@ -1212,6 +1212,7 @@
       negInput:"存在负值输入。账户总额、风险比例、价格与费率均须为正数，请核对后重新填写。",
       riskZero:"单笔风险比例须大于 0，否则无法反推仓位规模。通行区间为 1%–2%。",
       mmrBad:"维持保证金率应远低于 100%，常见区间为 0.4%–1%。当前取值无法得出有意义的强制平仓价。",
+      mmrMissing:"未填写维持保证金率，因此不计算强制平仓价。填入标的可自动带出该合约的数值，也可手动填写。",
       accountMissing:"请先填写账户总额，否则无法据以反推仓位规模。",
       assetFound:function(sym,lev,mmr){
         return "Hyperliquid · "+sym+" 最大杠杆 <b>"+lev+"x</b> · 维持保证金率 <b>"+mmr+"%</b>（已自动填入）";
@@ -1250,6 +1251,7 @@
       negInput:"Negative values detected. Account size, risk, prices and fee rates must all be positive — please check your inputs.",
       riskZero:"Risk per trade must be greater than 0, otherwise there is no position to size. 1%–2% is the usual range.",
       mmrBad:"Maintenance margin rate should be far below 100% (typically 0.4%–1%). The current value cannot produce a meaningful liquidation price.",
+      mmrMissing:"No maintenance margin rate has been entered, so no liquidation price is shown. Enter a symbol to fill it in from the contract, or type it in manually.",
       accountMissing:"Please enter the account size first; without it the position size cannot be derived.",
       assetFound:function(sym,lev,mmr){
         return "Hyperliquid &middot; "+sym+" max leverage <b>"+lev+"x</b> &middot; maintenance margin <b>"+mmr+"%</b> (filled in automatically)";
@@ -1439,7 +1441,12 @@
     var target  = num("target");
     var lev     = num("lev");
     var feePct  = num("fee")/100;
-    var mmr     = num("mmr")/100;
+    // 维持保证金率没有合理的通用默认值：各合约在 1.25%–16.67% 之间。
+    // num() 对空值返回 0，而 0 会算出一个比真实更远的强平价——风险提示
+    // 工具最不该错的方向。因此缺失时置 NaN，让强平价这一行显示为「—」。
+    var mmrRaw  = parseFloat($("mmr").value);
+    var mmrMissing = !isFinite(mmrRaw) || mmrRaw<=0;
+    var mmr     = mmrMissing ? NaN : mmrRaw/100;
 
     var alerts = [];
 
@@ -1447,6 +1454,7 @@
     var negative = account<0 || riskPct<0 || entry<0 || stop<0 || target<0 || feePct<0 || mmr<0;
     if(negative) alerts.push(["danger", M.negInput]);
     if(!negative && mmr>=1) alerts.push(["danger", M.mmrBad]);
+    if(!negative && mmrMissing && entry>0 && stop>0) alerts.push(["warn", M.mmrMissing]);
     if(!negative && riskPct<=0 && account>0 && entry>0 && stop>0) alerts.push(["danger", M.riskZero]);
     if(!negative && account<=0 && (entry>0 || stop>0)) alerts.push(["warn", M.accountMissing]);
 
@@ -1512,8 +1520,10 @@
     var netWin = reward - feeOpen - feeTargetLeg;
     var netLoss = riskAmt + feeAmt;
 
+    // 注意用 !(mmr>=1) 而非 mmr<1：mmr 为 NaN 时后者为 false，会把仓位规模、
+    // 名义价值、所需保证金这些与维持保证金率无关的结果一起打成「—」。
     var ready = account>0 && entry>0 && stop>0 && !dirInvalid
-                && !negative && riskPct>0 && mmr<1;
+                && !negative && riskPct>0 && !(mmr>=1);
 
     // ---- 渲染 ----
     var _sym=($("symbol").value||"").trim().toUpperCase();
@@ -1628,6 +1638,7 @@
   var HL_CACHE = 'hn_hl_meta_v3';
   var HL_TTL   = 24*3600*1000;
   var HL_ASSETS = null;          // { BTC: {lev, dec}, ... }
+  var HL_MMR_AUTO = false;       // mmr 框里的值是否由我们自动带出（用户一改就置假）
 
   function hlApply(universe){
     var m = {};
@@ -1671,6 +1682,12 @@
   }
 
   /* 标的变化时：带出维持保证金率、把杠杆上限压到该标的的真实上限 */
+  // 自动带出的维持保证金率是「某个具体合约的参数」，离开该合约就必须清掉，
+  // 否则会拿着上一个合约的数字去算强平价。用户自己填的值不在此列，一律保留。
+  function clearAutoMmr(){
+    if(HL_MMR_AUTO){ $("mmr").value=""; HL_MMR_AUTO=false; }
+  }
+
   function onSymbolChange(){
     var note = $("assetNote"); if(!note) return;
     var M = MSG[LANG];
@@ -1678,19 +1695,20 @@
     // 离开某个已识别标的时必须清掉它的下单精度，
     // 否则会拿着上一个标的的精度去取整，数量可能被直接抹成 0
     if(!sym){
-      HL_SZ_DEC=null; note.textContent=""; note.className="asset-note";
+      HL_SZ_DEC=null; clearAutoMmr(); note.textContent=""; note.className="asset-note";
       setLevMax(100); calc(); return;
     }
     if(!HL_ASSETS){ note.textContent=""; note.className="asset-note"; return; }
     var a = HL_ASSETS[sym];
     if(!a){
-      HL_SZ_DEC=null;
+      HL_SZ_DEC=null; clearAutoMmr();
       note.textContent = M.assetUnknown(sym);
       note.className = "asset-note warn";
       setLevMax(100); calc(); return;
     }
     var mmr = 100/(2*a.lev);                       // 维持保证金率 = 1/(2×最大杠杆)
     $("mmr").value = +mmr.toFixed(4);
+    HL_MMR_AUTO = true;
     HL_SZ_DEC = a.dec;
     setLevMax(a.lev);
     note.innerHTML = M.assetFound(sym, a.lev, mmr.toFixed(2));
@@ -1711,7 +1729,11 @@
   function savePrefs(){
     try{ localStorage.setItem(PREF_KEY, JSON.stringify({
       account:$("account").value, risk:$("risk").value, lev:$("lev").value,
-      fee:$("fee").value, mmr:$("mmr").value, mode:marginMode
+      fee:$("fee").value, mode:marginMode,
+      // 只持久化用户自己填的维持保证金率。自动带出的值属于某个具体合约，
+      // 而标的本身不进偏好——存下来会在下次打开时（标的为空）被恢复出来，
+      // 变成拿着上次那个合约的参数去算强平价。
+      mmr: HL_MMR_AUTO ? "" : $("mmr").value
     })); }catch(e){}
   }
   function restorePrefs(){
@@ -1732,6 +1754,9 @@
   }
 
   /* ---------- 事件绑定 ---------- */
+  // 必须先于下面 ids 的监听注册：savePrefs() 会读 HL_MMR_AUTO 决定要不要
+  // 持久化这个值，标记若晚一步清掉，用户手填的数字会被当成自动带出的丢弃。
+  $("mmr").addEventListener("input", function(){ HL_MMR_AUTO=false; });
   ids.forEach(function(id){ $(id).addEventListener("input", function(){ calc(); savePrefs(); }); });
   $("symbol").addEventListener("input", function(){ onSymbolChange(); calc(); });
   $("symbol").addEventListener("change", onSymbolChange);

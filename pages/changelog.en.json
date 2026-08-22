@@ -11,6 +11,10 @@
         "items": [
           [
             "Fixed",
+            "The maintenance margin rate could retain a value belonging to a previously looked-up contract. Once an instrument had been resolved, switching to one outside the listing — or clearing the field entirely — left that number in place and still feeding the calculation, even though the notice told the user to enter it manually. Carrying BTC's 1.25% over to another instrument understates maintenance margin and places the computed liquidation price further away than it really is. Automatically filled values are now distinguished from values the user typed: the former are cleared on leaving the contract, the latter are always kept. An unset rate is also no longer treated as 0%, which produced a plausible but more dangerous liquidation price; the row now reads “—” with an explicit notice. Position size, notional value and other results that do not depend on this parameter are unaffected."
+          ],
+          [
+            "Fixed",
             "The language switch on the English pages pointed at itself, so once you switched to English there was no way back to Chinese. The generator's replacement rule still targeted the pre-redesign header markup, and a replacement that matches nothing fails silently rather than raising. Every replacement in the generator now aborts the build when it fails to match, and the output is checked for a working route back to Chinese before it is written."
           ],
           [
