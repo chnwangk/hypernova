@@ -700,8 +700,7 @@
 
         <div class="field">
           <label for="symbol" data-i18n="label_symbol">Symbol <span class="hint">fills in the contract&rsquo;s leverage cap and maintenance margin</span></label>
-          <div class="input-wrap"><input type="text" id="symbol" placeholder="BTC" list="hlAssets" autocomplete="off" autocapitalize="characters" spellcheck="false"></div>
-            <datalist id="hlAssets"></datalist>
+          <div class="input-wrap"><input type="text" id="symbol" placeholder="BTC" autocomplete="off" autocapitalize="characters" spellcheck="false"></div>
             <div class="asset-note" id="assetNote" role="status" aria-live="polite"></div>
         </div>
 
@@ -1621,52 +1620,24 @@
 
   /* ==========================================================
      Hyperliquid 合约参数
-     只请求一个公开的合约清单接口（{"type":"metaAndAssetCtxs"}），不携带任何
-     用户数据。除杠杆/精度外还取 24h 成交额，用于把标的按活跃度排序。
+     只请求一个公开的合约清单接口（{"type":"meta"}），不携带任何用户数据。
      结果缓存 24 小时。任何失败都必须静默降级——计算器在离线状态下
      仍须完整可用，这是这段代码唯一不能妥协的约束。
      ========================================================== */
   var HL_URL   = 'https://api.hyperliquid.xyz/info';
-  var HL_CACHE = 'hn_hl_meta_v2';
+  var HL_CACHE = 'hn_hl_meta_v3';
   var HL_TTL   = 24*3600*1000;
-  var HL_ASSETS = null;          // { BTC: {lev, dec, vlm}, ... }
-  var HL_TOP = 10;               // 钉在下拉最前的常用合约数量
+  var HL_ASSETS = null;          // { BTC: {lev, dec}, ... }
 
   function hlApply(universe){
-    var m = {}, order = [];
+    var m = {};
     universe.forEach(function(u){
       if(u && u.name && u.maxLeverage && !u.isDelisted){
-        var k = u.name.toUpperCase();
-        var v = parseFloat(u.vlm);
-        if(!isFinite(v) || v<0) v = 0;
-        m[k] = {lev:u.maxLeverage, dec:u.szDecimals, vlm:v};
-        order.push(k);
+        m[u.name.toUpperCase()] = {lev:u.maxLeverage, dec:u.szDecimals};
       }
     });
     if(!Object.keys(m).length) return;
     HL_ASSETS = m;
-    var dl = $("hlAssets");
-    if(dl){
-      var frag = document.createDocumentFragment();
-      // 排序分两段，因为这两件事互相冲突：
-      //   · 纯字母序——整体可预期，但开头是 0G、2Z、AAVE 这类几乎没人碰的标的；
-      //   · 纯成交额序——头部很准，但前 20 名之后只占 5% 的成交额，顺序在用户眼里
-      //     就是一串噪音（TAO、WLD、CASHCAT、XPL……），想找某个标的只能从头翻。
-      // 因此：24h 成交额最高的 HL_TOP 个钉在最前（人们真正在交易的），其余一律
-      // 回到字母序（可以直接跳到某个字母去找）。已钉住的不再重复出现，否则
-      // 输入过滤时会看到两条一模一样的。
-      var alpha = order.slice().sort();
-      var top = order.filter(function(n){ return m[n].vlm > 0; })
-                     .sort(function(a,b){ return m[b].vlm - m[a].vlm; })
-                     .slice(0, HL_TOP);
-      var pinned = {};
-      top.forEach(function(n){ pinned[n] = 1; });
-      // 行情缺失时 top 为空，自动退回纯字母序——与加入成交额之前的行为一致。
-      top.concat(alpha.filter(function(n){ return !pinned[n]; })).forEach(function(name){
-        var o=document.createElement("option"); o.value=name; frag.appendChild(o);
-      });
-      dl.innerHTML=""; dl.appendChild(frag);
-    }
     onSymbolChange();
   }
 
@@ -1682,24 +1653,14 @@
     fetch(HL_URL, {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({type:'metaAndAssetCtxs'}),
+      body:JSON.stringify({type:'meta'}),
       signal: ctrl ? ctrl.signal : undefined
     })
     .then(function(r){ if(!r.ok) throw 0; return r.json(); })
     .then(function(d){
-      // metaAndAssetCtxs 返回 [meta, ctxs]，两个数组按下标一一对应。
-      // 行情部分缺失时不该拖垮杠杆/精度——照常降级到无排序信息。
-      var meta = (d && d[0]) || null, ctxs = (d && d[1]) || [];
-      if(!meta || !meta.universe) throw 0;
-      var u = meta.universe.map(function(a, i){
-        var c = ctxs[i];
-        return {
-          name:a.name, maxLeverage:a.maxLeverage, szDecimals:a.szDecimals,
-          isDelisted:a.isDelisted, vlm: c ? c.dayNtlVlm : 0
-        };
-      });
-      try{ localStorage.setItem(HL_CACHE, JSON.stringify({t:Date.now(), u:u})); }catch(e){}
-      hlApply(u);
+      if(!d || !d.universe) throw 0;
+      try{ localStorage.setItem(HL_CACHE, JSON.stringify({t:Date.now(), u:d.universe})); }catch(e){}
+      hlApply(d.universe);
     })
     .catch(function(err){
       // 网络失败要静默降级；但代码错误必须暴露出来，否则 bug 会被这里吞掉

@@ -18,8 +18,8 @@
             "The language switch now names the target language in that language: Chinese pages show English, English pages show 中文. Consistent across all eight pages."
           ],
           [
-            "Improved",
-            "The instrument list is now in two parts: the ten contracts with the highest 24-hour notional volume are pinned to the top, and everything else is alphabetical. A purely alphabetical list puts barely-traded instruments such as 0G, 2Z and AAVE at the front; a purely volume-ordered one makes everything past the top twenty — some 5% of volume — impossible to look up. Contract parameters now come from metaAndAssetCtxs, falling back to plain alphabetical order if market data is unavailable."
+            "Changed",
+            "The suggestion dropdown has been removed from the instrument field. With 177 listed contracts the list was awkward either way: alphabetical order put barely-traded instruments at the front, while volume order made everything past the top twenty impossible to look up. Traders already know which instrument they are opening, so the field is now plain text. Automatic lookup of max leverage and maintenance margin on input is unchanged."
           ],
           [
             "Fixed",
