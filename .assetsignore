@@ -5,3 +5,11 @@
 wrangler.jsonc
 .claude
 .DS_Store
+
+# 构建期文件：不是站点内容。pages/*.json 与法务页正文重复，
+# 被索引会造成重复内容；.py 是生成脚本，没有任何理由对外提供。
+build-en.py
+build-pages.py
+tools-icon.py
+pages
+README.md

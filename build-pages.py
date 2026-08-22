@@ -130,12 +130,14 @@ CSS = """
 STR = {
  "zh": {"home":"返回计算器","terms":"服务条款","privacy":"隐私政策","changelog":"更新日志","github":"源码",
         "updated":"最后更新","other":"/en/","otherLabel":"English","otherHreflang":"en",
+        "oglocale":"zh_CN","ogalt":"HYPERNOVA 加密合约仓位计算器",
         "note":"HYPERNOVA 是独立的第三方工具，与 Hyperliquid Labs 无隶属、赞助或背书关系。"
                "Hyperliquid 及其他提及的名称与标识为其各自所有者的商标。"
                "本站内容仅供研究与参考，不构成投资建议。",
         "copy":"© 2026 HYPERNOVA"},
  "en": {"home":"Back to calculator","terms":"Terms of Service","privacy":"Privacy Policy","changelog":"Changelog","github":"Source",
         "updated":"Last updated","other":"/","otherLabel":"中文","otherHreflang":"zh-Hans",
+        "oglocale":"en_US","ogalt":"HYPERNOVA crypto position size calculator",
         "note":"HYPERNOVA is an independent third-party tool with no affiliation, sponsorship or endorsement "
                "relationship with Hyperliquid Labs. Hyperliquid and any other names or marks mentioned are "
                "trademarks of their respective owners. Content is provided for research and reference only "
@@ -199,6 +201,21 @@ def TPL(lang, doc, tokens, body):
 <link rel="alternate" hreflang="en" href="{en_url}" />
 <link rel="alternate" hreflang="x-default" href="{zh_url}" />
 <meta name="robots" content="index, follow" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="HYPERNOVA" />
+<meta property="og:locale" content="{oglocale}" />
+<meta property="og:url" content="{url}" />
+<meta property="og:title" content="{title} · HYPERNOVA" />
+<meta property="og:description" content="{desc}" />
+<meta property="og:image" content="https://hypernova.vip/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="{ogalt}" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="{title} · HYPERNOVA" />
+<meta name="twitter:description" content="{desc}" />
+<meta name="twitter:image" content="https://hypernova.vip/og.png" />
+<meta name="twitter:image:alt" content="{ogalt}" />
 <meta name="theme-color" content="#04070a" />
 <meta name="color-scheme" content="dark" />
 <link rel="icon" href="/favicon.ico?v=6" sizes="16x16 32x32 48x48" />
@@ -252,12 +269,72 @@ def TPL(lang, doc, tokens, body):
            tokens=tokens, css=CSS,
            home=("/" if lang=="zh" else "/en/"), home_label=L["home"],
            other=(other_base+"/"), slug=doc["slug"], oh=L["otherHreflang"], ol=L["otherLabel"],
+           oglocale=L["oglocale"], ogalt=L["ogalt"],
            eyebrow=EYEBROW[lang]["releases" if "releases" in doc else "legal"],
            updated_label=L["updated"], updated=doc["updated"],
            lede=html.escape(doc["lede"]), body="\n\n".join(body),
            copy=L["copy"], terms=L["terms"], privacy=L["privacy"], github=L["github"],
            changelog=L["changelog"],
            note=html.escape(L["note"]), base=base)
+
+ERR404 = """<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>404 · HYPERNOVA</title>
+<meta name="robots" content="noindex, follow" />
+<meta name="theme-color" content="#04070a" />
+<meta name="color-scheme" content="dark" />
+<link rel="icon" href="/favicon.ico?v=6" sizes="16x16 32x32 48x48" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=6" sizes="180x180" />
+<style>
+{tokens}
+  *{{box-sizing:border-box;margin:0;padding:0}}
+  body{{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB",
+      "Microsoft YaHei",Roboto,Helvetica,Arial,sans-serif;
+    background:radial-gradient(1200px 560px at 50% -20%, rgba(45,212,191,.045), transparent 60%), var(--bg);
+    color:var(--text);line-height:1.6;min-height:100vh;font-variant-numeric:tabular-nums;
+    display:flex;align-items:center;justify-content:center;padding:24px;-webkit-font-smoothing:antialiased;
+  }}
+  .box{{text-align:center;max-width:460px}}
+  .mark{{
+    display:inline-block;font-weight:800;font-size:19px;letter-spacing:.10em;
+    color:var(--text);margin-bottom:26px;text-decoration:none;
+  }}
+  .mark span{{color:var(--accent)}}
+  .code{{
+    font-family:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+    font-size:15px;font-weight:700;letter-spacing:.14em;line-height:1;
+    color:var(--accent);text-transform:uppercase;
+  }}
+  h1{{font-size:22px;font-weight:700;letter-spacing:-.02em;margin:14px 0 10px}}
+  p{{color:var(--muted);font-size:14px;line-height:1.75;margin-bottom:28px}}
+  .en{{display:block;font-size:13px;color:var(--faint);font-weight:400;margin-top:6px}}
+  a.btn{{
+    display:inline-block;padding:11px 22px;border-radius:8px;background:transparent;
+    border:1px solid var(--line-strong);color:var(--text2);font-weight:600;
+    font-size:14px;text-decoration:none;transition:color .15s,border-color .15s;
+  }}
+  a.btn:hover{{color:var(--text);border-color:var(--muted)}}
+  :focus-visible{{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}}
+  @media(prefers-reduced-motion:reduce){{*{{transition:none!important}}}}
+</style>
+</head>
+<body>
+  <main class="box">
+    <a class="mark" href="/">HYPER<span>NOVA</span></a>
+    <div class="code">Error 404</div>
+    <h1>页面不存在<span class="en">Page not found</span></h1>
+    <p>所请求的地址在本站不存在，可能已被移除或从未发布。<br>请返回首页继续使用仓位计算器。
+       <span class="en">The requested address does not exist on this site. Please return to the homepage.</span></p>
+    <a class="btn" href="/">返回首页 · Return to homepage</a>
+  </main>
+</body>
+</html>
+"""
+
+def build_404(tokens):
+    return "<!DOCTYPE html>\n<html lang=\"zh-CN\">\n<head>\n" + ERR404.format(tokens=tokens)
+
 
 def main():
     tokens = tokens_from_index()
@@ -277,7 +354,8 @@ def main():
             os.makedirs(d, exist_ok=True)
             io.open(os.path.join(d, "index.html"), "w", encoding="utf-8").write(build(lang, key, doc, tokens))
             n+=1
-    print("已生成 %d 个法务页面（令牌取自 index.html，%d 个变量）" % (n, tokens.count("--")))
+    io.open("404.html", "w", encoding="utf-8").write(build_404(tokens))
+    print("已生成 %d 个法务页面 + 404.html（令牌取自 index.html，%d 个变量）" % (n, tokens.count("--")))
 
 if __name__ == "__main__":
     main()

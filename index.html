@@ -12,7 +12,7 @@
 <link rel="alternate" hreflang="en" href="https://hypernova.vip/en/" />
 <link rel="alternate" hreflang="x-default" href="https://hypernova.vip/" />
 <meta name="robots" content="index, follow, max-image-preview:large" />
-<meta name="theme-color" content="#06070b" />
+<meta name="theme-color" content="#04070a" />
 <meta name="color-scheme" content="dark" />
 <link rel="icon" href="/favicon.ico?v=6" sizes="16x16 32x32 48x48" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=6" sizes="180x180" />
@@ -24,8 +24,8 @@
 <meta property="og:url" content="https://hypernova.vip/" />
 <meta property="og:image" content="https://hypernova.vip/og.png" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="HYPERNOVA · Crypto Position Calculator" />
-<meta name="twitter:description" content="Size positions from risk, estimate liquidation and R:R, with every formula published. Runs locally; no data leaves your device." />
+<meta name="twitter:title" content="HYPERNOVA · 加密合约仓位计算器" />
+<meta name="twitter:description" content="由风险反推仓位规模，估算强制平仓价与盈亏比，全部公式公开。运算在本地完成，不上传交易数据。" />
 <meta name="twitter:image" content="https://hypernova.vip/og.png" />
 <meta property="og:site_name" content="HYPERNOVA" />
 <meta property="og:locale" content="zh_CN" />
@@ -33,7 +33,7 @@
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content="HYPERNOVA 加密合约仓位计算器" />
-<meta name="twitter:image:alt" content="HYPERNOVA crypto position size calculator" />
+<meta name="twitter:image:alt" content="HYPERNOVA 加密合约仓位计算器" />
 
 <!-- 结构化数据：让搜索引擎知道这是一个免费的在线工具 -->
 <script type="application/ld+json">
@@ -102,8 +102,11 @@
     /* 文字：四级，正文不用纯白，带极轻青调 */
     --text:#e6edf0;
     --text2:#a6b3ba;
-    --muted:#6b7a83;
-    --faint:#4e5b64;
+    /* 提亮至 WCAG AA：旧值 #6b7a83 / #4e5b64 在面板底色上只有 4.18 / 2.65，
+       而这两级用于结果行标签、章节导语、字段说明与输入占位符等正文内容。
+       现最低 5.24 / 4.51，色相饱和度不变，四级层次仍可分辨。 */
+    --muted:#798b95;
+    --faint:#6d808c;
 
     /* 语义色：整体加深去饱和。亮色系在金融语境里显消费级 */
     --accent:#2dd4bf;
@@ -418,7 +421,7 @@
   .fcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);padding:22px}
   .fcard .fi{margin-bottom:14px;color:var(--accent);display:flex}
   .fcard .fi svg{width:26px;height:26px}
-  .fcard h4{font-size:var(--fs-md);font-weight:700;margin-bottom:7px;letter-spacing:-.2px}
+  .fcard h3{font-size:var(--fs-md);font-weight:700;margin-bottom:7px;letter-spacing:-.2px}
   .fcard p{color:var(--muted);font-size:var(--fs-base);line-height:1.65}
 
   /* ---------- 计算方法 ---------- */
@@ -474,6 +477,15 @@
   @media(max-width:860px){.journal-grid{grid-template-columns:1fr}}
   .jform{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
   .jform .jspan2{grid-column:1 / -1}
+  .skip-link{
+    position:absolute;left:-9999px;top:0;z-index:100;
+    background:var(--accent);color:#04070a;font-weight:700;
+    padding:11px 18px;border-radius:0 0 var(--r) 0;text-decoration:none;
+    white-space:nowrap;   /* 窄屏下也不能被挤成竖排 */
+  }
+  .skip-link:focus{left:0}
+  .jnotice{color:var(--red-text);font-size:var(--fs-sm);line-height:1.6;margin:2px 0 10px;display:none}
+  .jnotice.on{display:block}
   .jbtn{width:100%;margin:4px 0 14px}
   #j_list{display:flex;flex-direction:column}
   .jtrade{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line-soft);font-size:var(--fs-sm);min-width:0}
@@ -637,6 +649,9 @@
 
 <span id="top" aria-hidden="true"></span>
 
+<!-- 键盘用户可借此越过顶栏直达正文；平时不可见，获得焦点时显现 -->
+<a class="skip-link" href="#main" data-i18n="skip_link">跳到主要内容</a>
+
 <!-- ===== NAV ===== -->
 <header>
   <div class="wrap nav">
@@ -656,6 +671,8 @@
   </div>
 </header>
 
+<main id="main">
+
 <!-- ===== HERO ===== -->
 <div class="wrap hero">
   <div class="pill"> <span data-i18n="hero_pill">全部运算在本地浏览器完成 · 不上传任何交易数据</span></div>
@@ -668,10 +685,10 @@
 </div>
 
 <!-- ===== CALCULATOR ===== -->
-<section id="calc">
+<section id="calc" aria-labelledby="calc-h">
   <div class="wrap">
     <div class="sec-title">01 &nbsp;Calculator</div>
-    <div class="sec-h" data-i18n="calc_h">加密合约仓位计算器</div>
+    <h2 class="sec-h" id="calc-h" data-i18n="calc_h">加密合约仓位计算器</h2>
 
     <div class="calc">
       <!-- INPUTS -->
@@ -807,10 +824,10 @@
 </section>
 
 <!-- ===== TRADE JOURNAL ===== -->
-<section id="journal">
+<section id="journal" aria-labelledby="journal-h">
   <div class="wrap">
     <div class="sec-title">02 &nbsp;Journal</div>
-    <div class="sec-h" data-i18n="journal_h">交易复盘日志</div>
+    <h2 class="sec-h" id="journal-h" data-i18n="journal_h">交易复盘日志</h2>
     <p class="journal-intro" data-i18n="journal_intro">记录已平仓的交易，自动统计真实胜率、每笔期望值、盈利因子与资金曲线。单笔盈亏以 R 倍数计量，即实际盈亏与该笔止损风险的比值，从而使不同仓位规模的交易可以横向比较。全部记录仅保存于本机浏览器，不会上传。</p>
 
     <div class="journal-grid">
@@ -828,6 +845,7 @@
           <div class="field jspan2"><label for="j_pnl" data-i18n="j_pnl">实际盈亏 <span class="hint">盈利为正，亏损为负</span></label><div class="input-wrap"><input type="number" id="j_pnl" step="any"><span class="suffix">USDT</span></div></div>
           <div class="field jspan2"><label for="j_note" data-i18n="j_note">备注 选填</label><input type="text" id="j_note"></div>
         </div>
+        <div class="jnotice" id="j_notice" role="alert" aria-live="assertive"></div>
         <button class="btn btn-primary jbtn" id="j_add" data-i18n="j_add_btn">录入</button>
         <button class="btn btn-ghost jbtn" id="j_cancel" data-i18n="j_cancel" style="display:none">取消编辑</button>
         <div id="j_list"></div>
@@ -866,24 +884,24 @@
 </section>
 
 <!-- ===== FEATURES ===== -->
-<section id="features">
+<section id="features" aria-labelledby="features-h">
   <div class="wrap">
     <div class="sec-title">03 &nbsp;Principles</div>
-    <div class="sec-h" data-i18n="feat_h">为什么以风险为起点</div>
+    <h2 class="sec-h" id="features-h" data-i18n="feat_h">为什么以风险为起点</h2>
     <div class="feat">
       <div class="fcard reveal">
         <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.2"/><path d="M12 1.5v3.5M12 19v3.5M1.5 12h3.5M19 12h3.5"/></svg></div>
-        <h4 data-i18n="feat1_t">先确定亏损上限，再确定仓位</h4>
+        <h3 data-i18n="feat1_t">先确定亏损上限，再确定仓位</h3>
         <p data-i18n="feat1_p">专业仓位管理的顺序，是先量化单笔可承受亏损，再由止损距离反推应开仓数量；而非先决定开多大仓，再被动接受相应的亏损敞口。</p>
       </div>
       <div class="fcard reveal">
         <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l7.5 2.8v5.7c0 4.8-3.2 8-7.5 10.5-4.3-2.5-7.5-5.7-7.5-10.5V5.3L12 2.5z"/><path d="M9 12l2 2 4-4.2"/></svg></div>
-        <h4 data-i18n="feat2_t">强制平仓价前置校验</h4>
+        <h3 data-i18n="feat2_t">强制平仓价前置校验</h3>
         <p data-i18n="feat2_p">杠杆过高时，强制平仓价可能先于止损价被触及，止损将失去保护作用。本工具计算强平价位并在该情形下发出风险提示。</p>
       </div>
       <div class="fcard reveal">
         <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M6 21h12M5 7h14M5 7l-2.5 5.5a3 3 0 006 0L6 7M19 7l-2.5 5.5a3 3 0 006 0L19 7"/></svg></div>
-        <h4 data-i18n="feat3_t">盈亏比与费后净额</h4>
+        <h3 data-i18n="feat3_t">盈亏比与费后净额</h3>
         <p data-i18n="feat3_p">自动计算风险回报比（R:R），并给出扣除双边手续费后的净盈利与净亏损，避免以毛利估算一笔交易的实际价值。</p>
       </div>
     </div>
@@ -892,10 +910,10 @@
 
 <!-- ===== ABOUT ===== -->
 <!-- ===== 计算方法 ===== -->
-<section id="method">
+<section id="method" aria-labelledby="method-h">
   <div class="wrap">
     <div class="sec-title">04 &nbsp;Methodology</div>
-    <div class="sec-h" data-i18n="method_h">计算方法</div>
+    <h2 class="sec-h" id="method-h" data-i18n="method_h">计算方法</h2>
     <p class="sec-lede" data-i18n="method_lede">本页公开工具使用的全部公式。所有数值均由下列公式直接得出，不含任何未披露的调整项。符号约定：E 为入场价，S 为止损价，T 为止盈价，A 为账户总额，r 为单笔风险比例，L 为杠杆倍数，m 为维持保证金率，f 为单边手续费率，Q 为开仓数量，N 为名义价值。</p>
 
     <div class="method-grid">
@@ -949,10 +967,10 @@
   </div>
 </section>
 
-<section id="about">
+<section id="about" aria-labelledby="about-h">
   <div class="wrap">
     <div class="sec-title">05 &nbsp;About</div>
-    <div class="sec-h" data-i18n="about_h">关于 HYPERNOVA</div>
+    <h2 class="sec-h" id="about-h" data-i18n="about_h">关于 HYPERNOVA</h2>
     <div class="about reveal">
       <p data-i18n="about_p1">HYPERNOVA 是面向加密衍生品交易者的风险管理工具站，目标是把机构通行的仓位管理方法，做成任何人都能直接使用的工具。</p>
       <p data-i18n="about_p2">仓位计算器与交易复盘日志是目前已上线的两项工具。后续将继续扩充与风险控制相关的功能，并保持计算方法完全公开。</p>
@@ -962,6 +980,8 @@
 </section>
 
 <!-- ===== FOOTER ===== -->
+</main>
+
 <footer>
   <div class="wrap">
     <div class="foot-top">
@@ -981,7 +1001,7 @@
         <a href="https://github.com/chnwangk/hypernova" rel="noopener" data-i18n="nav_source">源码</a>
       </nav>
       <dl class="foot-meta">
-        <div><dt class="caps" data-i18n="foot_version">版本</dt><dd>v5.3</dd></div>
+        <div><dt class="caps" data-i18n="foot_version">版本</dt><dd>v5.4</dd></div>
         <div><dt class="caps" data-i18n="foot_updated">最后更新</dt><dd>2026-08-23</dd></div>
         <div><dt class="caps" data-i18n="foot_data">数据存储</dt><dd data-i18n="foot_data_v">仅本机浏览器</dd></div>
       </dl>
@@ -1082,6 +1102,7 @@
       m4_t:'四、盈亏比与 R 倍数',
       m4_p:'盈亏比为止盈距离与止损距离之比，在开仓前即可确定。R 倍数为交易结束后的实际盈亏与该笔止损风险之比，用于横向比较不同规模的交易。',
       foot_desc:'风险驱动的加密衍生品仓位管理工具。全部运算在本地完成。',
+      skip_link:'跳到主要内容',
       nav_terms:'服务条款', nav_privacy:'隐私政策', nav_changelog:'更新日志', nav_source:'源码',
       foot_affil:'HYPERNOVA 是独立的第三方工具，与 Hyperliquid Labs 无隶属、赞助或背书关系。Hyperliquid 为其所有者的商标。',
       foot_version:'版本', foot_updated:'最后更新', foot_data:'数据存储', foot_data_v:'仅本机浏览器',
@@ -1173,6 +1194,7 @@
       m4_t:'IV. R:R and R-multiples',
       m4_p:'The risk-to-reward ratio is the target distance divided by the stop distance and is known before entry. The R-multiple is the realised result divided by the risk taken on that trade, which makes trades of different sizes comparable.',
       foot_desc:'A risk-driven position management tool for crypto derivatives. All computation runs locally.',
+      skip_link:'Skip to main content',
       nav_terms:'Terms of Service', nav_privacy:'Privacy Policy', nav_changelog:'Changelog', nav_source:'Source',
       foot_affil:'HYPERNOVA is an independent third-party tool with no affiliation, sponsorship or endorsement relationship with Hyperliquid Labs. Hyperliquid is a trademark of its owner.',
       foot_version:'Version', foot_updated:'Last updated', foot_data:'Data storage', foot_data_v:'Local browser only',
@@ -1203,6 +1225,10 @@
       jStreakVal:function(w,l){ return w+" 连胜 / "+l+" 连亏"; },
       jImportOk:function(n){ return "成功导入 "+n+" 笔交易。"; },
       jImportErr:"导入失败：文件格式不正确。",
+      jImportSkip:function(n){ return "（另有 "+n+" 条因缺少有效的风险或盈亏数值而跳过）"; },
+      jSaveFail:"交易日志未能保存到本机浏览器。可能是浏览器处于隐私模式，或本站的存储空间已满。本次录入在刷新页面后会丢失，建议先用「导出备份」保存到文件。",
+      jRiskBad:"请填写本笔风险 1R，且须为大于 0 的数值——R 倍数以它作分母，为 0 时无从计算。",
+      jPnlBad:"请填写实际盈亏金额，盈利为正、亏损为负；未盈未亏填 0。",
       jSaveEdit:"保存修改",
       vizNames:{entry:"入场",stop:"止损",target:"止盈",liq:"强平"},
       copied:"已复制",
@@ -1242,6 +1268,10 @@
       jStreakVal:function(w,l){ return w+"W / "+l+"L"; },
       jImportOk:function(n){ return "Imported "+n+" trades."; },
       jImportErr:"Import failed: invalid file format.",
+      jImportSkip:function(n){ return " (" + n + " further entries were skipped for want of a valid risk or P&L figure.)"; },
+      jSaveFail:"The journal could not be saved to this browser. It may be in private mode, or this site's storage may be full. Entries made now will be lost when the page is reloaded; consider using Export to save them to a file first.",
+      jRiskBad:"Enter the risk for this trade (1R) as a number greater than zero. It is the denominator of the R-multiple, so zero leaves nothing to compute.",
+      jPnlBad:"Enter the realised profit or loss: positive for a gain, negative for a loss, zero for a scratch.",
       jSaveEdit:"Save changes",
       vizNames:{entry:"Entry",stop:"Stop",target:"Target",liq:"Liq."},
       copied:"Copied",
@@ -1556,7 +1586,9 @@
     if(ready && isFinite(liq)){
       var liqBeforeStop = side==="long" ? (liq>=stop) : (liq<=stop);
       if(liqBeforeStop){
-        alerts.push(["danger", M.liqBefore(fmt(liq,2), fmt(stop,2))]);
+        // 价格一律用 fmtPx（与结果行同一套精度）。固定两位小数会让
+        // 低价合约（HMSTR 0.000191、TURBO 0.000998 等）显示成 0.00。
+        alerts.push(["danger", M.liqBefore(fmtPx(liq), fmtPx(stop))]);
       }
     }
     if(ready && stopDistPct>0 && stopDistPct<0.003){
@@ -1806,7 +1838,22 @@
   /* ---------- 交易日志 ---------- */
   var trades = [];
   try { trades = JSON.parse(localStorage.getItem('hn_trades')||'[]'); if(!Array.isArray(trades)) trades=[]; } catch(e){ trades=[]; }
-  function saveTrades(){ try{ localStorage.setItem('hn_trades', JSON.stringify(trades)); }catch(e){} }
+  // 日志是用户唯一的数据。写入失败（隐私模式、配额已满）若静默吞掉，
+  // 用户会以为记录已保存，刷新后全部消失且毫无提示。必须当场告知。
+  var storageWarned = false;
+  function saveTrades(){
+    try{
+      localStorage.setItem('hn_trades', JSON.stringify(trades));
+      storageWarned = false;
+      return true;
+    }catch(e){
+      if(!storageWarned){
+        storageWarned = true;
+        window.alert(MSG[LANG].jSaveFail);
+      }
+      return false;
+    }
+  }
 
   function fmtR(r){ return (r>0?"+":r<0?"−":"")+Math.abs(r).toFixed(2)+"R"; }
   function fmtSigned(n){ return (n>0?"+":n<0?"−":"")+fmt(Math.abs(n),2); }
@@ -1816,11 +1863,18 @@
     if(editingId!==null){ $("j_add").textContent=MSG[LANG].jSaveEdit; $("j_cancel").style.display="block"; }
     else { $("j_add").textContent=T[LANG].j_add_btn; $("j_cancel").style.display="none"; }
   }
+  function jNotice(msg){
+    var el=$("j_notice"); if(!el) return;
+    if(!msg){ el.textContent=""; el.className="jnotice"; return; }
+    el.textContent=msg; el.className="jnotice on";
+  }
+
   function addTrade(){
     var risk = parseFloat($("j_risk").value);
     var pnl = parseFloat($("j_pnl").value);
-    if(isNaN(risk) || risk<=0){ $("j_risk").focus(); return; }
-    if(isNaN(pnl)){ $("j_pnl").focus(); return; }
+    // 只移动焦点而不说明原因，用户只会看到「点了没反应」
+    if(isNaN(risk) || risk<=0){ jNotice(MSG[LANG].jRiskBad); $("j_risk").focus(); return; }
+    if(isNaN(pnl)){ jNotice(MSG[LANG].jPnlBad); $("j_pnl").focus(); return; }
     var data={
       date: $("j_date").value || "",
       symbol: ($("j_symbol").value||"").trim().toUpperCase().slice(0,12),
@@ -1837,6 +1891,7 @@
     }
     saveTrades();
     try{ localStorage.setItem('hn_jprefs', JSON.stringify({symbol:data.symbol, side:data.side})); }catch(e){}
+    jNotice("");
     $("j_pnl").value=""; $("j_note").value="";   // 保留日期/标的/风险，方便连续录入
     renderJournal();
   }
@@ -1873,20 +1928,28 @@
         if(!arr) throw 0;
         var seen={}; trades.forEach(function(t){ seen[t.id]=true; });
         var added=0;
+        var skipped=0;
         arr.forEach(function(t){
-          if(!t || typeof t.risk==="undefined" || typeof t.pnl==="undefined") return;
+          if(!t || typeof t.risk==="undefined" || typeof t.pnl==="undefined"){ skipped++; return; }
+          // 与手动录入同一套校验：风险必须为正数，否则 R 倍数无从计算，
+          // 该条会以 R=0 混进统计，悄悄拉低期望值。
+          var _r=Number(t.risk), _p=Number(t.pnl);
+          if(!isFinite(_r) || _r<=0 || !isFinite(_p)){ skipped++; return; }
           if(t.id && seen[t.id]) return;   // 已存在，跳过（避免重复）
           var id = t.id || (Date.now()+Math.floor(Math.random()*100000));
           seen[id]=true;
           trades.push({ id:id, date:(t.date||"").toString(), symbol:(t.symbol||"").toString().slice(0,12),
-            side:(t.side==="short"?"short":"long"), risk:Number(t.risk)||0, pnl:Number(t.pnl)||0,
+            side:(t.side==="short"?"short":"long"), risk:_r, pnl:_p,
             note:(t.note||"").toString().slice(0,140) });
           added++;
         });
-        saveTrades(); renderJournal();
-        window.alert(MSG[LANG].jImportOk(added));
+        if(saveTrades()){
+          renderJournal();
+          window.alert(MSG[LANG].jImportOk(added) + (skipped ? MSG[LANG].jImportSkip(skipped) : ""));
+        }
       }catch(err){ window.alert(MSG[LANG].jImportErr); }
     };
+    reader.onerror=function(){ window.alert(MSG[LANG].jImportErr); };
     reader.readAsText(file);
   }
 

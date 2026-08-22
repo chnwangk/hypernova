@@ -4,7 +4,7 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.hyperliquid.xyz https://cloudflareinsights.com; object-src 'none'; frame-ancestors 'self'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.hyperliquid.xyz; object-src 'none'; frame-ancestors 'self'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests
 
 # 图标：此前设 30 天缓存，导致换了图标之后老访客一个月都看不到新的。
 # 品牌资产会改，就不该按「基本不变」来设缓存。改为 1 小时 + 后台再校验：

@@ -6,6 +6,60 @@
     "lede": "Every public change to HYPERNOVA is recorded here, including bugs that were fixed. A calculation tool is only as trustworthy as its willingness to admit what it got wrong — so fixes are listed as fully as new features.",
     "releases": [
       {
+        "v": "5.4",
+        "date": "2026-08-23",
+        "items": [
+          [
+            "Fixed",
+            "The liquidation warning read 0.00 for low-priced instruments. The notice “liquidation price X sits before stop price Y” rendered both prices at two decimal places, while 29 of the 177 listed Hyperliquid perpetuals trade below $0.01 and 134 below $1. For those instruments the site's single most important warning read “liquidation price 0.00 sits before stop price 0.00”. Both figures now use the same adaptive precision as the results panel."
+          ],
+          [
+            "Fixed",
+            "A failure to save the journal produced no warning at all. In private browsing, or once the storage quota is full, the write error was swallowed silently and entries vanished on reload while the user believed them saved. The failure is now reported at once, with a suggestion to export a backup first, and only once per episode."
+          ],
+          [
+            "Fixed",
+            "Imported entries were not validated the way manually entered ones are. Manual entry rejects a risk of zero or less; import accepted such rows and counted them as R=0, quietly depressing expectancy. Validation is now shared, skipped rows are reported honestly, and a failure to read the file is no longer silent."
+          ],
+          [
+            "Improved",
+            "Document structure restored. The five section headings were plain divs, so a screen reader's heading outline contained only the hero title and the panel sub-headings — “Position calculator”, “Trading journal” and “Methodology” were absent entirely — and the page had no main landmark. Section headings are now h2, the principle cards h3 (previously h4, skipping a level), the content sits inside main, and a skip link has been added."
+          ],
+          [
+            "Improved",
+            "Text contrast now meets WCAG AA. The two muted greys used for result-row labels, section ledes, field hints and input placeholders measured 4.18:1 and 2.65:1 against the panel background, below the 4.5:1 required for body text. The minimum is now 4.51:1, with hue and hierarchy unchanged."
+          ],
+          [
+            "Improved",
+            "When a journal entry's risk or P&L is malformed, the form previously just moved the cursor without saying why. It now explains."
+          ],
+          [
+            "Fixed",
+            "The Chinese pages carried English Twitter card titles and descriptions, so sharing them on X showed English text that did not match the Open Graph tags."
+          ],
+          [
+            "Improved",
+            "The legal and changelog pages carried no social card tags at all and produced no preview when shared. All six now do."
+          ],
+          [
+            "Improved",
+            "The 404 page has been folded into the build. It was a separately hand-written palette in which seven of eight design tokens had drifted from the rest of the site, and it still carried a long-abandoned gradient logo. Its tokens now come from the homepage and the mark matches the header."
+          ],
+          [
+            "Improved",
+            "Content Security Policy tightened: the analytics domain, never used, has been removed so the policy matches the privacy policy's statement that the site carries no analytics script."
+          ],
+          [
+            "Improved",
+            "Build scripts and page source JSON are no longer served as public assets — they are build-time files, and pages/*.json duplicates the legal page text."
+          ],
+          [
+            "Improved",
+            "The English homepage description tag has been cut from 333 characters to 158; the theme colour now matches the actual page background."
+          ]
+        ]
+      },
+      {
         "v": "5.3",
         "date": "2026-08-23",
         "items": [

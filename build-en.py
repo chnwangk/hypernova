@@ -76,16 +76,26 @@ def main():
                '<meta property="og:locale" content="en_US" />')
     s = rep(s, '<meta property="og:locale:alternate" content="en_US" />',
                '<meta property="og:locale:alternate" content="zh_CN" />')
-    s = re.sub(r'<meta name="description" content="[^"]*" />',
-               '<meta name="description" content="Position size calculator for Hyperliquid traders: enter a symbol and the contract&rsquo;s '
-               'max leverage and maintenance margin are filled in automatically. Derive position size, required margin, estimated liquidation '
-               'price and R:R from the loss you can accept. Every formula is published. All computation runs locally in your browser." />',
-               s, count=1)
-    s = re.sub(r'<meta property="og:title" content="[^"]*" />',
-               '<meta property="og:title" content="HYPERNOVA &middot; Hyperliquid Position Calculator" />', s, count=1)
-    s = re.sub(r'<meta property="og:description" content="[^"]*" />',
-               '<meta property="og:description" content="Size positions from risk, with Hyperliquid contract parameters filled in automatically. '
-               'Every formula published. Runs locally." />', s, count=1)
+    # 搜索结果只显示约 160 字符，写长了等于白写
+    s = resub(s, r'<meta name="description" content="[^"]*" />',
+              '<meta name="description" content="Position sizing for Hyperliquid traders: enter a symbol and the contract&rsquo;s leverage '
+              'cap and maintenance margin fill in automatically. Every formula published." />')
+    s = resub(s, r'<meta property="og:title" content="[^"]*" />',
+              '<meta property="og:title" content="HYPERNOVA &middot; Hyperliquid Position Calculator" />')
+    s = resub(s, r'<meta property="og:description" content="[^"]*" />',
+              '<meta property="og:description" content="Size positions from risk, with Hyperliquid contract parameters filled in '
+              'automatically. Every formula published. Runs locally." />')
+
+    # twitter 三条与 og 同源，中文版里是中文，这里一并反向
+    s = resub(s, r'<meta name="twitter:title" content="[^"]*" />',
+              '<meta name="twitter:title" content="HYPERNOVA &middot; Crypto Position Calculator" />')
+    s = resub(s, r'<meta name="twitter:description" content="[^"]*" />',
+              '<meta name="twitter:description" content="Size positions from risk, estimate liquidation and R:R, with every formula '
+              'published. Runs locally; no data leaves your device." />')
+    s = resub(s, r'<meta name="twitter:image:alt" content="[^"]*" />',
+              '<meta name="twitter:image:alt" content="HYPERNOVA crypto position size calculator" />')
+    s = resub(s, r'<meta property="og:image:alt" content="[^"]*" />',
+              '<meta property="og:image:alt" content="HYPERNOVA crypto position size calculator" />')
 
     # 4) 语言切换链接反向
     s = rep(s,

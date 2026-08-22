@@ -11,6 +11,21 @@
 <link rel="alternate" hreflang="en" href="https://hypernova.vip/en/changelog/" />
 <link rel="alternate" hreflang="x-default" href="https://hypernova.vip/changelog/" />
 <meta name="robots" content="index, follow" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="HYPERNOVA" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://hypernova.vip/en/changelog/" />
+<meta property="og:title" content="Changelog · HYPERNOVA" />
+<meta property="og:description" content="Every public change to HYPERNOVA is recorded here, including bugs that were fixed. A calculation tool is only as trustworthy as its willingness to adm" />
+<meta property="og:image" content="https://hypernova.vip/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="HYPERNOVA crypto position size calculator" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Changelog · HYPERNOVA" />
+<meta name="twitter:description" content="Every public change to HYPERNOVA is recorded here, including bugs that were fixed. A calculation tool is only as trustworthy as its willingness to adm" />
+<meta name="twitter:image" content="https://hypernova.vip/og.png" />
+<meta name="twitter:image:alt" content="HYPERNOVA crypto position size calculator" />
 <meta name="theme-color" content="#04070a" />
 <meta name="color-scheme" content="dark" />
 <link rel="icon" href="/favicon.ico?v=6" sizes="16x16 32x32 48x48" />
@@ -33,8 +48,11 @@
     /* 文字：四级，正文不用纯白，带极轻青调 */
     --text:#e6edf0;
     --text2:#a6b3ba;
-    --muted:#6b7a83;
-    --faint:#4e5b64;
+    /* 提亮至 WCAG AA：旧值 #6b7a83 / #4e5b64 在面板底色上只有 4.18 / 2.65，
+       而这两级用于结果行标签、章节导语、字段说明与输入占位符等正文内容。
+       现最低 5.24 / 4.51，色相饱和度不变，四级层次仍可分辨。 */
+    --muted:#798b95;
+    --faint:#6d808c;
 
     /* 语义色：整体加深去饱和。亮色系在金融语境里显消费级 */
     --accent:#2dd4bf;
@@ -194,6 +212,22 @@
   <h1>Changelog</h1>
   <div class="updated">Last updated 2026-08-23</div>
   <p class="lede">Every public change to HYPERNOVA is recorded here, including bugs that were fixed. A calculation tool is only as trustworthy as its willingness to admit what it got wrong — so fixes are listed as fully as new features.</p>
+
+      <section class="rel">
+        <div class="rel-h"><span class="rel-v">v5.4</span><span class="rel-d">2026-08-23</span></div>
+        <div class="chg"><span class="tag fix">Fixed</span><p>The liquidation warning read 0.00 for low-priced instruments. The notice “liquidation price X sits before stop price Y” rendered both prices at two decimal places, while 29 of the 177 listed Hyperliquid perpetuals trade below $0.01 and 134 below $1. For those instruments the site&#x27;s single most important warning read “liquidation price 0.00 sits before stop price 0.00”. Both figures now use the same adaptive precision as the results panel.</p></div>
+        <div class="chg"><span class="tag fix">Fixed</span><p>A failure to save the journal produced no warning at all. In private browsing, or once the storage quota is full, the write error was swallowed silently and entries vanished on reload while the user believed them saved. The failure is now reported at once, with a suggestion to export a backup first, and only once per episode.</p></div>
+        <div class="chg"><span class="tag fix">Fixed</span><p>Imported entries were not validated the way manually entered ones are. Manual entry rejects a risk of zero or less; import accepted such rows and counted them as R=0, quietly depressing expectancy. Validation is now shared, skipped rows are reported honestly, and a failure to read the file is no longer silent.</p></div>
+        <div class="chg"><span class="tag imp">Improved</span><p>Document structure restored. The five section headings were plain divs, so a screen reader&#x27;s heading outline contained only the hero title and the panel sub-headings — “Position calculator”, “Trading journal” and “Methodology” were absent entirely — and the page had no main landmark. Section headings are now h2, the principle cards h3 (previously h4, skipping a level), the content sits inside main, and a skip link has been added.</p></div>
+        <div class="chg"><span class="tag imp">Improved</span><p>Text contrast now meets WCAG AA. The two muted greys used for result-row labels, section ledes, field hints and input placeholders measured 4.18:1 and 2.65:1 against the panel background, below the 4.5:1 required for body text. The minimum is now 4.51:1, with hue and hierarchy unchanged.</p></div>
+        <div class="chg"><span class="tag imp">Improved</span><p>When a journal entry&#x27;s risk or P&amp;L is malformed, the form previously just moved the cursor without saying why. It now explains.</p></div>
+        <div class="chg"><span class="tag fix">Fixed</span><p>The Chinese pages carried English Twitter card titles and descriptions, so sharing them on X showed English text that did not match the Open Graph tags.</p></div>
+        <div class="chg"><span class="tag imp">Improved</span><p>The legal and changelog pages carried no social card tags at all and produced no preview when shared. All six now do.</p></div>
+        <div class="chg"><span class="tag imp">Improved</span><p>The 404 page has been folded into the build. It was a separately hand-written palette in which seven of eight design tokens had drifted from the rest of the site, and it still carried a long-abandoned gradient logo. Its tokens now come from the homepage and the mark matches the header.</p></div>
+        <div class="chg"><span class="tag imp">Improved</span><p>Content Security Policy tightened: the analytics domain, never used, has been removed so the policy matches the privacy policy&#x27;s statement that the site carries no analytics script.</p></div>
+        <div class="chg"><span class="tag imp">Improved</span><p>Build scripts and page source JSON are no longer served as public assets — they are build-time files, and pages/*.json duplicates the legal page text.</p></div>
+        <div class="chg"><span class="tag imp">Improved</span><p>The English homepage description tag has been cut from 333 characters to 158; the theme colour now matches the actual page background.</p></div>
+      </section>
 
       <section class="rel">
         <div class="rel-h"><span class="rel-v">v5.3</span><span class="rel-d">2026-08-23</span></div>

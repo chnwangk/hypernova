@@ -4,28 +4,85 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>404 · HYPERNOVA</title>
-<meta name="robots" content="noindex" />
-<meta name="theme-color" content="#06070b" />
-<link rel="icon" href="/favicon.ico" sizes="any" />
+<meta name="robots" content="noindex, follow" />
+<meta name="theme-color" content="#04070a" />
+<meta name="color-scheme" content="dark" />
+<link rel="icon" href="/favicon.ico?v=6" sizes="16x16 32x32 48x48" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=6" sizes="180x180" />
 <style>
-  :root{--bg:#05070a;--text:#e8ecf3;--text2:#aab4c6;--muted:#6f7a90;--accent:#2dd4bf;--brand:#7c5cff;--line:#1c2230;--line-strong:#28303f}
+  :root{
+    /* 表面：中性色统一带一点青调，与数据主色同源，避免中性灰的廉价感 */
+    --bg:#04070a;
+    --bg2:#070b0f;
+    --panel:#0a0f14;
+    --panel2:#0e141a;
+    --inset:#05090c;
+
+    /* 结构线：主线只有一档，另两档仅用于极弱分隔与强调边界 */
+    --line:#1a232b;
+    --line-strong:#27333c;
+    --line-soft:#121a20;
+
+    /* 文字：四级，正文不用纯白，带极轻青调 */
+    --text:#e6edf0;
+    --text2:#a6b3ba;
+    /* 提亮至 WCAG AA：旧值 #6b7a83 / #4e5b64 在面板底色上只有 4.18 / 2.65，
+       而这两级用于结果行标签、章节导语、字段说明与输入占位符等正文内容。
+       现最低 5.24 / 4.51，色相饱和度不变，四级层次仍可分辨。 */
+    --muted:#798b95;
+    --faint:#6d808c;
+
+    /* 语义色：整体加深去饱和。亮色系在金融语境里显消费级 */
+    --accent:#2dd4bf;
+    --accent-deep:#14a89a;
+    --brand:#6d5ce0;
+    --brand-hover:#5c4cc9;
+    --green:#26a37c;
+    --green-text:#4cbf9c;
+    --red:#e0687f;
+    --red-text:#eb8497;
+    --amber:#d99a35;
+    --amber-text:#e0ad5c;
+
+    /* 圆角：再收一档，贴近专业终端的直角感 */
+    --r-lg:8px;
+    --r:6px;
+    --r-sm:4px;
+
+    /* 排版刻度 */
+    --fs-micro:11px;
+    --fs-xs:12px;
+    --fs-sm:13px;
+    --fs-base:14px;
+    --fs-md:15px;
+    --fs-lg:16px;
+    --fs-xl:18px;
+    --fs-sec:23px;      /* 分区标题 */
+    --fs-num:31px;      /* 结果区主数字 */
+    --fs-hero:46px;
+    --fs-hero-sm:31px;
+    --track-caps:.14em;
+
+    --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,Helvetica,Arial,sans-serif;
+    /* 字标专用字体栈：三者度量兼容，Mac/Windows/Linux 渲染几乎一致，
+       避免同一个品牌在不同设备上长得不一样 */
+    --wordmark:"Helvetica Neue",Helvetica,"Liberation Sans",Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono","JetBrains Mono","Roboto Mono",Menlo,Consolas,"Liberation Mono",monospace;
+  }
   *{box-sizing:border-box;margin:0;padding:0}
   body{
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Roboto,Helvetica,Arial,sans-serif;
-    background:
-      radial-gradient(1200px 560px at 50% -20%, rgba(45,212,191,.045), transparent 60%),
-      var(--bg);
-    font-variant-numeric:tabular-nums;
-    color:var(--text);line-height:1.6;min-height:100vh;
-    display:flex;align-items:center;justify-content:center;padding:24px;
-    -webkit-font-smoothing:antialiased;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB",
+      "Microsoft YaHei",Roboto,Helvetica,Arial,sans-serif;
+    background:radial-gradient(1200px 560px at 50% -20%, rgba(45,212,191,.045), transparent 60%), var(--bg);
+    color:var(--text);line-height:1.6;min-height:100vh;font-variant-numeric:tabular-nums;
+    display:flex;align-items:center;justify-content:center;padding:24px;-webkit-font-smoothing:antialiased;
   }
-  .box{text-align:center;max-width:440px}
-  .logo{
-    width:40px;height:40px;border-radius:12px;margin:0 auto 24px;position:relative;
-    background:conic-gradient(from 200deg,var(--brand),var(--accent),var(--brand));
+  .box{text-align:center;max-width:460px}
+  .mark{
+    display:inline-block;font-weight:800;font-size:19px;letter-spacing:.10em;
+    color:var(--text);margin-bottom:26px;text-decoration:none;
   }
-  .logo::after{content:"";position:absolute;inset:10px;border-radius:50%;background:var(--bg)}
+  .mark span{color:var(--accent)}
   .code{
     font-family:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
     font-size:15px;font-weight:700;letter-spacing:.14em;line-height:1;
@@ -33,23 +90,25 @@
   }
   h1{font-size:22px;font-weight:700;letter-spacing:-.02em;margin:14px 0 10px}
   p{color:var(--muted);font-size:14px;line-height:1.75;margin-bottom:28px}
-  .en{display:block;font-size:13px;color:var(--muted);font-weight:400;margin-top:6px}
+  .en{display:block;font-size:13px;color:var(--faint);font-weight:400;margin-top:6px}
   a.btn{
-    display:inline-block;padding:11px 22px;border-radius:8px;
-    background:transparent;border:1px solid var(--line-strong);
-    color:var(--text2);font-weight:600;font-size:14px;text-decoration:none;
-    transition:color .15s,border-color .15s;
+    display:inline-block;padding:11px 22px;border-radius:8px;background:transparent;
+    border:1px solid var(--line-strong);color:var(--text2);font-weight:600;
+    font-size:14px;text-decoration:none;transition:color .15s,border-color .15s;
   }
   a.btn:hover{color:var(--text);border-color:var(--muted)}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
-  <div class="box">
-    <div class="logo"></div>
+  <main class="box">
+    <a class="mark" href="/">HYPER<span>NOVA</span></a>
     <div class="code">Error 404</div>
     <h1>页面不存在<span class="en">Page not found</span></h1>
-    <p>所请求的地址在本站不存在，可能已被移除或从未发布。<br>请返回首页继续使用仓位计算器。<br><span class="en">The requested address does not exist on this site. Please return to the homepage.</span></p>
+    <p>所请求的地址在本站不存在，可能已被移除或从未发布。<br>请返回首页继续使用仓位计算器。
+       <span class="en">The requested address does not exist on this site. Please return to the homepage.</span></p>
     <a class="btn" href="/">返回首页 · Return to homepage</a>
-  </div>
+  </main>
 </body>
 </html>
